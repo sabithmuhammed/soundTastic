@@ -5,7 +5,7 @@
       <div
         class="col-12 col-lg-5 d-flex justify-content-center align-items-center"
       >
-        <div class="login  signup py-3">
+        <form action="/signup" method="post" class="login  signup py-3">
           <h3 class="red">Sign up</h3>
 
           <div class="login-container px-4">
@@ -30,7 +30,7 @@
             </div>
             <div class="login-input mb-3">
               <label for="cnfrm-password">Confirm password</label>
-              <input type="password" name="password" id="cnfrm-password" />
+              <input type="password" name="cnfpassword" id="cnfrm-password" />
               <div class="eye-icon" id="show-cnfrm-password"><i class="fa-solid fa-eye-slash"></i></div>
             </div>
           </div>
@@ -39,7 +39,7 @@
           <p class="text-center red">
             Already have an account? <a href="/login">Login</a>
           </p>
-        </div>
+        </form>
       </div>
     </div>
   </div>

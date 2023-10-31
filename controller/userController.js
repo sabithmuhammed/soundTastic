@@ -1,5 +1,6 @@
-// const User = require("../model/userModel");
+const User = require("../model/userModel");
 const bcrypt = require("bcrypt");
+const nodemailer =require("nodemailer";)
 
 const securePassword = async (password) => {
   try {
@@ -10,6 +11,11 @@ const securePassword = async (password) => {
   }
 };
 
+const sendVerifyMail=(name,email,subject)=>{
+  
+
+}
+
 
 const loadRegister = async (req, res) => {
   try {
@@ -19,35 +25,36 @@ const loadRegister = async (req, res) => {
   }
 };
 
-// const insertUser = async (req, res) => {
-//   try {
-//     const { password, email, name, phone } = req.body;
-//     const userCheck = await User.findOne({ email });
-//     if (userCheck) {
-//       return res.render("user/signup", {
-//         message: "User already exist, try login instead",
-//         color: "red",
-//       });
-//     }
-//     const hashPassword = await securePassword(req.body.password);
-//     const user = new User({
-//       name,
-//       email,
-//       phone,
-//       password: hashPassword,
-//     });
-//     const userData = await user.save();
+const insertUser = async (req, res) => {
+  try {
+    const { password, email, name, phone } = req.body;
+    const userCheck = await User.findOne({ email });
+    if (userCheck) {
+      return res.render("user/signup", {
+        message: "User already exist, try login instead",
+        color: "red",
+      });
+    }
+    const hashPassword = await securePassword(req.body.password);
+    const user = new User({
+      name,
+      email,
+      phone,
+      password: hashPassword,
+    });
+    const userData = await user.save();
 
-//     if (userData) {
-//       req.session.user = userData.name;
-//       res.render("user/home", { message: req.session.user });
-//     } else {
-//       res.render("user/signup", { message: "Something went wrong. Try again" });
-//     }
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// };
+    if (userData) {
+      sendVerifyMail(userData.name,userData.email,userData._id)
+      req.session.user = userData.name;
+      res.render("user/verifyMail", { email:userData.email });
+    } else {
+      res.render("user/signup", { message: "Something went wrong. Try again" });
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
 const verifyMail= async (req,res)=>{
     try {
@@ -94,12 +101,21 @@ const loginLoad = async (req, res) => {
 //   }
 // };
 
-const forgotPassword = async (req,res)=> {
+const forgetPassword = async (req,res)=> {
     try {
-        res.render('user/forgotPassword')
+        res.render('user/forgetPassword')
     } catch (error) {
         console.log(error.message);
     }
+}
+
+const forgetVerify = async (req,res)=>{
+  try {
+    const email=req.body.email;
+    console.log(email);
+} catch (error) {
+    console.log(error.message);
+}
 }
 
 const changePassword =async (req,res)=>{
@@ -134,11 +150,12 @@ const changePassword =async (req,res)=>{
 
 module.exports = {
   loadRegister,
-//   insertUser,
+  insertUser,
 verifyMail,
    loginLoad,
-//   verifyLogin,
-forgotPassword,
+//   verifyLogin,`
+forgetPassword,
+forgetVerify,
 changePassword,
 //   loadHome,
 //   userLogout,
