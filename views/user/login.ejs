@@ -1,0 +1,35 @@
+<%- include("../layouts/userHeader") %>
+
+<div class="container-fluid h-100">
+    <div class="row h-100 justify-content-center">
+      <div
+        class="col-12 col-lg-5 d-flex justify-content-center align-items-center"
+      >
+        <div class="login py-3">
+          <h3 class="red">Login</h3>
+
+          <div class="login-container px-4">
+            <div class="login-input mb-4">
+              <div class="error">error</div>
+            </div>
+            <div class="login-input mb-4">
+              <label for="email">Email</label>
+              <input type="email" name="email" id="email" />
+            </div>
+            <div class="login-input">
+              <label for="password">Password</label>
+              <input type="password" name="password" id="password" />
+              <div class="eye-icon" id="show-password"><i class="fa-solid fa-eye-slash"></i></div>
+            </div>
+          </div>
+          <p><a href="#">Forgot password?</a></p>
+          <button class="btn btn-red">Login</button>
+          <p class="text-center red">
+            Don't have an account yet? <a href="/signup">Sign&nbsp;up</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="/js/login.js"></script>
+<%- include("../layouts/userFooter") %>

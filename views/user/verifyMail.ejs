@@ -1,0 +1,38 @@
+<%- include("../layouts/userHeader") %>
+
+<div class="container-fluid h-100">
+    <div class="row h-100 justify-content-center">
+      <div
+        class="col-12 col-lg-5 d-flex justify-content-center align-items-center"
+      >
+        <form action="" method="post"
+          class="w-100 py-4 otp-section text-center d-flex flex-column justify-content-evenly align-items-center"
+        >
+          <div class="verify-icon"><i class="fa-solid fa-envelope"></i></div>
+          <h3>Please Verify Account</h3>
+          <p>
+            We emailed you the six digit code to {email@gmail.com}.<br />Enter
+            the code below to confirm your email address
+          </p>
+          <a href="/index.html"
+            class="button btn btn-primary btn-contdown"
+            id="timer"
+            disabled
+          >
+            1:00
+          </a>
+          <div class="otp-container">
+            <input type="number" name="" id="" class="otp" min="0" max="9" />
+            <input type="number" name="" id="" class="otp" min="0" max="9" />
+            <input type="number" name="" id="" class="otp" min="0" max="9" />
+            <input type="number" name="" id="" class="otp" min="0" max="9" />
+            <input type="number" name="" id="" class="otp" min="0" max="9" />
+            <input type="number" name="" id="" class="otp" min="0" max="9" />
+          </div>
+          <button class="btn btn-blue btn-primary">Verify</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script src="/js/verifyOtp.js"></script>
+<%- include("../layouts/userFooter") %>
