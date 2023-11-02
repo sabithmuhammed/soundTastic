@@ -71,6 +71,10 @@ body{
     text-indent: 10px;
     font-weight: 500;
 }
+.error-wrap{
+    height: 40px;
+    width: 100%;
+}
 .error{
     height: 40px;
     width: 100%;
@@ -81,6 +85,9 @@ body{
     border:2px solid #f80029;
     color: #f80029;
     font-weight: 500;
+}
+
+.hidden{
     visibility: hidden;
 }
 .eye-icon{
@@ -153,6 +160,10 @@ body{
 }
 .forgot-email >label{
     align-self: flex-start;
+}
+
+.otp-error{
+    height: 30px;
 }
 /* otp section */
 

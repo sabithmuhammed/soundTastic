@@ -7,6 +7,7 @@ const nocache = require("nocache");
 const path = require("path");
 const secretString = require("./config/config");
 const userRoute=require("./routes/userRoute");
+const adminRoute=require("./routes/adminRoute");
 
 const app = express();
 dotenv.config({ path: ".env" });
@@ -29,12 +30,13 @@ app.use(express.urlencoded({ extended: true }));
 
 //static files
 app.use("/css", express.static(path.resolve(__dirname, "assets/css")));
-app.use("/img", express.static(path.resolve(__dirname, "assets/img")));
+app.use("/images", express.static(path.resolve(__dirname, "assets/images")));
 app.use("/js", express.static(path.resolve(__dirname, "assets/js")));
+app.use("/libs", express.static(path.resolve(__dirname, "assets/libs")));
 
 //routes
 app.use("/", userRoute);
-// app.use("/admin", adminRoute);
+app.use("/admin", adminRoute);
 
 app.listen(PORT, () =>
   console.log(`Server is running on http://localhost:${PORT}`)

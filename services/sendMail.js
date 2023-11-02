@@ -1,24 +1,25 @@
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 dotenv.config({ path: ".env" });
+const UserOTP = require("../model/userOTPVerification");
 
-const sendVerifyMail=(name,email,otp)=>{
+const sendVerifyMail=async(name,email,otp)=>{
     const transporter = nodemailer.createTransport({
         host: process.env.MAIL_HOST,
         port: process.env.MAIL_PORT,
         secure: false,
         requireTLS: true,
         auth: {
-          user: "sabithmuhammed136@gmail.com",
-          pass: password,
+          user: process.env.MAIL_USERNAME,
+          pass: process.env.MAIL_PASSWORD,
         },
       });
       const mailOptions = {
-        from: "sabithmuhammed136@gmail.com",
-        to: "hiitsmemj2@gmail.com",
+        from: process.env.USERNAME,
+        to: email,
         subject: "OTP verification for soundtastic",
         html: `<center>
-        <h1>Hi, Jabeen </h1><br>
+        <h1>Hi, ${name} </h1><br>
         <h3>Your OTP for email verfication of soundtastic is:</h3><br>
         <div
           style="
@@ -38,9 +39,11 @@ const sendVerifyMail=(name,email,otp)=>{
         if (err) {
           console.log(err);
         } else {
-          console.log(info);
+          return info;
         }
       });
-      
+}
 
+module.exports={
+  sendVerifyMail
 }

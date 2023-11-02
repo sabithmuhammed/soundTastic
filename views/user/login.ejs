@@ -5,12 +5,17 @@
       <div
         class="col-12 col-lg-5 d-flex justify-content-center align-items-center"
       >
-        <div class="login py-3">
+        <form class="login py-3" action="/login" method="">
           <h3 class="red">Login</h3>
 
           <div class="login-container px-4">
             <div class="login-input mb-4">
-              <div class="error">error</div>
+              <div class="error-wrap">
+                <% if(locals.message){%>
+                  <div class="error"><%= message%></div>
+                  <%}%>
+              </div>
+             
             </div>
             <div class="login-input mb-4">
               <label for="email">Email</label>
@@ -27,7 +32,7 @@
           <p class="text-center red">
             Don't have an account yet? <a href="/signup">Sign&nbsp;up</a>
           </p>
-        </div>
+        </form>
       </div>
     </div>
   </div>

@@ -1,21 +1,8 @@
 const User = require("../model/userModel");
 const bcrypt = require("bcrypt");
-const nodemailer =require("nodemailer";)
-
-const securePassword = async (password) => {
-  try {
-    const passwordHash = await bcrypt.hash(password, 10);
-    return passwordHash;
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
-const sendVerifyMail=(name,email,subject)=>{
-  
-
-}
-
+const sendMail = require("../services/sendMail");
+const UserOTP = require("../model/userOTPVerification");
+const securePassword = require("../services/securePassword")
 
 const loadRegister = async (req, res) => {
   try {
@@ -45,9 +32,20 @@ const insertUser = async (req, res) => {
     const userData = await user.save();
 
     if (userData) {
-      sendVerifyMail(userData.name,userData.email,userData._id)
-      req.session.user = userData.name;
-      res.render("user/verifyMail", { email:userData.email });
+      const { name, _id, email } = userData;
+      const otp = `${Math.floor(100000 + Math.random() * 900000)}`;
+      const OTPsave = new UserOTP({
+        userId: _id,
+        otp,
+      });
+      const userOTP = await OTPsave.save();
+      if (userOTP) {
+        await sendMail.sendVerifyMail(name, email, otp);
+        req.session.user = name;
+        req.session.userId = _id;
+        req.session.userEmail = email;
+        res.render("user/verifyMail", { email, userId: _id });
+      }
     } else {
       res.render("user/signup", { message: "Something went wrong. Try again" });
     }
@@ -56,14 +54,48 @@ const insertUser = async (req, res) => {
   }
 };
 
-const verifyMail= async (req,res)=>{
-    try {
-        res.render('user/verifyMail');
-    } catch (error) {
-        console.log(error.message);
+const checkOTP = async (req, res) => {
+  try {
+    const { o1, o2, o3, o4, o5, o6, id, email } = req.body;
+    const otp = o1 + o2 + o3 + o4 + o5 + o6;
+    const userOtp = await UserOTP.findOne({ userId: id });
+    if (userOtp) {
+      if (otp === userOtp.otp) {
+        await UserOTP.findByIdAndDelete({ userId: id });
+        const UseData = await User.findByIdAndUpdate(
+          { _id: id },
+          { verified: true }
+        );
+        res.redirect("user/home");
+      } else {
+        res.render("user/verifyMail", {
+          message: "invalid OTP",
+          userId: id,
+          email,
+        });
+      }
     }
-}
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
+const resendOTP = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const name = req.session.user;
+    const email = req.session.userEmail;
+    console.log(id);
+    const otp = `${Math.floor(100000 + Math.random() * 900000)}`;
+    const newOtp = await UserOTP.findOneAndUpdate({ userId: id }, { otp });
+    if (newOtp) {
+      await sendMail.sendVerifyMail(name, email, otp);
+      res.render("user/verifyMail", { email, userId: id });
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
 const loginLoad = async (req, res) => {
   try {
@@ -75,88 +107,65 @@ const loginLoad = async (req, res) => {
   }
 };
 
-// const verifyLogin = async (req, res) => {
-//   try {
-//     const { email, password } = req.body;
-//     const userData = await User.findOne({ email });
-//     if (userData) {
-//       const passwordMatch = await bcrypt.compare(password, userData.password);
-//       if (passwordMatch) {
-//         req.session.user = userData.name;
-//         res.redirect("/home");
-//       } else {
-//         res.render("user/login", {
-//           message: "Username or Password is incorrect!",
-//           color: "red",
-//         });
-//       }
-//     } else {
-//       res.render("user/login", {
-//         message: "Username or Password is incorrect!",
-//         color: "red",
-//       });
-//     }
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// };
-
-const forgetPassword = async (req,res)=> {
-    try {
-        res.render('user/forgetPassword')
-    } catch (error) {
-        console.log(error.message);
+const verifyLogin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const userData = await User.findOne({ email });
+    if (userData) {
+      const passwordMatch = await bcrypt.compare(password, userData.password);
+      if (passwordMatch) {
+        req.session.user = userData.name;
+        res.send("home");
+      } else {
+        res.render("user/login", {
+          message: "Username or Password is incorrect!",
+        });
+      }
+    } else {
+      res.render("user/login", {
+        message: "Username or Password is incorrect!",
+      });
     }
-}
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
-const forgetVerify = async (req,res)=>{
+const forgetPassword = async (req, res) => {
   try {
-    const email=req.body.email;
+    res.render("user/forgetPassword");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const forgetVerify = async (req, res) => {
+  try {
+    const email = req.body.email;
     console.log(email);
-} catch (error) {
+  } catch (error) {
     console.log(error.message);
-}
-}
+  }
+};
 
-const changePassword =async (req,res)=>{
+const changePassword = async (req, res) => {
   try {
-    res.render('user/changePassword')
-} catch (error) {
+    res.render("user/changePassword");
+  } catch (error) {
     console.log(error.message);
-}
-}
-
-// const loadHome = (req, res) => {
-//   try {
-//     res.render("user/home", { message: req.session.user });
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// };
-// const userLogout = (req, res) => {
-//   try {
-//     req.session.destroy((err) => {
-//       if (err) {
-//         res.send("Oops something went wrong, please try again");
-//       } else {
-//         const message = "Logged out successfully";
-//         res.redirect(`/?m=${encodeURIComponent(message)}`);
-//       }
-//     });
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// };
+  }
+};
 
 module.exports = {
   loadRegister,
   insertUser,
-verifyMail,
-   loginLoad,
-//   verifyLogin,`
-forgetPassword,
-forgetVerify,
-changePassword,
-//   loadHome,
-//   userLogout,
+  checkOTP,
+  resendOTP,
+  loginLoad,
+    verifyLogin,
+  forgetPassword,
+  forgetVerify,
+  changePassword,
+  //   loadHome,
+  //   userLogout,
 };
