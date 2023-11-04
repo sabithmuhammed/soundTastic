@@ -1,5 +1,6 @@
 const Admin = require("../model/adminModel");
 const User = require("../model/userModel");
+const Category = require("../model/categoryModel");
 const bcrypt = require("bcrypt");
 const securePassword = require("../services/securePassword");
 const adminSignup = (req, res) => {
@@ -92,15 +93,84 @@ const loadDashboard = async (req, res) => {
   }
 };
 
-const seeCustomers = async (req,res)=>{
+const seeCustomers = async (req, res) => {
   try {
-    const customers=await User.find();
-    res.render("admin/customers",{customers});
+    const customers = await User.find();
+    res.render("admin/customers", { customers });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+const updateCustomers = async (req, res) => {
+  try {
+    const userData = await User.findByIdAndUpdate(
+      { _id: req.params.id },
+      { $bit: { blocked: { xor: 1 } } },
+      { new: true }
+    );
+    if (userData) {
+      const message = userData.blocked ? "Unblock" : "Block";
+      res.json({ message });
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const seeProducts = async (req, res) => {
+  try {
+    res.render("admin/products");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+const seeCategories = async (req, res) => {
+  try {
+    const categories = await Category.find();
+    console.log(categories);
+    res.render("admin/categories", { categories });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const addCategory = async (req, res) => {
+  try {
+    const name = req.body.categoryName;
+    const category = new Category({ name });
+    const result = await category.save();
+    if (result) {
+      res.json({ status: "success", result });
+    } else {
+      res.json({ status: "failed" });
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const updateCategories = async (req, res) => {
+  try {
+    const category = await Category.findByIdAndUpdate(
+      { _id: req.params.id },
+      { $bit: { listed: { xor: 1 } } },
+      { new: true }
+    );
+    if (category) {
+      const message = category.listed ? "Unlist" : "List";
+      res.json({ message });
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+const showAddProduct=async (req,res)=>{
+  try {
+    res.render('admin/addProduct');
   } catch (error) {
     console.log(error.message);
   }
 }
-
 module.exports = {
   createAdmin,
   adminSignup,
@@ -108,4 +178,11 @@ module.exports = {
   verifyLogin,
   loadDashboard,
   seeCustomers,
+  seeProducts,
+  updateCustomers,
+  seeCategories,
+  addCategory,
+  updateCategories,
+  showAddProduct,
+  
 };

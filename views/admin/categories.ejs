@@ -1,0 +1,68 @@
+<%- include("../layouts/adminHeader") %>
+
+<!--  Main wrapper -->
+<div class="body-wrapper">
+  <%- include("../layouts/adminNavbar") %>
+  <div class="container-fluid">
+    <div class="row justify-content-center mb-3">
+      <div class="col-md-7">
+        <div class="search-container d-flex p-0">
+          <input type="text" class="flex-grow-1" placeholder="search..." /><a
+            href=""
+            ><button class="btn btn-primary h-100 rounded-start-0">
+              Search
+            </button></a
+          >
+        </div>
+      </div>
+    </div>
+    <h2 class="my-3">Categories</h2>
+    <div class="row">
+      <div class="col-8">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th scope="col">Category name</th>
+              <th scope="col" colspan="3" class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="table-category">
+            <% if(locals.categories.length>0){ categories.forEach(item=>{ %>
+            <tr>
+              <td><%= item.name %></td>
+              <td>
+                <button
+                  class="btn btn-list <%= item.listed?'btn-danger':'btn-success' %> btn-block"
+                  id="<%= item._id %>"
+                  onclick="categoryList(this)"
+                >
+                  <%= item.listed?'Unlist':'List' %>
+                </button>
+              </td>
+              <td><button class="btn btn-dark">Edit</button></td>
+              <td><button class="btn btn-danger">Delete</button></td>
+            </tr>
+            <% })}else{ %>
+            <tr>
+              <td colspan="4" class="text-center"> No categories found </td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-4 border-2 border-start border-dark h-50 px-4">
+        <h5>ADD CATEGORY</h5>
+        <div class="d-flex flex-column mt-3">
+          <label for="add-category"><h6>Category name</h6></label>
+          <input type="text" name="" id="add-category" />
+          <button class="btn btn-success w-25 mt-3" onclick="addCategory(this)">
+            ADD
+          </button>
+        </div>
+        <div class="alert-category" id="category-alert">Category added</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include("../layouts/adminFooter") %>

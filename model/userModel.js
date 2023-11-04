@@ -11,9 +11,9 @@ const userSchema = new mongoose.Schema({
     default:false
   },
   blocked:{
-    type:Boolean,
+    type:Number,
     required:true,
-    default:false
+    default:0
   },
   address: [
     {
