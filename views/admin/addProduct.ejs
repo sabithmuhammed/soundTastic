@@ -2,22 +2,90 @@
 
 <!--  Main wrapper -->
 <div class="body-wrapper">
-<%- include("../layouts/adminNavbar") %>
-<div class="container-fluid">
+  <%- include("../layouts/adminNavbar") %>
+  <div class="container-fluid">
     <div class="row justify-content-center mb-3">
-        <div class="col-md-7">
-            <div class="search-container d-flex p-0">
-                <input type="text" class="flex-grow-1 " placeholder="search..."><a href=""><button class="btn btn-primary h-100 rounded-start-0">Search</button></a>
+      <form action="/admin/add-product" method="post" class="col-8 add-product" enctype="multipart/form-data">
+        <div class="add-product-row">
+          <div class="image-container">
+            <label for="image1" class="label-image">
+              <input type="file" accept="image/*" name="image1" id="image1" onchange="previewImage(event)" required/><span>Coose Image</span>
+              <img id="preview" alt="Preview Image" data-image1>
+            </label>
+            <label for="image2" class="label-image">
+              <input type="file" accept="image/*" name="image2" id="image2" onchange="previewImage(event)" required/><span>Coose Image</span>
+              <img id="preview" alt="Preview Image" data-image2>
+
+            </label>
+          </div>
+          <div class="input-div">
+            <div class="input-wrapper">
+              <label for="name">Product Name</label>
+              <input type="text" name="name" id="name" class="input-style" required onblur="removeWhiteSpace(this)"/>
             </div>
+            <div class="input-price-wrapper">
+              <div class="input-wrapper">
+                <label for="mrkdwn">Markdown Price</label>
+                <input type="number" name="md_price" id="mrkdwn" class="input-style" min="1" required/>
+              </div>
+              <div class="input-wrapper">
+                <label for="actual-price">Price</label>
+                <input
+                  type="number"
+                  name="price"
+                  id="actual-price"
+                  class="input-style"
+                  required
+                  min="1"
+                />
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="col-md-3 mt-2 mt-md-0">
-            <button class="btn btn-success">ADD PRODUCTS</button>
+        <div class="add-product-row">
+          <div class="image-container">
+            <label for="image3" class="label-image">
+              <input type="file" accept="image/*" name="image3" id="image3" onchange="previewImage(event)" required/><span>Coose Image</span>
+              <img id="preview" alt="Preview Image" data-image3>
+            </label>
+            <label for="image4" class="label-image">
+              <input type="file" accept="image/*" name="image4" id="image4" onchange="previewImage(event)" required/><span>Coose Image</span>
+              <img id="preview" alt="Preview Image" data-image4>
+            </label>
+          </div>
+          <div class="input-div">
+            <div class="input-wrapper">
+              <label for="category">Choose A Category</label>
+              <select name="category" id="category" class="input-style" required>
+                <% if(categories.length>0){ %>
+                <option value="" disabled selected hidden>
+                  Choose a category
+                </option>
+
+                <% categories.forEach((item)=>{ %>
+
+                <option value="<%= item._id %>"><%= item.name %></option>
+                <% })}else{ %>
+                <option value="" disabled selected hidden>
+                  No categories found
+                </option>
+                <% } %>
+              </select>
+            </div>
+            <div class="input-wrapper">
+              <label for="name">Quantity</label>
+              <input type="number" min="1" name="quantity" id="name" class="input-style" required/>
+            </div>
+          </div>
         </div>
-        
-        
+        <div class="add-product-row">
+          <textarea name="description" id="" cols="100" rows="6"class="input-style" required onblur="removeWhiteSpace(this)"></textarea>
+        </div>
+        <div class="add-product-row">
+          <button class="btn btn-primary">Add product</button>
+        </div>
+      </form>
     </div>
-    <h2 class="my-3">All customers</h2>
-    
   </div>
 </div>
 

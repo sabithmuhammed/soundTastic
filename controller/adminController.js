@@ -166,11 +166,23 @@ const updateCategories = async (req, res) => {
 };
 const showAddProduct=async (req,res)=>{
   try {
-    res.render('admin/addProduct');
+    const categories=await Category.find();
+    if(categories){
+      res.render('admin/addProduct',{categories});
+    }
+    
   } catch (error) {
     console.log(error.message);
   }
 }
+const addProduct=async (req,res)=>{
+try {
+  console.log(req.files);
+} catch (error) {
+  console.log(error.message);
+}
+}
+
 module.exports = {
   createAdmin,
   adminSignup,
@@ -184,5 +196,6 @@ module.exports = {
   addCategory,
   updateCategories,
   showAddProduct,
-  
+  addProduct,
+
 };

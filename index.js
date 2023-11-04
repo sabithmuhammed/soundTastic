@@ -5,7 +5,7 @@ const morgan = require("morgan");
 const session = require("express-session");
 const nocache = require("nocache");
 const path = require("path");
-const secretString = require("./config/config");
+const secretString = require("./config/sessionSecret");
 const userRoute=require("./routes/userRoute");
 const adminRoute=require("./routes/adminRoute");
 

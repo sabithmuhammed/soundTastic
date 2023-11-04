@@ -1,6 +1,7 @@
 const express = require('express');
 const adminController =require('../controller/adminController');
 const admin_route = express.Router();
+const imageUpload =require('../config/multerConfig');
 
 
 admin_route.get('/',adminController.loginLoad);
@@ -17,7 +18,8 @@ admin_route.get('/products',adminController.seeProducts);
 admin_route.get('/categories',adminController.seeCategories);
 admin_route.get('/categories/:id',adminController.updateCategories);
 admin_route.post('/add-category',adminController.addCategory);
-admin_route.get('/add-product',adminController.showAddProduct)
+admin_route.get('/add-product',adminController.showAddProduct);
+admin_route.post('/add-product',imageUpload,adminController.addProduct);
 
 
 module.exports = admin_route;

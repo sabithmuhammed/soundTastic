@@ -1,3 +1,21 @@
+/* utility classes */
+
+.input-style{
+    background-color:bisque;
+     border: 2px solid rgb(117, 117, 117);
+     text-indent: 10px;
+     font-size: 1rem;
+     font-weight: 500;
+}
+input[type="number"]::-webkit-inner-spin-button,.otp::-webkit-outer-spin-button{
+    display: none;
+}
+
+
+/* utility classes */
+
+
+
 .search-container{
     max-width: 500px;
     height: 50px;
@@ -33,4 +51,82 @@
     border-radius: 9px;
     visibility: hidden;
     text-align: center;
+}
+.add-product-row{
+    width: 100%;
+    display: flex;
+    margin-bottom: 20px;
+}
+.add-product-row >.image-container{
+    display: flex;
+}
+.label-image>input{
+position: absolute;
+top: -1000px;
+}
+label{
+    color: black;
+}
+.label-image{
+    width: 150px ;
+    height: 150px;
+    border: 2px solid rgb(117, 117, 117);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    background-color:bisque;
+    color: black;
+    position: relative;
+}
+.label-image>img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    position: absolute;
+    z-index: -1;
+}
+.label-image>span{
+    z-index: 1;
+    background-color: aliceblue;
+}
+.input-div{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 400px;
+
+}
+.input-wrapper{
+    display: flex;
+    flex-direction: column;
+}
+.input-price-wrapper{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    gap: 10px;
+    
+
+}
+.input-price-wrapper > .input-wrapper{
+    width: 50%;
+}
+.input-wrapper input {
+ width: 100%;
+ height: 40px;
+    
+
+
+}
+
+.input-wrapper >select{
+    height: 40px;
+    
+
+}
+
+.add-product-row>button{
+   margin-left: auto;
+   margin-right: 20px;
 }
