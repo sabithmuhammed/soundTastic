@@ -17,7 +17,57 @@
         
     </div>
     <h2 class="my-3">All customers</h2>
-    
+    <table class="table text-wrap">
+        <thead>
+          <tr>
+            <th scope="col">Image</th>
+            <th scope="col">Name</th>
+            <th scope="col">Brand</th>
+            <th scope="col">Category</th>
+            <th scope="col">Stock</th>
+            <th scope="col">Prices</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if(locals.products.length>0){
+            products.forEach((item)=>{
+            %>
+          <tr>
+            <td class="product-img" ><img src="/images/products/<%= item.images[0] %>" alt=""></td>
+            <td><%= item.name %></td>
+            <td><%= item.brand %></td>
+            <td><%= item.category?.name ?? "No category" %></td>
+            <td><%= item.quantity %></td>
+            <td class="product-prices"><div>
+                <p>Markdown&nbsp;price</p>
+                <h5> &#8377; <%= item.md_price %></h5>
+            </div>
+            <div class="">
+              <p>
+                Selling&nbsp;price
+              </p>
+              <h4 class="text-danger">&#8377; <%= item.price %></h4>
+            </div>
+          </td>
+            <td class="product-actions d-flex flex-column">
+              <button 
+              class="btn <%= item.listed?'btn-danger':'btn-success' %>"
+              data-id="<%= item._id %>"
+              onclick="productList(this)"><%= item.listed?'Unlist':'List' %></button>
+              <button class="btn btn-dark">Edit</button>
+              <button class="btn btn-danger">Delete</button>
+              
+            </td>
+          </tr>
+          <% })}else{ %>
+            <tr>
+              <td class="text-center" > No products found</td>
+              
+            </tr>
+            <% } %>
+        </tbody>
+      </table>
   </div>
 </div>
 

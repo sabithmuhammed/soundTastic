@@ -1,6 +1,7 @@
 const Admin = require("../model/adminModel");
 const User = require("../model/userModel");
 const Category = require("../model/categoryModel");
+const Product = require("../model/productModel");
 const bcrypt = require("bcrypt");
 const securePassword = require("../services/securePassword");
 const adminSignup = (req, res) => {
@@ -117,17 +118,11 @@ const updateCustomers = async (req, res) => {
   }
 };
 
-const seeProducts = async (req, res) => {
-  try {
-    res.render("admin/products");
-  } catch (error) {
-    console.log(error.message);
-  }
-};
+// category controllers start
+
 const seeCategories = async (req, res) => {
   try {
     const categories = await Category.find();
-    console.log(categories);
     res.render("admin/categories", { categories });
   } catch (error) {
     console.log(error.message);
@@ -164,24 +159,73 @@ const updateCategories = async (req, res) => {
     console.log(error.message);
   }
 };
-const showAddProduct=async (req,res)=>{
+// category controllers end
+
+// product controllers start
+const seeProducts = async (req, res) => {
   try {
-    const categories=await Category.find();
-    if(categories){
-      res.render('admin/addProduct',{categories});
-    }
-    
+    const products = await Product.find().populate("category").exec();
+    console.log(products);
+    res.render("admin/products", { products });
   } catch (error) {
     console.log(error.message);
   }
-}
-const addProduct=async (req,res)=>{
-try {
-  console.log(req.files);
-} catch (error) {
-  console.log(error.message);
-}
-}
+};
+const showAddProduct = async (req, res) => {
+  try {
+    const categories = await Category.find();
+    if (categories) {
+      res.render("admin/addProduct", { categories });
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+const addProduct = async (req, res) => {
+  try {
+    const { name, md_price, price, category, quantity, description, brand } =
+      req.body;
+    const images = [];
+    for (let key in req.files) {
+      images.push(req.files[key][0].filename);
+    }
+    const newProduct = new Product({
+      name,
+      md_price,
+      price,
+      images,
+      quantity,
+      category,
+      description,
+      brand,
+    });
+    const product = await newProduct.save();
+    if (product) {
+      res.redirect("/admin/products");
+    } else {
+      res.redirect("/admin/add-product");
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+const updateProducts = async (req, res) => {
+  try {
+    const product = await Product.findByIdAndUpdate(
+      { _id: req.params.id },
+      { $bit: { listed: { xor: 1 } } },
+      { new: true }
+    );
+    if (product) {
+      const message = product.listed ? "Unlist" : "List";
+      res.json({ message });
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+// product controllers end
 
 module.exports = {
   createAdmin,
@@ -197,5 +241,5 @@ module.exports = {
   updateCategories,
   showAddProduct,
   addProduct,
-
+  updateProducts,
 };

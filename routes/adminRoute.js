@@ -20,6 +20,7 @@ admin_route.get('/categories/:id',adminController.updateCategories);
 admin_route.post('/add-category',adminController.addCategory);
 admin_route.get('/add-product',adminController.showAddProduct);
 admin_route.post('/add-product',imageUpload,adminController.addProduct);
+admin_route.get('/products/:id',adminController.updateProducts);
 
 
 module.exports = admin_route;

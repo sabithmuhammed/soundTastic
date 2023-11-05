@@ -6,14 +6,15 @@
   <div class="container-fluid">
     <div class="row justify-content-center mb-3">
       <form action="/admin/add-product" method="post" class="col-8 add-product" enctype="multipart/form-data">
+        <h4>Fill all the fields</h4>
         <div class="add-product-row">
           <div class="image-container">
             <label for="image1" class="label-image">
-              <input type="file" accept="image/*" name="image1" id="image1" onchange="previewImage(event)" required/><span>Coose Image</span>
+              <input type="file" accept="image/*" name="image1" id="image1" onchange="previewImage(event)" required/><span>Choose Image</span>
               <img id="preview" alt="Preview Image" data-image1>
             </label>
             <label for="image2" class="label-image">
-              <input type="file" accept="image/*" name="image2" id="image2" onchange="previewImage(event)" required/><span>Coose Image</span>
+              <input type="file" accept="image/*" name="image2" id="image2" onchange="previewImage(event)" required/><span>Choose Image</span>
               <img id="preview" alt="Preview Image" data-image2>
 
             </label>
@@ -45,11 +46,11 @@
         <div class="add-product-row">
           <div class="image-container">
             <label for="image3" class="label-image">
-              <input type="file" accept="image/*" name="image3" id="image3" onchange="previewImage(event)" required/><span>Coose Image</span>
+              <input type="file" accept="image/*" name="image3" id="image3" onchange="previewImage(event)" required/><span>Choose Image</span>
               <img id="preview" alt="Preview Image" data-image3>
             </label>
             <label for="image4" class="label-image">
-              <input type="file" accept="image/*" name="image4" id="image4" onchange="previewImage(event)" required/><span>Coose Image</span>
+              <input type="file" accept="image/*" name="image4" id="image4" onchange="previewImage(event)" required/><span>Choose Image</span>
               <img id="preview" alt="Preview Image" data-image4>
             </label>
           </div>
@@ -72,9 +73,23 @@
                 <% } %>
               </select>
             </div>
+            <div class="input-price-wrapper">
+              
             <div class="input-wrapper">
-              <label for="name">Quantity</label>
-              <input type="number" min="1" name="quantity" id="name" class="input-style" required/>
+              <label for="quantity">Quantity</label>
+              <input type="number" min="1" name="quantity" id="quantity" class="input-style" required/>
+            </div>
+              <div class="input-wrapper">
+                <label for="brand">Brand</label>
+                <input
+                  type="text"
+                  name="brand"
+                  id="brand"
+                  class="input-style"
+                  required
+                  onblur="removeWhiteSpace(this)"
+                />
+              </div>
             </div>
           </div>
         </div>
