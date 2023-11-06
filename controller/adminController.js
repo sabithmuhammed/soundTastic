@@ -153,13 +153,17 @@ const seeCategories = async (req, res) => {
 
 const addCategory = async (req, res) => {
   try {
-    const name = req.body.categoryName;
-    const category = new Category({ name });
-    const result = await category.save();
-    if (result) {
-      res.json({ status: "success", result });
+    let name = req.body.categoryName;
+    name = name[0].toUpperCase() + name.slice(1).toLowerCase();
+    const check = await Category.findOne({ name });
+    if (!check) {
+      const category = new Category({ name });
+      const result = await category.save();
+      if (result) {
+        res.json({ status: "success", result });
+      }
     } else {
-      res.json({ status: "failed" });
+      res.json({ status: "failed",message:"Cannot add duplicate categories" });
     }
   } catch (error) {
     console.log(error.message);
@@ -204,7 +208,6 @@ const editCategory = async (req, res) => {
 const seeProducts = async (req, res) => {
   try {
     const products = await Product.find().populate("category").exec();
-    console.log(products);
     res.render("admin/products", { products });
   } catch (error) {
     console.log(error.message);
@@ -212,7 +215,7 @@ const seeProducts = async (req, res) => {
 };
 const showAddProduct = async (req, res) => {
   try {
-    const categories = await Category.find({listed:1});
+    const categories = await Category.find({ listed: 1 });
     if (categories) {
       res.render("admin/addProduct", { categories });
     }
@@ -263,20 +266,69 @@ const updateProducts = async (req, res) => {
     console.log(error.message);
   }
 };
-const showEditProduct=async (req,res)=>{
+const showEditProduct = async (req, res) => {
   try {
-    const categories = await Category.find({listed:1});
+    const categories = await Category.find({ listed: 1 });
 
-    const id=req.params.id;
-    const product=await Product.findById({_id:id}).populate('category').exec();
-    if(product){
-      console.log(product);
-    res.render('admin/editProduct',{product,categories});
-    }else{
-      res.redirect('/admin/products')
+    const id = req.params.id;
+    const product = await Product.findById({ _id: id })
+      .populate("category")
+      .exec();
+    if (product) {
+      res.render("admin/editProduct", { product, categories });
+    } else {
+      res.redirect("/admin/products");
     }
   } catch (error) {
     console.log(error.message);
+  }
+};
+const editProduct = async (req, res) => {
+  try {
+    const {
+      name,
+      md_price,
+      price,
+      category,
+      quantity,
+      description,
+      brand,
+      id,
+      image_1,
+      image_2,
+      image_3,
+      image_4,
+    } = req.body;
+    const images = [];
+    console.log(req.body);
+    images.push(req.files["image1"]?.[0].filename ?? image_1);
+    images.push(req.files["image2"]?.[0].filename ?? image_2);
+    images.push(req.files["image3"]?.[0].filename ?? image_3);
+    images.push(req.files["image4"]?.[0].filename ?? image_4);
+    console.log(images);
+    const product = await Product.findByIdAndUpdate(
+      { _id: id },
+      { name, md_price, price, category, quantity, description, brand, images }
+    );
+    console.log(product);
+    if (product) {
+      res.redirect("/admin/products");
+    } else {
+      res.redirect(`/admin/edit-product/${id}`);
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+const addStock=async (req,res)=>{
+  try {
+    const {id,quantity}=req.body;
+    const product=await Product.findByIdAndUpdate({_id:id},{$inc:{quantity}},{new:true});
+    if(product){
+      res.json({status:'success',quantity:product.quantity});
+    }
+  } catch (error) {
+    
   }
 }
 // product controllers end
@@ -298,4 +350,7 @@ module.exports = {
   updateProducts,
   editCategory,
   showEditProduct,
+  editProduct,
+  addStock,
+
 };

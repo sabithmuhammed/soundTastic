@@ -2,72 +2,99 @@
 
 <!--  Main wrapper -->
 <div class="body-wrapper">
-<%- include("../layouts/adminNavbar") %>
-<div class="container-fluid">
+  <%- include("../layouts/adminNavbar") %>
+  <div class="container-fluid">
     <div class="row justify-content-center mb-3">
-        <div class="col-md-7">
-            <div class="search-container d-flex p-0">
-                <input type="text" class="flex-grow-1 " placeholder="search..."><a href=""><button class="btn btn-primary h-100 rounded-start-0">Search</button></a>
-            </div>
+      <div class="col-md-7">
+        <div class="search-container d-flex p-0">
+          <input type="text" class="flex-grow-1" placeholder="search..." /><a
+            href=""
+            ><button class="btn btn-primary h-100 rounded-start-0">
+              Search
+            </button></a
+          >
         </div>
-        <div class="col-md-3 mt-2 mt-md-0">
-            <a href="/admin/add-product"><button class="btn btn-success">ADD PRODUCTS</button></a>
-        </div>
-        
-        
+      </div>
+      <div class="col-md-3 mt-2 mt-md-0">
+        <a href="/admin/add-product"
+          ><button class="btn btn-success">ADD PRODUCTS</button></a
+        >
+      </div>
     </div>
     <h2 class="my-3">All customers</h2>
     <table class="table text-wrap">
-        <thead>
-          <tr>
-            <th scope="col">Image</th>
-            <th scope="col">Name</th>
-            <th scope="col">Brand</th>
-            <th scope="col">Category</th>
-            <th scope="col">Stock</th>
-            <th scope="col">Prices</th>
-            <th scope="col">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% if(locals.products.length>0){
-            products.forEach((item)=>{
-            %>
-          <tr>
-            <td class="product-img" ><img src="/images/products/<%= item.images[0] %>" alt=""></td>
-            <td><%= item.name %></td>
-            <td><%= item.brand %></td>
-            <td><%= item.category?.name ?? "No category" %></td>
-            <td><%= item.quantity %></td>
-            <td class="product-prices"><div>
-                <p>Markdown&nbsp;price</p>
-                <h5> &#8377; <%= item.md_price %></h5>
+      <thead>
+        <tr>
+          <th scope="col">Image</th>
+          <th scope="col">Name</th>
+          <th scope="col">Brand</th>
+          <th scope="col">Category</th>
+          <th scope="col">Stock</th>
+          <th scope="col">Prices</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if(locals.products.length>0){ products.forEach((item)=>{ %>
+        <tr>
+          <td class="product-img pb-0">
+            <img src="/images/products/<%= item.images[0] %>" alt="" />
+          </td>
+          <td><%= item.name %></td>
+          <td><%= item.brand %></td>
+          <td><%= item.category?.name ?? "No category" %></td>
+          <td class="d-flex flex-column align-items-center ">
+            <h4 data-quantity="<%= item._id %>"><%= item.quantity %></h4>
+            <button class="btn btn-primary" onclick="addStock(this)" data-id="<%= item._id %>">Add stock</button>
+          </td>
+          <td class="product-prices">
+            <div>
+              <p>Markdown&nbsp;price</p>
+              <h5>&#8377; <%= item.md_price %></h5>
             </div>
             <div class="">
-              <p>
-                Selling&nbsp;price
-              </p>
+              <p>Selling&nbsp;price</p>
               <h4 class="text-danger">&#8377; <%= item.price %></h4>
             </div>
           </td>
-            <td class="product-actions d-flex flex-column justify-content-evenly">
-              <button 
+          <td class="product-actions d-flex flex-column justify-content-evenly">
+            <button
               class="btn <%= item.listed?'btn-danger':'btn-success' %>"
               data-id="<%= item._id %>"
-              onclick="productList(this)"><%= item.listed?'Unlist':'List' %></button>
-              <a href="/admin/edit-product/<%= item._id %>"><button class="btn btn-dark">Edit</button></a>
-              
-            </td>
-          </tr>
-          <% })}else{ %>
-            <tr>
-              <td class="text-center" > No products found</td>
-              
-            </tr>
-            <% } %>
-        </tbody>
-      </table>
+              onclick="productList(this)"
+            >
+              <%= item.listed?'Unlist':'List' %>
+            </button>
+            <a href="/admin/edit-product/<%= item._id %>"
+              ><button class="btn btn-dark">Edit</button></a
+            >
+          </td>
+        </tr>
+        <% })}else{ %>
+        <tr>
+          <td class="text-center">No products found</td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
   </div>
 </div>
-
+<div class="modal fade" id="product-stock-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Add stock</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="text" class="form-control-plaintext border border-1 border-dark ps-3" id="product-quantity" name="quantity" placeholder="Please add values greater than zero" min="1">
+        <input type="hidden" name="id" id="product-id" value="">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="sendStockRequest()">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 <%- include("../layouts/adminFooter") %>

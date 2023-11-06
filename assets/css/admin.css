@@ -42,7 +42,6 @@ input[type="number"]::-webkit-inner-spin-button,.otp::-webkit-outer-spin-button{
     margin-top: 30px;
     width: 100%;
     height: 60px;
-    background-color: rgba(216, 216, 6, 0.823);
     color: black;
     font-size: 1rem;
     display: flex;
@@ -151,4 +150,10 @@ label{
 }
 .product-actions button{
     width: 100px;
+}
+tr{
+    border-bottom: 2px solid rgba(108, 108, 108, 0.407);
+}
+td{
+    border: none;
 }

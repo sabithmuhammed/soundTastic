@@ -1,0 +1,115 @@
+<%- include("../layouts/adminHeader") %>
+
+<!--  Main wrapper -->
+<div class="body-wrapper">
+  <%- include("../layouts/adminNavbar") %>
+  <div class="container-fluid">
+    <div class="row justify-content-center mb-3">
+      <form action="/admin/edit-product" method="post" class="col-8 add-product" enctype="multipart/form-data">
+        <h4>Fill all the fields</h4>
+        <div class="add-product-row">
+          <div class="image-container">
+            <label for="image1" class="label-image">
+                <input type="hidden" name="image_1" value="<%= product.images[0]%>">
+              <input type="file" accept="image/*" name="image1" id="image1" onchange="previewImage(event)"/><span>Choose Image</span>
+              <img id="preview" alt="Preview Image" class="img-show" data-image1 src="/images/products/<%= product.images[0]%>">
+            </label>
+            <label for="image2" class="label-image">
+                <input type="hidden" name="image_2" value="<%= product.images[1]%>">
+              <input type="file" accept="image/*" name="image2" id="image2" onchange="previewImage(event)" /><span>Choose Image</span>
+              <img id="preview" alt="Preview Image" class="img-show" data-image2 src="/images/products/<%= product.images[1]%>">
+
+            </label>
+          </div>
+          <div class="input-div">
+            <div class="input-wrapper">
+              <label for="name">Product Name</label>
+              <input type="text" name="name" id="name" class="input-style" required onblur="removeWhiteSpace(this)" value="<%= product.name%>"/>
+            </div>
+            <div class="input-price-wrapper">
+              <div class="input-wrapper">
+                <label for="mrkdwn">Markdown Price</label>
+                <input type="number" name="md_price" id="mrkdwn" class="input-style" min="1" required value="<%= product.md_price%>"/>
+              </div>
+              <div class="input-wrapper">
+                <label for="actual-price">Price</label>
+                <input
+                  type="number"
+                  name="price"
+                  id="actual-price"
+                  class="input-style"
+                  required
+                  min="1"
+                  value="<%= product.price%>"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="add-product-row">
+          <div class="image-container">
+            <label for="image3" class="label-image">
+                <input type="hidden" name="image_3" value="<%= product.images[2]%>">
+              <input type="file" accept="image/*" name="image3" id="image3" onchange="previewImage(event)"/><span>Choose Image</span>
+              <img id="preview" alt="Preview Image" class="img-show" data-image3 src="/images/products/<%= product.images[2]%>">
+            </label>
+            <label for="image4" class="label-image">
+                <input type="hidden" name="image_4" value="<%= product.images[3]%>">
+              <input type="file" accept="image/*" name="image4" id="image4" onchange="previewImage(event)"/><span>Choose Image</span>
+              <img id="preview" alt="Preview Image" class="img-show" data-image4 src="/images/products/<%= product.images[3]%>">
+            </label>
+          </div>
+          <div class="input-div">
+            <div class="input-wrapper">
+              <label for="category">Choose A Category</label>
+              <select name="category" id="category" class="input-style">
+                <% if(categories.length>0){ %>
+                <option value="<%= product.category._id %>" selected hidden>
+                  <%= product.category.name %>
+                </option>
+
+                <% categories.forEach((item)=>{ %>
+
+                <option value="<%= item._id %>"><%= item.name %></option>
+                <% })}else{ %>
+                <option value="" disabled selected hidden>
+                  No categories found
+                </option>
+                <% } %>
+              </select>
+            </div>
+            <div class="input-price-wrapper">
+              
+            <div class="input-wrapper">
+              <label for="quantity">Quantity</label>
+              <input type="number" min="1" name="quantity" id="quantity" class="input-style" required value="<%= product.quantity%>"/>
+            </div>
+              <div class="input-wrapper">
+                <label for="brand">Brand</label>
+                <input
+                  type="text"
+                  name="brand"
+                  id="brand"
+                  class="input-style"
+                  required
+                  onblur="removeWhiteSpace(this)"
+                  value="<%= product.brand%>"
+
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="add-product-row">
+          <textarea name="description" id="" cols="100" rows="6"class="input-style" required onblur="removeWhiteSpace(this)"><%= product.description %></textarea>
+        </div>
+        <div class="add-product-row">
+            <input type="hidden" name="id" value="<%= product._id%>">
+          <button class="btn btn-primary">Add product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<%- include("../layouts/adminFooter") %>

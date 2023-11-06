@@ -1,5 +1,5 @@
-let myModal=null;
-
+let categoryModal=null;
+let productModal=null;
 async function customerBlock(item) {
   try {
     const rawData = await fetch(`/admin/block-customer/${item.id}`);
@@ -31,16 +31,26 @@ async function addCategory(item) {
           const tableBody = document.getElementById("table-category");
           const tr = document.createElement("tr");
           console.log(data.result, data.result.name);
-          tr.innerHTML = `<td>${data.result.name}</td>
-          <td><button class="btn btn-danger btn-list">Unlist</button></td>
-          <td><button class="btn btn-dark">Edit</button></td>
-          <td><button class="btn btn-danger">Delete</button></td>`;
+          tr.innerHTML =  `<td data-name="${data.result._id}">${data.result.name}</td>
+          <td class="justify-content-center d-flex">
+            <button
+              class="btn btn-list me-2 btn-danger %> btn-block"
+              data-id="${data.result._id}"
+              onclick="categoryList(this)"
+            >
+              Unlist
+            </button>
+            <button class="btn btn-dark" data-id="${data.result._id}" onclick="editCategory(this)">Edit</button>
+          </td>`;
+
+         
           tableBody.appendChild(tr);
           alert.innerText = "Category added";
           alert.style.visibility = "visible";
+          alert.style.backgroundColor = "#77dd77";
         } else {
-          alert.innerText =
-            "Oops something went wrong try again (nb:You cannot add duplicate categories)";
+          alert.innerText = data.message;
+          alert.style.backgroundColor = "#FAFA33";
           alert.style.visibility = "visible";
         }
         setTimeout(() => {
@@ -100,10 +110,10 @@ function removeWhiteSpace(item){
 }
 function editCategory(item){
     const element=document.getElementById('edit-category-modal');
-    myModal=new bootstrap.Modal(element);
+    categoryModal=new bootstrap.Modal(element);
     const catId=document.getElementById('cat-id');
     catId.value=item.dataset.id;
-    myModal.show()
+    categoryModal.show()
 }
 async function sendEditRequest(){
   try {
@@ -121,7 +131,44 @@ async function sendEditRequest(){
       if(data.status==='success'){
         const catName=document.querySelector(`[data-name="${id}"]`);
         catName.innerText=data.message;
-        myModal.hide()
+        categoryModal.hide()
+      }
+    }
+
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+function addStock(item){
+  const element=document.getElementById('product-stock-modal');
+  productModal=new bootstrap.Modal(element);
+  const productId=document.getElementById('product-id');
+  productId.value=item.dataset.id;
+  productModal.show()
+}
+
+async function sendStockRequest(){
+  try {
+    const id=document.getElementById('product-id').value;
+    const quantityInput=document.getElementById('product-quantity');
+    const quantity=quantityInput.value;
+    if(!Number(quantity)){
+      quantityInput.value='';
+      return false;
+    }
+    const rawData=await fetch("/admin/add-stock", {
+      method: "POST",
+      body: JSON.stringify({ id,quantity }),
+      headers: { "Content-Type": "application/json" },
+    });
+    
+    if(rawData.ok){
+      const data=await rawData.json();
+      if(data.status==='success'){
+        const quantityCount=document.querySelector(`[data-quantity="${id}"]`);
+        quantityCount.innerText=data.quantity;
+        quantityInput.value='';
+        productModal.hide()
       }
     }
 

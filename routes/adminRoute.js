@@ -30,6 +30,8 @@ admin_route.get('/products',adminController.seeProducts);
 admin_route.get('/add-product',adminController.showAddProduct);
 admin_route.post('/add-product',imageUpload,adminController.addProduct);
 admin_route.get('/edit-product/:id',adminController.showEditProduct);
+admin_route.post('/edit-product',imageUpload,adminController.editProduct);
+admin_route.post('/add-stock',adminController.addStock);
 admin_route.get('/list-product/:id',adminController.updateProducts);
 // product routes end
 
