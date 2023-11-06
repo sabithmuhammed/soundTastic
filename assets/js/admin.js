@@ -1,6 +1,8 @@
+let myModal=null;
+
 async function customerBlock(item) {
   try {
-    const rawData = await fetch(`/admin/customers/${item.id}`);
+    const rawData = await fetch(`/admin/block-customer/${item.id}`);
     if (rawData.ok) {
       const data = await rawData.json();
       item.classList.toggle("btn-danger");
@@ -54,7 +56,7 @@ async function addCategory(item) {
 }
 async function categoryList(item) {
   try {
-    const rawData = await fetch(`/admin/categories/${item.dataset.id}`);
+    const rawData = await fetch(`/admin/list-category/${item.dataset.id}`);
     if (rawData.ok) {
       const data = await rawData.json();
       item.classList.toggle("btn-danger");
@@ -68,7 +70,7 @@ async function categoryList(item) {
 
 async function productList(item) {
   try {
-    const rawData = await fetch(`/admin/products/${item.dataset.id}`);
+    const rawData = await fetch(`/admin/list-product/${item.dataset.id}`);
     if (rawData.ok) {
       const data = await rawData.json();
       item.classList.toggle("btn-danger");
@@ -98,7 +100,7 @@ function removeWhiteSpace(item){
 }
 function editCategory(item){
     const element=document.getElementById('edit-category-modal');
-    const myModal=new bootstrap.Modal(element);
+    myModal=new bootstrap.Modal(element);
     const catId=document.getElementById('cat-id');
     catId.value=item.dataset.id;
     myModal.show()
@@ -106,7 +108,7 @@ function editCategory(item){
 async function sendEditRequest(){
   try {
     const id=document.getElementById('cat-id').value;
-    const name=document.getElementById('cat-id').value;
+    const name=document.getElementById('cat-name').value;
 
     const rawData=await fetch("/admin/edit-category", {
       method: "POST",
@@ -117,7 +119,9 @@ async function sendEditRequest(){
     if(rawData.ok){
       const data=await rawData.json();
       if(data.status==='success'){
-
+        const catName=document.querySelector(`[data-name="${id}"]`);
+        catName.innerText=data.message;
+        myModal.hide()
       }
     }
 

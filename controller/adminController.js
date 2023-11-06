@@ -96,7 +96,23 @@ const loadDashboard = async (req, res) => {
 
 const seeCustomers = async (req, res) => {
   try {
-    const customers = await User.find();
+    let search = "";
+    if (req.query.search) {
+      search = req.query.search;
+    }
+    const customers = await User.find({
+      $or: [
+        {
+          name: { $regex: ".*" + search + ".*", $options: "i" },
+        },
+        {
+          email: { $regex: ".*" + search + ".*", $options: "i" },
+        },
+        {
+          phone: { $regex: ".*" + search + ".*" },
+        },
+      ],
+    });
     res.render("admin/customers", { customers });
   } catch (error) {
     console.log(error.message);
@@ -122,7 +138,13 @@ const updateCustomers = async (req, res) => {
 
 const seeCategories = async (req, res) => {
   try {
-    const categories = await Category.find();
+    let search = "";
+    if (req.query.search) {
+      search = req.query.search;
+    }
+    const categories = await Category.find({
+      name: { $regex: ".*" + search + ".*", $options: "i" },
+    });
     res.render("admin/categories", { categories });
   } catch (error) {
     console.log(error.message);
@@ -159,6 +181,23 @@ const updateCategories = async (req, res) => {
     console.log(error.message);
   }
 };
+const editCategory = async (req, res) => {
+  try {
+    const { id, name } = req.body;
+    const category = await Category.findByIdAndUpdate(
+      { _id: id },
+      { name },
+      { new: true }
+    );
+    if (category) {
+      res.json({ status: "success", message: category.name });
+    } else {
+      res.json({ status: "failed" });
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 // category controllers end
 
 // product controllers start
@@ -173,7 +212,7 @@ const seeProducts = async (req, res) => {
 };
 const showAddProduct = async (req, res) => {
   try {
-    const categories = await Category.find();
+    const categories = await Category.find({listed:1});
     if (categories) {
       res.render("admin/addProduct", { categories });
     }
@@ -224,7 +263,22 @@ const updateProducts = async (req, res) => {
     console.log(error.message);
   }
 };
+const showEditProduct=async (req,res)=>{
+  try {
+    const categories = await Category.find({listed:1});
 
+    const id=req.params.id;
+    const product=await Product.findById({_id:id}).populate('category').exec();
+    if(product){
+      console.log(product);
+    res.render('admin/editProduct',{product,categories});
+    }else{
+      res.redirect('/admin/products')
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 // product controllers end
 
 module.exports = {
@@ -242,4 +296,6 @@ module.exports = {
   showAddProduct,
   addProduct,
   updateProducts,
+  editCategory,
+  showEditProduct,
 };

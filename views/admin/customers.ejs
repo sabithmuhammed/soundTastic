@@ -5,9 +5,9 @@
 <%- include("../layouts/adminNavbar") %>
   <div class="container-fluid">
     <div class="row justify-content-center mb-3">
-        <div class="search-container d-flex p-0">
-            <input type="text" class="flex-grow-1 " placeholder="search..."><a href=""><button class="btn btn-primary h-100 rounded-start-0">Search</button></a>
-        </div>
+        <form class="search-container d-flex p-0" action="/admin/customers" method="get">
+            <input type="text" class="flex-grow-1 " placeholder="search..." name="search"><button class="btn btn-primary h-100 rounded-start-0">Search</button>
+        </form>
     </div>
     <h2 class="my-3">All customers</h2>
     <table class="table">
@@ -21,6 +21,7 @@
         </thead>
         
         <tbody>
+           <% if(customers.length>0){ %>
             <% customers.forEach((item,index)=>{ %> 
           <tr>
             <td><%= item.name%></td>
@@ -28,7 +29,12 @@
             <td><%= item.phone%></td>
             <td><button class="btn btn-block <%= item.blocked?'btn-success':'btn-danger' %> btn-block" id="<%= item._id %>" onclick="customerBlock(this)"><%= item.blocked?'Unblock':'Block' %></button></td>
           </tr>
-        <% })%>
+        <% })}else{ %>
+          <tr>
+            <td></td>
+            <td colspan="3" class="">No customers found</td>
+          </tr>
+          <%}%>
         </tbody>
       </table>
   </div>

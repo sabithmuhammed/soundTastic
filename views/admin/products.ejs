@@ -50,13 +50,12 @@
               <h4 class="text-danger">&#8377; <%= item.price %></h4>
             </div>
           </td>
-            <td class="product-actions d-flex flex-column">
+            <td class="product-actions d-flex flex-column justify-content-evenly">
               <button 
               class="btn <%= item.listed?'btn-danger':'btn-success' %>"
               data-id="<%= item._id %>"
               onclick="productList(this)"><%= item.listed?'Unlist':'List' %></button>
-              <button class="btn btn-dark">Edit</button>
-              <button class="btn btn-danger">Delete</button>
+              <a href="/admin/edit-product/<%= item._id %>"><button class="btn btn-dark">Edit</button></a>
               
             </td>
           </tr>

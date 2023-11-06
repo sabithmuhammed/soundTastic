@@ -6,14 +6,12 @@
   <div class="container-fluid">
     <div class="row justify-content-center mb-3">
       <div class="col-md-7">
-        <div class="search-container d-flex p-0">
-          <input type="text" class="flex-grow-1" placeholder="search..." /><a
-            href=""
-            ><button class="btn btn-primary h-100 rounded-start-0">
+        <form class="search-container d-flex p-0" action="/admin/categories" method="get">
+          <input type="text" class="flex-grow-1" placeholder="search..." name="search"/>
+            <button class="btn btn-primary h-100 rounded-start-0">
               Search
-            </button></a
-          >
-        </div>
+            </button>
+        </form>
       </div>
     </div>
     <h2 class="my-3">Categories</h2>
@@ -29,7 +27,7 @@
           <tbody id="table-category">
             <% if(locals.categories.length>0){ categories.forEach(item=>{ %>
             <tr>
-              <td><%= item.name %></td>
+              <td data-name="<%= item.id %>"><%= item.name %></td>
               <td class="justify-content-center d-flex">
                 <button
                   class="btn btn-list me-2 <%= item.listed?'btn-danger':'btn-success' %> btn-block"
