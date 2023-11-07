@@ -1,43 +1,107 @@
 <%- include("../layouts/adminLoginHeader") %>
-  
-  <!--  Body Wrapper -->
-  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
-    data-sidebar-position="fixed" data-header-position="fixed">
-    <div
-      class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
-      <div class="d-flex align-items-center justify-content-center w-100">
-        <div class="row justify-content-center w-100">
-          <div class="col-md-8 col-lg-6 col-xxl-3">
-            <div class="card mb-0">
-              <div class="card-body">
-                <a href="./index.html" class="text-nowrap logo-img text-center d-block py-3 w-100">
-                  <img src="/images/logos/logo-white.png" width="180" alt="">
-                </a>
-                <div class="error">
-                  <p class="text-center">hfdsjkhfjalhjl</p>
-                </div>
-                
-                <form>
-                  <div class="mb-3">
-                    <label for="exampleInputEmail1" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                  </div>
-                  <div class="mb-4">
-                    <label for="exampleInputPassword1" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1">
-                  </div>
-                  <div class="d-flex align-items-center justify-content-between mb-4">
-                  
-                    <a class="text-primary fw-bold" href="./index.html">Forgot Password ?</a>
-                  </div>
-                  <a href="./index.html" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Sign In</a>
-                 
-                </form>
+
+<!--  Body Wrapper -->
+<div
+  class="page-wrapper"
+  id="main-wrapper"
+  data-layout="vertical"
+  data-navbarbg="skin6"
+  data-sidebartype="full"
+  data-sidebar-position="fixed"
+  data-header-position="fixed"
+>
+  <div
+    class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center"
+  >
+    <div class="d-flex align-items-center justify-content-center w-100">
+      <div class="row justify-content-center w-100">
+        <div class="col-md-8 col-lg-6 col-xxl-3">
+          <div class="card mb-0">
+            <div class="card-body">
+              <a
+                href="./index.html"
+                class="text-nowrap logo-img text-center d-block py-3 w-100"
+              >
+                <img src="/images/logos/logo-white.png" width="180" alt="" />
+              </a>
+              <div class="error">
+                <p class="text-center text-danger m-0" id="error"></p>
               </div>
+
+              <form id="form">
+                <div class="mb-3">
+                  <label for="exampleInputEmail1" class="form-label"
+                    >Email</label
+                  >
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    aria-describedby="emailHelp"
+                    name="email"
+                  />
+                </div>
+                <div class="mb-4">
+                  <label for="exampleInputPassword1" class="form-label"
+                    >Password</label
+                  >
+                  <input type="password" class="form-control" id="password" name="password"/>
+                </div>
+                <div
+                  class="d-flex align-items-center justify-content-between mb-4"
+                >
+                  <a class="text-primary fw-bold" href="./index.html"
+                    >Forgot Password ?</a
+                  >
+                </div>
+                <button
+                  type="submit"
+                  href="./index.html"
+                  class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2"
+                >
+                  Sign In
+                </button>
+              </form>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
+<script>
+  const formEl = document.querySelector("#form");
+  formEl.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const errorEl = document.getElementById("error");
+    const userName = document.getElementById("email");
+    const userPassword = document.getElementById("password");
+    userName.value = userName.value.trim().toLowerCase();
+    userPassword.value = userPassword.value.trim();
+    if (userName.value && userPassword.value) {
+      const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (userName.value.match(validEmail)) {
+        const formData = new FormData(formEl);
+        const formObj = Object.fromEntries(formData);
+        const rawData = await fetch("/admin/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formObj),
+        });
+        const data = await rawData.json();
+        if (data.status === "success") {
+          console.log(data)
+          window.location.href = "/admin/dashboard";
+        } else {
+          errorEl.innerText = data.message;
+        }
+      } else {
+        errorEl.innerText = "Invalid email id";
+        userName.focus();
+      }
+    } else {
+      errorEl.innerText = "Credentials cannot be empty";
+    }
+  });
+</script>
 <%- include("../layouts/adminLoginFooter") %>

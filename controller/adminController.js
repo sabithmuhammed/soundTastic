@@ -4,23 +4,13 @@ const Category = require("../model/categoryModel");
 const Product = require("../model/productModel");
 const bcrypt = require("bcrypt");
 const securePassword = require("../services/securePassword");
-const adminSignup = (req, res) => {
-  try {
-    res.render("admin/signup");
-  } catch (error) {
-    console.log(error.message);
-  }
-};
 
 const createAdmin = async (req, res) => {
   try {
     const { password, email, name } = req.body;
     const adminCheck = await Admin.findOne({ email });
     if (adminCheck) {
-      return res.render("admin/signup", {
-        message: "Admin already exist",
-        color: "red",
-      });
+      return res.json({ status: "failed", message: "Account already exist" });
     }
     const hashPassword = await securePassword(password);
     const admin = new Admin({
@@ -31,14 +21,11 @@ const createAdmin = async (req, res) => {
     });
     const adminData = await admin.save();
     if (adminData) {
-      res.render("admin/signup", {
-        message: "Admin created successfully, Try login",
-        color: "green",
-      });
+      res.json({ status: "success", message: "Account created successfully" });
     } else {
-      res.render("admin/signup", {
+      res.json({
+        status: "failed",
         message: "Something went wrong, Try login",
-        color: "red",
       });
     }
   } catch (error) {
@@ -55,35 +42,38 @@ const loginLoad = (req, res) => {
 const verifyLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log(email,password);
     const adminData = await Admin.findOne({ email });
+    console.log(adminData);
     if (adminData) {
       const passwordMatch = await bcrypt.compare(password, adminData.password);
       if (passwordMatch) {
-        if (adminData.isVerified) {
-          req.session.admin = adminData.name;
-          res.redirect("/admin/dashboard");
-        } else {
-          res.render("admin/login", {
-            message: "Verification is pending",
-            color: "green",
-          });
-        }
+        req.session.admin = adminData.name;
+        res.json({ status: "success" });
       } else {
-        res.render("admin/login", {
-          message: "Username or Password is incorrect!",
-          color: "red",
-        });
+        res.json({ status: "failed", message: "Invalid username or password" });
       }
     } else {
-      res.render("admin/login", {
-        message: "Username or Password is incorrect!",
-        color: "red",
-      });
+      res.json({ status: "failed", message: "Invalid username or password" });
     }
   } catch (error) {
     console.log(error.message);
   }
 };
+const adminLogout=async (req,res)=>{
+  try {
+    req.session.destroy((err) => {
+      if (err) {
+        res.redirect("/admin/dashboard");
+      } else {
+        const message = "Logged out successfully";
+        res.redirect("/admin");
+      }
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 
 const loadDashboard = async (req, res) => {
   try {
@@ -163,7 +153,10 @@ const addCategory = async (req, res) => {
         res.json({ status: "success", result });
       }
     } else {
-      res.json({ status: "failed",message:"Cannot add duplicate categories" });
+      res.json({
+        status: "failed",
+        message: "Cannot add duplicate categories",
+      });
     }
   } catch (error) {
     console.log(error.message);
@@ -188,6 +181,7 @@ const updateCategories = async (req, res) => {
 const editCategory = async (req, res) => {
   try {
     const { id, name } = req.body;
+    name = name[0].toUpperCase() + name.slice(1).toLowerCase();
     const category = await Category.findByIdAndUpdate(
       { _id: id },
       { name },
@@ -320,24 +314,26 @@ const editProduct = async (req, res) => {
     console.log(error.message);
   }
 };
-const addStock=async (req,res)=>{
+const addStock = async (req, res) => {
   try {
-    const {id,quantity}=req.body;
-    const product=await Product.findByIdAndUpdate({_id:id},{$inc:{quantity}},{new:true});
-    if(product){
-      res.json({status:'success',quantity:product.quantity});
+    const { id, quantity } = req.body;
+    const product = await Product.findByIdAndUpdate(
+      { _id: id },
+      { $inc: { quantity } },
+      { new: true }
+    );
+    if (product) {
+      res.json({ status: "success", quantity: product.quantity });
     }
-  } catch (error) {
-    
-  }
-}
+  } catch (error) {}
+};
 // product controllers end
 
 module.exports = {
   createAdmin,
-  adminSignup,
   loginLoad,
   verifyLogin,
+  adminLogout,
   loadDashboard,
   seeCustomers,
   seeProducts,
@@ -352,5 +348,4 @@ module.exports = {
   showEditProduct,
   editProduct,
   addStock,
-
 };

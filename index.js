@@ -38,6 +38,9 @@ app.use("/libs", express.static(path.resolve(__dirname, "assets/libs")));
 app.use("/", userRoute);
 app.use("/admin", adminRoute);
 
+app.get('*', function(req, res){
+  res.status(404).send('what???');
+});
 app.listen(PORT, () =>
   console.log(`Server is running on http://localhost:${PORT}`)
 );

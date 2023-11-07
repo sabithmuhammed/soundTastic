@@ -2,7 +2,7 @@ let categoryModal=null;
 let productModal=null;
 async function customerBlock(item) {
   try {
-    const rawData = await fetch(`/admin/block-customer/${item.id}`);
+    const rawData = await fetch(`/admin/block-customer/${item.id}`,{method:"POST"});
     if (rawData.ok) {
       const data = await rawData.json();
       item.classList.toggle("btn-danger");
@@ -66,7 +66,7 @@ async function addCategory(item) {
 }
 async function categoryList(item) {
   try {
-    const rawData = await fetch(`/admin/list-category/${item.dataset.id}`);
+    const rawData = await fetch(`/admin/list-category/${item.dataset.id}`,{method:"POST"});
     if (rawData.ok) {
       const data = await rawData.json();
       item.classList.toggle("btn-danger");
@@ -80,7 +80,7 @@ async function categoryList(item) {
 
 async function productList(item) {
   try {
-    const rawData = await fetch(`/admin/list-product/${item.dataset.id}`);
+    const rawData = await fetch(`/admin/list-product/${item.dataset.id}`,{method:"POST"});
     if (rawData.ok) {
       const data = await rawData.json();
       item.classList.toggle("btn-danger");

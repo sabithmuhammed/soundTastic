@@ -157,3 +157,8 @@ tr{
 td{
     border: none;
 }
+.error{
+    width: 100%;
+    height: 40px;
+    box-sizing: border-box;
+}
