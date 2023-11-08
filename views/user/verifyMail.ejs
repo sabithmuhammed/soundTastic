@@ -5,7 +5,7 @@
       <div
         class="col-12 col-lg-5 d-flex justify-content-center align-items-center"
       >
-        <form action="/verify-mail" method="post"
+        <div 
           class="w-100 py-4 otp-section text-center d-flex flex-column justify-content-evenly align-items-center"
         >
           <div class="verify-icon"><i class="fa-solid fa-envelope"></i></div>
@@ -14,32 +14,29 @@
             We emailed you the six digit code to <strong><%= email %></strong>.<br />Enter
             the code below to confirm your email address
           </p>
-          <a href="/verify-mail/<%= userId %>"
+          <button
             class="button btn btn-primary btn-contdown"
             id="timer"
             disabled
           >
             1:00
-          </a>
+          </button>
           <div class="otp-container">
-            <div class="otp-error text-warning"><% if(locals.message){ %>
-              <i class="fa-solid fa-triangle-exclamation"></i> 
-              <%= message %>
-              <%}%>
+            <div class="otp-error text-warning" id="error">
+
             </div>
-            <input type="number" name="o1" id="" class="otp" min="0" max="9" />
-            <input type="number" name="o2" id="" class="otp" min="0" max="9" />
-            <input type="number" name="o3" id="" class="otp" min="0" max="9" />
-            <input type="number" name="o4" id="" class="otp" min="0" max="9" />
-            <input type="number" name="o5" id="" class="otp" min="0" max="9" />
-            <input type="number" name="o6" id="" class="otp" min="0" max="9" />
-            <input type="hidden" name="id" value="<%= userId%>">
-            <input type="hidden" name="email" value="<%= email%>">
+            <input type="number" id="" class="otp" min="0" max="9">
+            <input type="number" id="" class="otp" min="0" max="9">
+            <input type="number" id="" class="otp" min="0" max="9"/>
+            <input type="number" id="" class="otp" min="0" max="9"/>
+            <input type="number" id="" class="otp" min="0" max="9" />
+            <input type="number" id="" class="otp" min="0" max="9" />
           </div>
-          <button class="btn btn-blue btn-primary">Verify</button>
-        </form>
+          <button class="btn btn-blue btn-primary" id="verify">Verify</button>
+        </div>
       </div>
     </div>
   </div>
   <script src="/js/verifyOtp.js"></script>
+
 <%- include("../layouts/userFooter") %>

@@ -1,49 +1,88 @@
-const otp=document.querySelectorAll('.otp');
+const otp = document.querySelectorAll(".otp");
+const countdownEl = document.getElementById("timer");
+const error = document.getElementById("error");
+const verifyBtn=document.getElementById('verify');
 
-otp[0].focus()
+otp[0].focus();
 
-otp.forEach((item,index)=>{
-    item.addEventListener('keydown',(e)=>{
-        if(e.key>=0 && e.key<=9){
-            otp[index].value=''
-            if(index<5){
-                setTimeout(()=>{
-                    otp[index+1].focus();
-                },0)
-            }else{
-                setTimeout(()=>{
-                    otp[index].blur();
-                },0)
-            }
-            
-            
-        }
-        if(e.key==="Backspace" && index!=0){
-            setTimeout(()=>{
-                otp[index-1].focus();
-            },0)
-        }
-
-    })
-   
-})
-
-let startingMinutes =1;
-let time=startingMinutes*60;
-function updateCountdown() {
-    const minutes = Math.floor(time /60);
-    let seconds=time%60; 
-    seconds =seconds <10 ?'0'+seconds:seconds;
-    time--;
-    if(time>=0){
-        
-    countdownEl.innerHTML=`${minutes}:${seconds}`;
-    }else{
-        countdownEl.innerHTML='Resend'
-        clearInterval(updateCountdown);
-        countdownEl.style.pointerEvents='all';
+otp.forEach((item, index) => {
+  item.addEventListener("keydown", (e) => {
+    if (e.key >= 0 && e.key <= 9) {
+      otp[index].value = "";
+      if (index < 5) {
+        setTimeout(() => {
+          otp[index + 1].focus();
+        }, 0);
+      } else {
+        setTimeout(() => {
+          otp[index].blur();
+        }, 0);
+      }
     }
-}
-const countdownEl=document.getElementById('timer');
+    if (e.key === "Backspace" && index != 0) {
+      setTimeout(() => {
+        otp[index - 1].focus();
+      }, 0);
+    }
+  });
+});
 
-setInterval(updateCountdown,1000);
+let startingMinutes = 0.2;
+let time = startingMinutes * 60;
+function updateCountdown() {
+  const minutes = Math.floor(time / 60);
+  let seconds = time % 60;
+  seconds = seconds < 10 ? "0" + seconds : seconds;
+  time--;
+  if (time >= 0) {
+    countdownEl.innerHTML = `${minutes}:${seconds}`;
+  } else {
+    countdownEl.innerHTML = "Resend";
+    clearInterval(timeerInterval);
+    countdownEl.disabled = false;
+  }
+}
+
+let timeerInterval=setInterval(updateCountdown, 1000);
+countdownEl.addEventListener("click", async () => {
+  countdownEl.disabled = true;
+  const rawData = await fetch("/resend-otp", { method: "POST" });
+  if (rawData.ok) {
+    const data = await rawData.json();
+    if (data.status === "success") {
+      console.log(data);
+      startingMinutes = 1;
+      time = startingMinutes * 60;
+      timeerInterval=setInterval(updateCountdown, 1000);
+    } else {
+      error.innerText = data.message;
+      countdownEl.disabled = false;
+    }
+  }
+});
+
+verifyBtn.addEventListener('click',async ()=>{
+    let userOtp='';
+    otp.forEach((item)=>{
+        userOtp+=item.value;
+    })
+    if(userOtp.length<6){
+        error.innerText="OTP must contains 6 digits"
+        return false;
+    }
+    const rawData=await fetch('/verify-otp',{
+        method:"POST",
+        headers:{
+            'Content-Type':'application/json'
+        },
+        body:JSON.stringify({otp:userOtp})
+    })
+    if(rawData.ok){
+        const data=await rawData.json()
+        if(data.status==='success'){
+            window.location.href = data.link;
+        }else{
+            error.innerText=data.message
+        }
+    }
+})

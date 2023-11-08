@@ -11,7 +11,9 @@ body{
     background-color: rgb(255, 255, 255);
 }
 /* utils */
-
+input[type="number"]::-webkit-inner-spin-button,.otp::-webkit-outer-spin-button{
+    display: none;
+}
 .btn-red{
     background-color: #D10024;
     color: #fff;
@@ -146,7 +148,6 @@ body{
 }
 .btn-contdown{
     width: 150px ;
-    pointer-events: none;
     cursor: pointer;
 }
 .forgot-email{

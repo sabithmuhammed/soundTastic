@@ -1,51 +1,124 @@
 <%- include("../layouts/userHeader") %>
 
 <div class="container-fluid h-100">
-    <div class="row h-100 justify-content-center">
-      <div
-        class="col-12 col-lg-5 d-flex justify-content-center align-items-center"
-      >
-        <form action="/signup" method="post" class="login  signup py-3">
-          <h3 class="red">Sign up</h3>
+  <div class="row h-100 justify-content-center">
+    <div
+      class="col-12 col-lg-5 d-flex justify-content-center align-items-center"
+    >
+      <form action="/signup" method="post" class="login signup py-3" id="form">
+        <h3 class="red">Sign up</h3>
 
-          <div class="login-container px-4">
-            <div class="login-input mb-3">
-              <div class="error-wrap">
-                <div class="error">error</div>
-              </div>
-              
-            </div>
-            <div class="login-input mb-3">
-              <label for="name">Name</label>
-              <input type="text" name="name" id="name" />
-            </div>
-            <div class="login-input mb-3">
-              <label for="email">Email</label>
-              <input type="email" name="email" id="email" />
-            </div><div class="login-input mb-3">
-              <label for="phone">Phone</label>
-              <input type="number" name="phone" id="phone" />
-            </div>
-            <div class="login-input mb-3">
-              <label for="password">Password</label>
-              <input type="password" name="password" id="password" />
-              <div class="eye-icon" id="show-password"><i class="fa-solid fa-eye-slash"></i></div>
-            </div>
-            <div class="login-input mb-3">
-              <label for="cnfrm-password">Confirm password</label>
-              <input type="password" name="cnfpassword" id="cnfrm-password" />
-              <div class="eye-icon" id="show-cnfrm-password"><i class="fa-solid fa-eye-slash"></i></div>
+        <div class="login-container px-4">
+          <div class="login-input mb-3">
+            <div class="error-wrap">
+              <div class="error" id="error"></div>
             </div>
           </div>
+          <div class="login-input mb-3">
+            <label for="name">Name</label>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              required
+              onblur="removeWhiteSpace(this)"
+            />
+          </div>
+          <div class="login-input mb-3">
+            <label for="email">Email</label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              required
+              onblur="removeWhiteSpace(this)"
+            />
+          </div>
+          <div class="login-input mb-3">
+            <label for="phone">Phone</label>
+            <input type="number" name="phone" id="phone" required />
+          </div>
+          <div class="login-input mb-3">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              required
+              onblur="removeWhiteSpace(this)"
+            />
+            <div class="eye-icon" id="show-password">
+              <i class="fa-solid fa-eye-slash"></i>
+            </div>
+          </div>
+          <div class="login-input mb-3">
+            <label for="cnfrm-password">Confirm password</label>
+            <input
+              type="password"
+              name="cnfpassword"
+              id="cnfrm-password"
+              required
+              onblur="removeWhiteSpace(this)"
+            />
+            <div class="eye-icon" id="show-cnfrm-password">
+              <i class="fa-solid fa-eye-slash"></i>
+            </div>
+          </div>
+        </div>
 
-          <button class="btn btn-red">Sign up</button>
-          <p class="text-center red">
-            Already have an account? <a href="/login">Login</a>
-          </p>
-        </form>
-      </div>
+        <button class="btn btn-red">Sign up</button>
+        <p class="text-center red">
+          Already have an account? <a href="/login">Login</a>
+        </p>
+      </form>
     </div>
   </div>
+</div>
 
 <script src="/js/login.js"></script>
+<script>
+  const form = document.getElementById("form");
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const phone = document.getElementById("phone").value;
+    const password = document.getElementById("password").value;
+    const confPassword = document.getElementById("cnfrm-password").value;
+    const error = document.getElementById("error");
+    if (!/^[a-z ,.'-]+$/i.test(name)) {
+      return (error.innerText = "Invalid name");
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return (error.innerText = "Invalid email address");
+    }
+    if (!/^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$/.test(phone)) {
+      return (error.innerText = "Invalid phone number");
+    }
+    if (!(password === confPassword)) {
+      return (error.innerText = "Passwords must match");
+    }
+    const rawData =await fetch("/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        phone,
+        password,
+      }),
+    });
+    if (rawData.ok) {
+      const data = await rawData.json();
+      if (data.status === "success") {
+        window.location.href = "/verify-mail";
+      } else {
+        error.innerText = data.message;
+      }
+    }
+  });
+</script>
+
 <%- include("../layouts/userFooter") %>

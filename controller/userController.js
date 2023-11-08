@@ -2,7 +2,7 @@ const User = require("../model/userModel");
 const bcrypt = require("bcrypt");
 const sendMail = require("../services/sendMail");
 const UserOTP = require("../model/userOTPVerification");
-const securePassword = require("../services/securePassword")
+const securePassword = require("../services/securePassword");
 
 const loadRegister = async (req, res) => {
   try {
@@ -17,9 +17,9 @@ const insertUser = async (req, res) => {
     const { password, email, name, phone } = req.body;
     const userCheck = await User.findOne({ email });
     if (userCheck) {
-      return res.render("user/signup", {
+      return res.json({
+        status: "failed",
         message: "User already exist, try login instead",
-        color: "red",
       });
     }
     const hashPassword = await securePassword(req.body.password);
@@ -30,49 +30,65 @@ const insertUser = async (req, res) => {
       password: hashPassword,
     });
     const userData = await user.save();
-
     if (userData) {
-      const { name, _id, email } = userData;
-      const otp = `${Math.floor(100000 + Math.random() * 900000)}`;
-      const OTPsave = new UserOTP({
-        userId: _id,
-        otp,
-      });
-      const userOTP = await OTPsave.save();
-      if (userOTP) {
-        await sendMail.sendVerifyMail(name, email, otp);
-        req.session.user = name;
-        req.session.userId = _id;
-        req.session.userEmail = email;
-        res.render("user/verifyMail", { email, userId: _id });
-      }
+      req.session.user = name;
+      req.session.userId = userData._id;
+      res.json({ status: "success" });
     } else {
-      res.render("user/signup", { message: "Something went wrong. Try again" });
+      res.json({
+        status: "failed",
+        message: "Something went wrong! Please try again",
+      });
     }
   } catch (error) {
     console.log(error.message);
   }
 };
+const showVerify = async (req, res) => {
+  const userId = req.session.userId ?? req.session.tempUserId
+  const userData = await User.findById({ _id: userId });
+  if (userData) {
+    const otp = `${Math.floor(100000 + Math.random() * 900000)}`;
+    const hashOtp = await securePassword(otp);
+    const userOtp = new UserOTP({
+      userId,
+      otp: hashOtp,
+      email: userData.email,
+    });
+    const otpSave = await userOtp.save();
+    if (otpSave) {
+      console.log(userData);
+      await sendMail.sendVerifyMail(userData.name, userData.email, otp);
+      return res.render("user/verifyMail", { email: userData.email });
+    }
+  }
+  res.redirect("/login");
+};
 
 const checkOTP = async (req, res) => {
   try {
-    const { o1, o2, o3, o4, o5, o6, id, email } = req.body;
-    const otp = o1 + o2 + o3 + o4 + o5 + o6;
-    const userOtp = await UserOTP.findOne({ userId: id });
+    const { otp } = req.body;
+    const userId = req.session.userId
+    console.log(otp);
+    const userOtp = await UserOTP.findOne({ userId: userId });
     if (userOtp) {
-      if (otp === userOtp.otp) {
-        await UserOTP.findByIdAndDelete({ userId: id });
-        const UseData = await User.findByIdAndUpdate(
-          { _id: id },
+      const otpMatch = await bcrypt.compare(otp, userOtp.otp);
+      if (otpMatch) {
+        await UserOTP.findByIdAndDelete({ _id: userOtp._id });
+        const userData = await User.findByIdAndUpdate(
+          { _id: userId },
           { verified: true }
         );
-        res.redirect("user/home");
+        if (userData) {
+          res.json({ status: "success",link:'/'});
+        } else {
+          res.json({
+            status: "failed",
+            message: "Something went wrong! Try again",
+          });
+        }
       } else {
-        res.render("user/verifyMail", {
-          message: "invalid OTP",
-          userId: id,
-          email,
-        });
+        res.json({ status: "failed", message: "OTP doesn't match" });
       }
     }
   } catch (error) {
@@ -82,15 +98,20 @@ const checkOTP = async (req, res) => {
 
 const resendOTP = async (req, res) => {
   try {
-    const id = req.params.id;
+    const userId = req.session.userId ?? req.session.tempUserId;
     const name = req.session.user;
-    const email = req.session.userEmail;
-    console.log(id);
     const otp = `${Math.floor(100000 + Math.random() * 900000)}`;
-    const newOtp = await UserOTP.findOneAndUpdate({ userId: id }, { otp });
+    const hashOtp = await securePassword(otp);
+    const newOtp = await UserOTP.findOneAndUpdate({ userId }, { otp: hashOtp });
     if (newOtp) {
+      const email = newOtp.email;
       await sendMail.sendVerifyMail(name, email, otp);
-      res.render("user/verifyMail", { email, userId: id });
+      res.json({ status: "success" });
+    } else {
+      res.json({
+        status: "failed",
+        message: "Something went wrong! Try again",
+      });
     }
   } catch (error) {
     console.log(error.message);
@@ -115,14 +136,17 @@ const verifyLogin = async (req, res) => {
       const passwordMatch = await bcrypt.compare(password, userData.password);
       if (passwordMatch) {
         req.session.user = userData.name;
-        res.send("home");
+        req.session.userId = userData._id;
+        res.json({ status: "success" });
       } else {
-        res.render("user/login", {
+        res.json({
+          status: "failed",
           message: "Username or Password is incorrect!",
         });
       }
     } else {
-      res.render("user/login", {
+      res.json({
+        status: "failed",
         message: "Username or Password is incorrect!",
       });
     }
@@ -142,7 +166,14 @@ const forgetPassword = async (req, res) => {
 const forgetVerify = async (req, res) => {
   try {
     const email = req.body.email;
-    console.log(email);
+    const userData = await User.findOne({email});
+    if(userData){
+      req.session.tempUserId=userData._id;
+      res.json({status:'success'});
+    }else{
+      res.json({status:'failed',message:'No account found with this email-id!'})
+    }
+    
   } catch (error) {
     console.log(error.message);
   }
@@ -162,10 +193,11 @@ module.exports = {
   checkOTP,
   resendOTP,
   loginLoad,
-    verifyLogin,
+  verifyLogin,
   forgetPassword,
   forgetVerify,
   changePassword,
+  showVerify,
   //   loadHome,
   //   userLogout,
 };

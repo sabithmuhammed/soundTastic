@@ -1,40 +1,79 @@
 <%- include("../layouts/userHeader") %>
 
 <div class="container-fluid h-100">
-    <div class="row h-100 justify-content-center">
-      <div
-        class="col-12 col-lg-5 d-flex justify-content-center align-items-center"
-      >
-        <form class="login py-3" action="/login" method="">
-          <h3 class="red">Login</h3>
+  <div class="row h-100 justify-content-center">
+    <div
+      class="col-12 col-lg-5 d-flex justify-content-center align-items-center"
+    >
+      <form class="login py-3" id="form">
+        <h3 class="red">Login</h3>
 
-          <div class="login-container px-4">
-            <div class="login-input mb-4">
-              <div class="error-wrap">
-                <% if(locals.message){%>
-                  <div class="error"><%= message%></div>
-                  <%}%>
-              </div>
-             
-            </div>
-            <div class="login-input mb-4">
-              <label for="email">Email</label>
-              <input type="email" name="email" id="email" />
-            </div>
-            <div class="login-input">
-              <label for="password">Password</label>
-              <input type="password" name="password" id="password" />
-              <div class="eye-icon" id="show-password"><i class="fa-solid fa-eye-slash"></i></div>
+        <div class="login-container px-4">
+          <div class="login-input mb-4">
+            <div class="error-wrap">
+              <div class="error" id="error"></div>
             </div>
           </div>
-          <p><a href="/forget-password">Forgot password?</a></p>
-          <button class="btn btn-red">Login</button>
-          <p class="text-center red">
-            Don't have an account yet? <a href="/signup">Sign&nbsp;up</a>
-          </p>
-        </form>
-      </div>
+          <div class="login-input mb-4">
+            <label for="email">Email</label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              required
+              onblur="removeWhiteSpace(this)"
+            />
+          </div>
+          <div class="login-input">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              required
+              onblur="removeWhiteSpace(this)"
+            />
+            <div class="eye-icon" id="show-password">
+              <i class="fa-solid fa-eye-slash"></i>
+            </div>
+          </div>
+        </div>
+        <p><a href="/forget-password">Forgot password?</a></p>
+        <button class="btn btn-red">Login</button>
+        <p class="text-center red">
+          Don't have an account yet? <a href="/signup">Sign&nbsp;up</a>
+        </p>
+      </form>
     </div>
   </div>
-  <script src="/js/login.js"></script>
+</div>
+<script src="/js/login.js"></script>
+<script src="/js/user.js"></script>
+<script>
+  const form = document.getElementById("form");
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const error = document.getElementById("error");
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return (error.innerText = "Invalid email address");
+    }
+    const rawData=await fetch('/login',{
+      method:"POST",
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify({email,password})
+    })
+    if(rawData.ok){
+      const data=await rawData.json();
+      if(data.status==="success"){
+        window.location.href = "/";
+      }else{
+        error.innerText=data.message;
+      }
+    }
+  });
+</script>
 <%- include("../layouts/userFooter") %>

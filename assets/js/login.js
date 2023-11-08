@@ -12,7 +12,7 @@ showPassword.addEventListener("click", () => {
     showPassword.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
   }
 });
-cnfrmPassword.addEventListener("click", () => {
+cnfrmPassword?.addEventListener("click", () => {
   const passwordField = document.getElementById("cnfrm-password");
 
   if (passwordField.type === "password") {
@@ -23,3 +23,5 @@ cnfrmPassword.addEventListener("click", () => {
     cnfrmPassword.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
   }
 });
+
+

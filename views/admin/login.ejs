@@ -90,7 +90,6 @@
         });
         const data = await rawData.json();
         if (data.status === "success") {
-          console.log(data)
           window.location.href = "/admin/dashboard";
         } else {
           errorEl.innerText = data.message;
