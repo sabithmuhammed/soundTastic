@@ -1,0 +1,79 @@
+<%- include("../layouts/userHeader") %> <%- include("../layouts/userNavbar") %>
+
+<!-- SECTION -->
+<div class="section mb-5">
+  <!-- container -->
+  <div class="container">
+    <!-- row -->
+    <div class="row">
+      <!-- section title -->
+      <div class="col-md-12">
+        <div class="section-title">
+          <h3 class="title">All products</h3>
+        </div>
+      </div>
+      <!-- /section title -->
+    </div>
+    <!-- /row -->
+
+    <!-- /container -->
+  </div>
+
+  <!-- /SECTION -->
+
+  <!-- product -->
+
+  <!-- SECTION -->
+  <div class="section">
+    <!-- container -->
+    <div class="container">
+      <!-- row -->
+      <div class="row">
+        <!-- /shop -->
+        <% products.forEach((item)=>{ %>
+        <div class="col-md-3 col-xs-6">
+          <div class="product">
+            <div class="product-img">
+              <img src="/images/products/<%= item.images[0] %>" alt="" />
+            </div>
+            <div class="product-body">
+              <p><%= item.category.name %></p>
+              <h5><%= item.name %></h5>
+              <div class="price">
+                <span class="original-price">&#8377;<%= item.price %></span>
+                <span class="mrk-down"
+                  ><strike>&#8377;<%= item.md_price %></strike></span
+                >
+              </div>
+              <div class="add-to-cart-div">
+                <div class="circle"><i class="fa-regular fa-heart"></i></div>
+                <div class="circle">
+                  <i class="fa-solid fa-cart-shopping"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <% }) %>
+
+        <!-- /row -->
+      </div>
+      <!-- /container -->
+    </div>
+    <!-- /SECTION -->
+
+    <!-- product-end -->
+    <!-- <div class="section">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 show-more">
+        <button class="primary-btn mx-auto ">SHOW MORE</button>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+    <%- include("../layouts/userFooter") %>
+  </div>
+</div>

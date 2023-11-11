@@ -1,0 +1,81 @@
+.banner{
+    height: 390px;
+}
+.banner >img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+.shop-img {
+    height: 200px;
+}
+.shop-img >img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: right;
+}
+.product{
+    height: 450px;
+    background-color: rgb(255, 255, 255);
+}
+.product-img{
+    width: 100%;
+    height: 250px;
+    margin-bottom: 5px;
+    padding: 10px;
+}
+.product-img >img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.original-price{
+    font-size: large;
+    font-weight: 600;
+    color: #D10024;
+    margin-right: 5px;
+}
+.mrk-down{
+    font-weight: 500;
+
+}
+.add-to-cart-div{
+    margin-top: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+.circle{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid rgb(8, 0, 255)(145, 71, 71) ;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all ease-in-out .3s;
+    
+}
+.circle:hover{
+    background-color: #D10024;
+    color: white;
+    transform: rotate(360deg);
+}
+.header-logo > a{
+    display: block;
+    width: 200px;
+    height: 70px;
+    padding: 0;
+}
+.header-logo img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.show-more{
+    display: flex;
+    justify-content: center;
+}
