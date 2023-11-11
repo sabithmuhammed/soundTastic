@@ -5,29 +5,61 @@
   <%- include("../layouts/adminNavbar") %>
   <div class="container-fluid">
     <div class="row justify-content-center mb-3">
-      <form action="/admin/add-product" method="post" class="col-8 add-product" enctype="multipart/form-data">
+      <form
+        action="/admin/add-product"
+        method="post"
+        class="col-8 add-product"
+        enctype="multipart/form-data"
+      >
         <h4>Fill all the fields</h4>
         <div class="add-product-row">
           <div class="image-container">
             <label for="image1" class="label-image">
-              <input type="file" accept="image/*" name="image1" id="image1" onchange="previewImage(event)" required/><span>Choose Image</span>
-              <img id="preview" alt="Preview Image" data-image1>
+              <input
+                type="file"
+                accept="image/*"
+                name="image1"
+                id="image1"
+                onchange="previewImage(event)"
+                required
+              /><span>Choose Image</span>
+              <img id="preview" alt="Preview Image" data-image1 />
             </label>
             <label for="image2" class="label-image">
-              <input type="file" accept="image/*" name="image2" id="image2" onchange="previewImage(event)" required/><span>Choose Image</span>
-              <img id="preview" alt="Preview Image" data-image2>
-
+              <input
+                type="file"
+                accept="image/*"
+                name="image2"
+                id="image2"
+                onchange="previewImage(event)"
+                required
+              /><span>Choose Image</span>
+              <img id="preview" alt="Preview Image" data-image2 />
             </label>
           </div>
           <div class="input-div">
             <div class="input-wrapper">
               <label for="name">Product Name</label>
-              <input type="text" name="name" id="name" class="input-style" required onblur="removeWhiteSpace(this)"/>
+              <input
+                type="text"
+                name="name"
+                id="name"
+                class="input-style"
+                required
+                onblur="removeWhiteSpace(this)"
+              />
             </div>
             <div class="input-price-wrapper">
               <div class="input-wrapper">
                 <label for="mrkdwn">Markdown Price</label>
-                <input type="number" name="md_price" id="mrkdwn" class="input-style" min="1" required/>
+                <input
+                  type="number"
+                  name="md_price"
+                  id="mrkdwn"
+                  class="input-style"
+                  min="1"
+                  required
+                />
               </div>
               <div class="input-wrapper">
                 <label for="actual-price">Price</label>
@@ -46,18 +78,37 @@
         <div class="add-product-row">
           <div class="image-container">
             <label for="image3" class="label-image">
-              <input type="file" accept="image/*" name="image3" id="image3" onchange="previewImage(event)" required/><span>Choose Image</span>
-              <img id="preview" alt="Preview Image" data-image3>
+              <input
+                type="file"
+                accept="image/*"
+                name="image3"
+                id="image3"
+                onchange="previewImage(event)"
+                required
+              /><span>Choose Image</span>
+              <img id="preview" alt="Preview Image" data-image3 />
             </label>
             <label for="image4" class="label-image">
-              <input type="file" accept="image/*" name="image4" id="image4" onchange="previewImage(event)" required/><span>Choose Image</span>
-              <img id="preview" alt="Preview Image" data-image4>
+              <input
+                type="file"
+                accept="image/*"
+                name="image4"
+                id="image4"
+                onchange="previewImage(event)"
+                required
+              /><span>Choose Image</span>
+              <img id="preview" alt="Preview Image" data-image4 />
             </label>
           </div>
           <div class="input-div">
             <div class="input-wrapper">
               <label for="category">Choose A Category</label>
-              <select name="category" id="category" class="input-style" required>
+              <select
+                name="category"
+                id="category"
+                class="input-style"
+                required
+              >
                 <% if(categories.length>0){ %>
                 <option value="" disabled selected hidden>
                   Choose a category
@@ -74,11 +125,17 @@
               </select>
             </div>
             <div class="input-price-wrapper">
-              
-            <div class="input-wrapper">
-              <label for="quantity">Quantity</label>
-              <input type="number" min="1" name="quantity" id="quantity" class="input-style" required/>
-            </div>
+              <div class="input-wrapper">
+                <label for="quantity">Quantity</label>
+                <input
+                  type="number"
+                  min="1"
+                  name="quantity"
+                  id="quantity"
+                  class="input-style"
+                  required
+                />
+              </div>
               <div class="input-wrapper">
                 <label for="brand">Brand</label>
                 <input
@@ -94,7 +151,15 @@
           </div>
         </div>
         <div class="add-product-row">
-          <textarea name="description" id="" cols="100" rows="6"class="input-style" required onblur="removeWhiteSpace(this)"></textarea>
+          <textarea
+            name="description"
+            id=""
+            cols="100"
+            rows="6"
+            class="input-style"
+            required
+            onblur="removeWhiteSpace(this)"
+          ></textarea>
         </div>
         <div class="add-product-row">
           <button class="btn btn-primary">Add product</button>

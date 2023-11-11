@@ -6,11 +6,18 @@
   <div class="container-fluid">
     <div class="row justify-content-center mb-3">
       <div class="col-md-7">
-        <form class="search-container d-flex p-0" action="/admin/categories" method="get">
-          <input type="text" class="flex-grow-1" placeholder="search..." name="search"/>
-            <button class="btn btn-primary h-100 rounded-start-0">
-              Search
-            </button>
+        <form
+          class="search-container d-flex p-0"
+          action="/admin/categories"
+          method="get"
+        >
+          <input
+            type="text"
+            class="flex-grow-1"
+            placeholder="search..."
+            name="search"
+          />
+          <button class="btn btn-primary h-100 rounded-start-0">Search</button>
         </form>
       </div>
     </div>
@@ -36,12 +43,18 @@
                 >
                   <%= item.listed?'Unlist':'List' %>
                 </button>
-                <button class="btn btn-dark" data-id="<%= item._id %>" onclick="editCategory(this)">Edit</button>
+                <button
+                  class="btn btn-dark"
+                  data-id="<%= item._id %>"
+                  onclick="editCategory(this)"
+                >
+                  Edit
+                </button>
               </td>
             </tr>
             <% })}else{ %>
             <tr>
-              <td colspan="4" class="text-center"> No categories found </td>
+              <td colspan="4" class="text-center">No categories found</td>
             </tr>
             <% } %>
           </tbody>
@@ -51,7 +64,12 @@
         <h5>ADD CATEGORY</h5>
         <div class="d-flex flex-column mt-3">
           <label for="add-category"><h6>Category name</h6></label>
-          <input type="text" name="" id="add-category" placeholder="Enter category name"/>
+          <input
+            type="text"
+            name=""
+            id="add-category"
+            placeholder="Enter category name"
+          />
           <button class="btn btn-success w-25 mt-3" onclick="addCategory(this)">
             ADD
           </button>
@@ -61,24 +79,50 @@
     </div>
   </div>
 </div>
-  <!-- Modal -->
-  <div class="modal fade" id="edit-category-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Rename category</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <input type="text" class="form-control-plaintext border border-1 border-dark ps-3" id="cat-name" name="name" placeholder="Enter new name" onblur="removeWhiteSpace(this)">
-          <input type="hidden" name="id" id="cat-id" value="">
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" onclick="sendEditRequest()">Rename</button>
-        </div>
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="edit-category-modal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Rename category</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <input
+          type="text"
+          class="form-control-plaintext border border-1 border-dark ps-3"
+          id="cat-name"
+          name="name"
+          placeholder="Enter new name"
+          onblur="removeWhiteSpace(this)"
+        />
+        <input type="hidden" name="id" id="cat-id" value="" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          onclick="sendEditRequest()"
+        >
+          Rename
+        </button>
       </div>
     </div>
   </div>
+</div>
 
 <%- include("../layouts/adminFooter") %>

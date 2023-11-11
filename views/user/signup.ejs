@@ -1,4 +1,4 @@
-<%- include("../layouts/userHeader") %>
+<%- include("../layouts/userLoginHeader") %>
 
 <div class="container-fluid h-100">
   <div class="row h-100 justify-content-center">
@@ -98,7 +98,7 @@
     if (!(password === confPassword)) {
       return (error.innerText = "Passwords must match");
     }
-    const rawData =await fetch("/signup", {
+    const rawData = await fetch("/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -121,4 +121,4 @@
   });
 </script>
 
-<%- include("../layouts/userFooter") %>
+<%- include("../layouts/userLoginFooter") %>

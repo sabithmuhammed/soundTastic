@@ -33,6 +33,7 @@ app.use("/css", express.static(path.resolve(__dirname, "assets/css")));
 app.use("/images", express.static(path.resolve(__dirname, "assets/images")));
 app.use("/js", express.static(path.resolve(__dirname, "assets/js")));
 app.use("/libs", express.static(path.resolve(__dirname, "assets/libs")));
+app.use("/user", express.static(path.resolve(__dirname, "assets/user")));
 
 //routes
 app.use("/", userRoute);

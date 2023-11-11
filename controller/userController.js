@@ -1,8 +1,26 @@
 const User = require("../model/userModel");
 const bcrypt = require("bcrypt");
+const Category = require("../model/categoryModel");
+const Product = require("../model/productModel");
 const sendMail = require("../services/sendMail");
 const UserOTP = require("../model/userOTPVerification");
 const securePassword = require("../services/securePassword");
+
+const loadHome=async(req,res)=>{
+  try {
+    const user= req.session.user ?? null;
+    const products=await Product.find().limit(4).populate('category').exec();
+    if(products){
+      res.render('user/home',{products,user})
+    }
+   
+  } catch (error) {
+    
+  }
+}
+
+
+
 
 const loadRegister = async (req, res) => {
   try {
@@ -45,30 +63,35 @@ const insertUser = async (req, res) => {
   }
 };
 const showVerify = async (req, res) => {
-  const userId = req.session.userId ?? req.session.tempUserId
-  const userData = await User.findById({ _id: userId });
-  if (userData) {
-    const otp = `${Math.floor(100000 + Math.random() * 900000)}`;
-    const hashOtp = await securePassword(otp);
-    const userOtp = new UserOTP({
-      userId,
-      otp: hashOtp,
-      email: userData.email,
-    });
-    const otpSave = await userOtp.save();
-    if (otpSave) {
-      console.log(userData);
-      await sendMail.sendVerifyMail(userData.name, userData.email, otp);
-      return res.render("user/verifyMail", { email: userData.email });
+  try {
+    const userId = req.session.userId;
+    await UserOTP.findOneAndDelete({ userId });
+    const userData = await User.findById({ _id: userId });
+    if (userData) {
+      const otp = `${Math.floor(100000 + Math.random() * 900000)}`;
+      const hashOtp = await securePassword(otp);
+      const userOtp = new UserOTP({
+        userId,
+        otp: hashOtp,
+        email: userData.email,
+      });
+      const otpSave = await userOtp.save();
+      if (otpSave) {
+        console.log(userData);
+        await sendMail.sendVerifyMail(userData.name, userData.email, otp);
+        return res.render("user/verifyMail", { email: userData.email });
+      }
     }
+    res.redirect("/login");
+  } catch (error) {
+    console.log(error.message);
   }
-  res.redirect("/login");
 };
 
 const checkOTP = async (req, res) => {
   try {
     const { otp } = req.body;
-    const userId = req.session.userId
+    const userId = req.session.userId;
     console.log(otp);
     const userOtp = await UserOTP.findOne({ userId: userId });
     if (userOtp) {
@@ -80,7 +103,7 @@ const checkOTP = async (req, res) => {
           { verified: true }
         );
         if (userData) {
-          res.json({ status: "success",link:'/'});
+          res.json({ status: "success", link: "/" });
         } else {
           res.json({
             status: "failed",
@@ -135,9 +158,15 @@ const verifyLogin = async (req, res) => {
     if (userData) {
       const passwordMatch = await bcrypt.compare(password, userData.password);
       if (passwordMatch) {
+        if(userData.blocked){
+          return res.json({stauss:"failed",message:"You have been blocked"})
+        }
         req.session.user = userData.name;
         req.session.userId = userData._id;
-        res.json({ status: "success" });
+        if(!userData.verified){
+          return res.json({status:'pending',location:'/verify-mail'});
+        }
+         res.json({ status: "success" });
       } else {
         res.json({
           status: "failed",
@@ -166,26 +195,117 @@ const forgetPassword = async (req, res) => {
 const forgetVerify = async (req, res) => {
   try {
     const email = req.body.email;
-    const userData = await User.findOne({email});
-    if(userData){
-      req.session.tempUserId=userData._id;
-      res.json({status:'success'});
-    }else{
-      res.json({status:'failed',message:'No account found with this email-id!'})
+    const userData = await User.findOne({ email });
+    if (userData) {
+      req.session.tempUserId = userData._id;
+      res.json({ status: "success" });
+    } else {
+      res.json({
+        status: "failed",
+        message: "No account found with this email-id!",
+      });
     }
-    
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+const showPasswordOtp = async (req, res) => {
+  try {
+    const userId = req.session.tempUserId;
+    await UserOTP.findOneAndDelete({ userId });
+    const userData = await User.findById({ _id: userId });
+
+    if (userData) {
+      const otp = `${Math.floor(100000 + Math.random() * 900000)}`;
+      const hashOtp = await securePassword(otp);
+      const userOtp = new UserOTP({
+        userId,
+        otp: hashOtp,
+        email: userData.email,
+      });
+      const otpSave = await userOtp.save();
+      if (otpSave) {
+        console.log(userData);
+        await sendMail.sendVerifyMail(userData.name, userData.email, otp);
+        return res.render("user/changePasswordOtp", { email: userData.email });
+      }
+    }
+    res.redirect("/login");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+const passwordCheckOTP = async (req, res) => {
+  try {
+    const { otp } = req.body;
+    const userId = req.session.tempUserId;
+    const userOtp = await UserOTP.findOne({ userId: userId });
+    if (userOtp) {
+      const otpMatch = await bcrypt.compare(otp, userOtp.otp);
+      if (otpMatch) {
+        await UserOTP.findByIdAndDelete({ _id: userOtp._id });
+        res.json({ status: "success",});
+      } else {
+        res.json({ status: "failed", message: "OTP doesn't match" });
+      }
+    }
   } catch (error) {
     console.log(error.message);
   }
 };
 
-const changePassword = async (req, res) => {
+const showChangePassword = async (req, res) => {
   try {
     res.render("user/changePassword");
   } catch (error) {
     console.log(error.message);
   }
 };
+
+const changePassword=async (req,res)=>{
+  try {
+    const id=req.session.tempUserId;
+    const password=req.body.password;
+    const hashPassword=await securePassword(password);
+    if(hashPassword){
+      const userData=await User.findByIdAndUpdate({_id:id},{password:hashPassword},{new:true})
+      if(userData){
+        req.session.tempUserId=null;
+        req.session.userId=userData._id;
+        req.session.user=userData.name;
+       return res.json({status:"success"});
+      }
+    }
+    res.json({status:"failed",message:"Oops! something went wrong, try again"})
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+const showShop=async (req,res)=>{
+  try { 
+  const user= req.session.user ?? null;
+  const products=await Product.find({listed:1})
+  res.render('user/shop',{products})
+  } catch (error) {
+    
+  }
+  const user= req.session.user ?? null;
+  const products=await Product.find()
+  res.render('user/shop',{products})
+}
+const userLogout=async (req,res)=>{
+  try {
+    req.session.destroy((err) => {
+      if (err) {
+        res.send("Oops something went wrong, please try again");
+      } else {
+        res.redirect('/');
+      }
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 
 module.exports = {
   loadRegister,
@@ -196,8 +316,12 @@ module.exports = {
   verifyLogin,
   forgetPassword,
   forgetVerify,
-  changePassword,
   showVerify,
-  //   loadHome,
-  //   userLogout,
+  showPasswordOtp,
+  passwordCheckOTP,
+  showChangePassword,
+  changePassword,
+    loadHome,
+    showShop,
+    userLogout,
 };

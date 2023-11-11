@@ -27,7 +27,7 @@ otp.forEach((item, index) => {
   });
 });
 
-let startingMinutes = 0.2;
+let startingMinutes = 1;
 let time = startingMinutes * 60;
 function updateCountdown() {
   const minutes = Math.floor(time / 60);
@@ -61,28 +61,3 @@ countdownEl.addEventListener("click", async () => {
   }
 });
 
-verifyBtn.addEventListener('click',async ()=>{
-    let userOtp='';
-    otp.forEach((item)=>{
-        userOtp+=item.value;
-    })
-    if(userOtp.length<6){
-        error.innerText="OTP must contains 6 digits"
-        return false;
-    }
-    const rawData=await fetch('/verify-otp',{
-        method:"POST",
-        headers:{
-            'Content-Type':'application/json'
-        },
-        body:JSON.stringify({otp:userOtp})
-    })
-    if(rawData.ok){
-        const data=await rawData.json()
-        if(data.status==='success'){
-            window.location.href = data.link;
-        }else{
-            error.innerText=data.message
-        }
-    }
-})

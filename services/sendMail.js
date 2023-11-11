@@ -25,7 +25,7 @@ const sendVerifyMail=async(name,email,otp)=>{
           style="
             width: 100px;
             background-color: #d10024;
-            color: white;
+            color: #ffffff;
             text-align:center;
             padding:10px
           "

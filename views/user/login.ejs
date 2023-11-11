@@ -1,4 +1,4 @@
-<%- include("../layouts/userHeader") %>
+<%- include("../layouts/userLoginHeader") %>
 
 <div class="container-fluid h-100">
   <div class="row h-100 justify-content-center">
@@ -59,21 +59,23 @@
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return (error.innerText = "Invalid email address");
     }
-    const rawData=await fetch('/login',{
-      method:"POST",
-      headers:{
-        'Content-Type':'application/json'
+    const rawData = await fetch("/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-      body:JSON.stringify({email,password})
-    })
-    if(rawData.ok){
-      const data=await rawData.json();
-      if(data.status==="success"){
+      body: JSON.stringify({ email, password }),
+    });
+    if (rawData.ok) {
+      const data = await rawData.json();
+      if (data.status === "success") {
         window.location.href = "/";
-      }else{
-        error.innerText=data.message;
+      }else if(data.status="pending"){
+        window.location.href=data.location;
+      } else {
+        error.innerText = data.message;
       }
     }
   });
 </script>
-<%- include("../layouts/userFooter") %>
+<%- include("../layouts/userLoginFooter") %>
