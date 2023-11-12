@@ -70,8 +70,8 @@
       const data = await rawData.json();
       if (data.status === "success") {
         window.location.href = "/";
-      }else if(data.status="pending"){
-        window.location.href=data.location;
+      }else if(data.status==="pending"){
+        window.location.href="/verify-mail";
       } else {
         error.innerText = data.message;
       }

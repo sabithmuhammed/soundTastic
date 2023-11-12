@@ -6,21 +6,18 @@ const sendMail = require("../services/sendMail");
 const UserOTP = require("../model/userOTPVerification");
 const securePassword = require("../services/securePassword");
 
-const loadHome=async(req,res)=>{
+const loadHome = async (req, res) => {
   try {
-    const user= req.session.user ?? null;
-    const products=await Product.find().limit(4).populate('category').exec();
-    if(products){
-      res.render('user/home',{products,user})
+    const user = req.session.userId ? req.session.user : null;
+    const products = await Product.find({ listed: 1 })
+      .limit(4)
+      .populate("category")
+      .exec();
+    if (products) {
+      res.render("user/home", { products, user });
     }
-   
-  } catch (error) {
-    
-  }
-}
-
-
-
+  } catch (error) {}
+};
 
 const loadRegister = async (req, res) => {
   try {
@@ -49,8 +46,8 @@ const insertUser = async (req, res) => {
     });
     const userData = await user.save();
     if (userData) {
-      req.session.user = name;
-      req.session.userId = userData._id;
+      req.session.user= userData.name
+      req.session.tempUserId = userData._id;
       res.json({ status: "success" });
     } else {
       res.json({
@@ -64,7 +61,7 @@ const insertUser = async (req, res) => {
 };
 const showVerify = async (req, res) => {
   try {
-    const userId = req.session.userId;
+    const userId = req.session.tempUserId;
     await UserOTP.findOneAndDelete({ userId });
     const userData = await User.findById({ _id: userId });
     if (userData) {
@@ -91,7 +88,7 @@ const showVerify = async (req, res) => {
 const checkOTP = async (req, res) => {
   try {
     const { otp } = req.body;
-    const userId = req.session.userId;
+    const userId = req.session.tempUserId;
     console.log(otp);
     const userOtp = await UserOTP.findOne({ userId: userId });
     if (userOtp) {
@@ -103,7 +100,9 @@ const checkOTP = async (req, res) => {
           { verified: true }
         );
         if (userData) {
-          res.json({ status: "success", link: "/" });
+          req.session.userId=req.session.tempUserId;
+          req.session.tempUserId=null;
+          res.json({ status: "success"});
         } else {
           res.json({
             status: "failed",
@@ -121,7 +120,7 @@ const checkOTP = async (req, res) => {
 
 const resendOTP = async (req, res) => {
   try {
-    const userId = req.session.userId ?? req.session.tempUserId;
+    const userId = req.session.tempUserId;
     const name = req.session.user;
     const otp = `${Math.floor(100000 + Math.random() * 900000)}`;
     const hashOtp = await securePassword(otp);
@@ -158,15 +157,20 @@ const verifyLogin = async (req, res) => {
     if (userData) {
       const passwordMatch = await bcrypt.compare(password, userData.password);
       if (passwordMatch) {
-        if(userData.blocked){
-          return res.json({stauss:"failed",message:"You have been blocked"})
+        if (userData.blocked) {
+          return res.json({
+            status: "failed",
+            message: "You have been blocked",
+          });
         }
         req.session.user = userData.name;
-        req.session.userId = userData._id;
-        if(!userData.verified){
-          return res.json({status:'pending',location:'/verify-mail'});
+        if (!userData.verified) {
+          req.session.tempUserId = userData._id;
+          return res.json({ status: "pending" });
         }
-         res.json({ status: "success" });
+        
+        req.session.userId = userData._id;
+        res.json({ status: "success" });
       } else {
         res.json({
           status: "failed",
@@ -198,6 +202,7 @@ const forgetVerify = async (req, res) => {
     const userData = await User.findOne({ email });
     if (userData) {
       req.session.tempUserId = userData._id;
+      req.session.user=userData.name
       res.json({ status: "success" });
     } else {
       res.json({
@@ -243,8 +248,9 @@ const passwordCheckOTP = async (req, res) => {
     if (userOtp) {
       const otpMatch = await bcrypt.compare(otp, userOtp.otp);
       if (otpMatch) {
+        req.session.otpVerified=true;
         await UserOTP.findByIdAndDelete({ _id: userOtp._id });
-        res.json({ status: "success",});
+        res.json({ status: "success" });
       } else {
         res.json({ status: "failed", message: "OTP doesn't match" });
       }
@@ -256,56 +262,65 @@ const passwordCheckOTP = async (req, res) => {
 
 const showChangePassword = async (req, res) => {
   try {
+    req.session.otpVerified=null;
     res.render("user/changePassword");
   } catch (error) {
     console.log(error.message);
   }
 };
 
-const changePassword=async (req,res)=>{
+const changePassword = async (req, res) => {
   try {
-    const id=req.session.tempUserId;
-    const password=req.body.password;
-    const hashPassword=await securePassword(password);
-    if(hashPassword){
-      const userData=await User.findByIdAndUpdate({_id:id},{password:hashPassword},{new:true})
-      if(userData){
-        req.session.tempUserId=null;
-        req.session.userId=userData._id;
-        req.session.user=userData.name;
-       return res.json({status:"success"});
+    const id = req.session.tempUserId;
+    const password = req.body.password;
+    const hashPassword = await securePassword(password);
+    if (hashPassword) {
+      const userData = await User.findByIdAndUpdate(
+        { _id: id },
+        { password: hashPassword },
+        { new: true }
+      );
+      if (userData) {
+        req.session.tempUserId = null;
+        req.session.userId = userData._id;
+        req.session.user = userData.name;
+        return res.json({ status: "success" });
       }
     }
-    res.json({status:"failed",message:"Oops! something went wrong, try again"})
+    res.json({
+      status: "failed",
+      message: "Oops! something went wrong, try again",
+    });
   } catch (error) {
-    console.log(error.message)
+    console.log(error.message);
   }
-}
-const showShop=async (req,res)=>{
-  try { 
-  const user= req.session.user ?? null;
-  const products=await Product.find({listed:1})
-  res.render('user/shop',{products})
-  } catch (error) {
-    
-  }
-  const user= req.session.user ?? null;
-  const products=await Product.find()
-  res.render('user/shop',{products})
-}
-const userLogout=async (req,res)=>{
+};
+
+const showShop = async (req, res) => {
+  try {
+    const user = req.session.user ?? null;
+    const products = await Product.find({ listed: 1 })
+      .populate("category")
+      .exec();
+    res.render("user/shop", { products });
+  } catch (error) {}
+  const user = req.session.user ?? null;
+  const products = await Product.find();
+  res.render("user/shop", { products });
+};
+const userLogout = async (req, res) => {
   try {
     req.session.destroy((err) => {
       if (err) {
         res.send("Oops something went wrong, please try again");
       } else {
-        res.redirect('/');
+        res.redirect("/");
       }
     });
   } catch (error) {
     console.log(error.message);
   }
-}
+};
 
 module.exports = {
   loadRegister,
@@ -321,7 +336,7 @@ module.exports = {
   passwordCheckOTP,
   showChangePassword,
   changePassword,
-    loadHome,
-    showShop,
-    userLogout,
+  loadHome,
+  showShop,
+  userLogout,
 };

@@ -42,9 +42,8 @@ const loginLoad = (req, res) => {
 const verifyLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log(email,password);
+    console.log(email, password);
     const adminData = await Admin.findOne({ email });
-    console.log(adminData);
     if (adminData) {
       const passwordMatch = await bcrypt.compare(password, adminData.password);
       if (passwordMatch) {
@@ -60,7 +59,7 @@ const verifyLogin = async (req, res) => {
     console.log(error.message);
   }
 };
-const adminLogout=async (req,res)=>{
+const adminLogout = async (req, res) => {
   try {
     req.session.destroy((err) => {
       if (err) {
@@ -73,7 +72,7 @@ const adminLogout=async (req,res)=>{
   } catch (error) {
     console.log(error.message);
   }
-}
+};
 
 const loadDashboard = async (req, res) => {
   try {
@@ -180,17 +179,25 @@ const updateCategories = async (req, res) => {
 };
 const editCategory = async (req, res) => {
   try {
-    const { id, name } = req.body;
+    let { id, name } = req.body;
     name = name[0].toUpperCase() + name.slice(1).toLowerCase();
-    const category = await Category.findByIdAndUpdate(
-      { _id: id },
-      { name },
-      { new: true }
-    );
-    if (category) {
-      res.json({ status: "success", message: category.name });
+    const checkExist = await Category.findOne({ name });
+    if (!checkExist) {
+      const category = await Category.findByIdAndUpdate(
+        { _id: id },
+        { name },
+        { new: true }
+      );
+      if (category) {
+        res.json({ status: "success", message: category.name });
+      } else {
+        res.json({ status: "failed" });
+      }
     } else {
-      res.json({ status: "failed" });
+      res.json({
+        status: "failed",
+        message: "Category with same name already exist",
+      });
     }
   } catch (error) {
     console.log(error.message);

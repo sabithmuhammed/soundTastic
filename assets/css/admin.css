@@ -162,3 +162,10 @@ td{
     height: 40px;
     box-sizing: border-box;
 }
+.error-modal{
+    margin-top: 0;
+    height: 20px;
+    color: red;
+   position: absolute;
+   top: -15px;
+}
