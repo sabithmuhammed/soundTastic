@@ -126,7 +126,7 @@
         <!-- /shop -->
         <% products.forEach((item)=>{ %>
             <div class="col-md-3 col-xs-6">
-                <div class="product">
+                <div class="product" onclick="window.location.href='product/<%= item._id %>'">
                   <div class="product-img">
                     <img src="/images/products/<%= item.images[0] %>" alt="" />
                   </div>

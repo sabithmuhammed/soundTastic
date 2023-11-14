@@ -3,7 +3,7 @@ const userController = require("../controller/userController");
 const auth = require("../middleware/auth");
 const user_route = express.Router();
 
-user_route.get("/", userController.loadHome);
+user_route.get("/", userController.home);
 user_route.get("/home", userController.loadHome);
 user_route.get("/login",auth.isLogout,userController.loginLoad);
 user_route.post("/login", userController.verifyLogin);
@@ -29,5 +29,7 @@ user_route.get("/change-password",auth.changePassword,userController.showChangeP
 user_route.post("/change-password",userController.changePassword);
 
 user_route.get("/shop",userController.showShop);
+user_route.get("/product/:id",userController.showProductPage);
 
+user_route.get('/my-profile',userController.showProfile)
 module.exports = user_route;

@@ -27,7 +27,7 @@ const changePassword=async(req,res,next)=>{
         if(req.session.otpVerified){
             next();
         }else{
-            res.redirect('/')
+            res.redirect('/home')
         }
     } catch (error) {
         console.log(error.message);
@@ -39,7 +39,7 @@ const tempAccess=async(req,res,next)=>{
         if(req.session.tempUserId){
             next()
         }else{
-            res.redirect('/');
+            res.redirect('/home');
         }
     } catch (error) {
         console.log(error.message);

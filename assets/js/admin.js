@@ -212,3 +212,4 @@ async function sendStockRequest() {
     console.log(error.message);
   }
 }
+

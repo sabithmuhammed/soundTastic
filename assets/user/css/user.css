@@ -1,3 +1,8 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+
 .banner{
     height: 390px;
 }
@@ -83,4 +88,347 @@
 .show-more{
     display: flex;
     justify-content: center;
+}
+
+.image-container{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.image-list{
+    width: 100px;
+    height:400px;
+}
+.image-div{
+    position: relative;
+    width: 400px;
+    height: 400px;
+    border: 2px solid #D10024;
+
+    
+}
+.image-div > img{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+.lens{
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background-color: rgba(214, 168, 31, 0.314);
+    border:2px solid  rgb(214, 168, 31);
+    top: 0;
+    cursor: crosshair;
+    opacity: 0;
+    transition: all 3ms;
+}
+.lens-active{
+    opacity: 1;
+}
+.zoom{
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    left: calc(100% + 50px);
+    top: 0;
+    display: none;
+    z-index: 10;
+}
+.zoom-active{
+    display: block;
+}
+.image-thumb{
+    width: 100px;
+    height: 100px;
+    padding: 5px;
+}
+.image-thumb >img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.image-thumb-active{
+    border: 2px solid #D10024;
+}
+.product-details{
+    height: 400px;
+    /* background-color: green; */
+}
+.prod-buttons >button{
+    width: 200px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+.yellow-btn {
+    margin-right: 10px;
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: #c86000;
+    border: none;
+    border-radius: 40px;
+    color: #FFF;
+    text-transform: uppercase;
+    font-weight: 700;
+    text-align: center;
+    -webkit-transition: 0.2s all;
+    transition: 0.2s all;
+  }
+  
+  .yellow-btn:hover, .yellow-btn:focus {
+    opacity: 0.9;
+    color: #FFF;
+  }
+  .prod-description > p{
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: justify;
+  }
+  .prod-brand,.prod-review,.prod-price{
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+  .prod-review> h5{
+    align-self: center;
+    padding-top: 10px;
+    margin-right: 20px;
+  }
+  .prod-price >h3{
+    margin-right: 20px;
+    color: #D10024;
+  }
+  .prod-price >h5{
+    color: rgb(139, 137, 137);
+  }
+  .in-stock{
+    margin-left: 30px;
+    color: green;
+  }
+  .out-of-stock{
+    margin-left: 30px;
+    color: red;
+  }
+
+  
+
+/* profile styles */
+
+.option-section *{
+    color: white;
+}
+
+.option-section {
+    width: 40%;
+    height: fit-content;
+    padding-right: 10px;
+}
+
+.details-section {
+    width: 60%;
+    height: 100%;
+
+}
+
+.name-container {
+    width: 100%;
+    background-color: #D10024;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 9px;
+}
+
+.avatar {
+    width: 70px;
+    height: 70px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 50%;
+    margin-right: 10px;
+    overflow: hidden;
+    border: 3px solid white;
+}
+
+.avatar>img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.option {
+    height: 50px;
+    background-color: #D10024;
+    margin-top: 15px;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    padding-left: 90px;
+    border-radius: 9px;
+    color: white;
+    cursor: pointer;
+}
+.option:hover{
+    opacity: 0.9;
+}
+.wallet-container {
+    margin-top: 20px;
+    width: 100%;
+    height: 270px;
+    background-color: #15161D;
+    border-radius: 9px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    border: 2px solid black;
+}
+
+.wallet-container * {
+
+    font-family: monospace;
+    color: white;
+}
+
+.wallet-head {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.wallet-balance {
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+}
+
+.wallet-name {
+    text-transform: uppercase;
+}
+
+.profile-details {
+    padding: 20px;
+    background-color: rgb(198, 197, 197);
+    border-radius: 9px;
+    margin: 0 10px 10px;
+}
+
+.profile-details .profile-form input{
+    width: 400px;
+    height: 40px;
+    font-size: 18px;
+    font-weight: 500;
+    text-indent: 10px;
+}
+
+.profile-form {
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    font-weight: 500;
+}
+.add-address{
+    width: 200px;
+    height: 50px;
+    font-size: 18px;
+    font-weight: bolder;
+    background-color: #D10024;
+    color: white;
+    border: none;
+    border-radius: 9px;
+    cursor: pointer;
+}
+.add-address:hover,.add-address:active{
+    opacity: 0.9;
+}
+.address{
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin: 10px 0;
+}
+.address >input[type="radio"]{
+    height: 30px;
+    width: 30px;
+    margin-right: 10px;
+    accent-color: #D10024;
+    border: 2px solid #D10024;
+    background-color: aqua;
+    cursor: pointer;
+}
+.address-details {
+    width: 500px;
+    min-height: 90px;
+    background-color: rgb(255, 255, 255);
+    font-size: 18px;
+    font-weight: 500;
+    padding: 10px;
+}
+.btn-address-div{
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+}
+.btn-address-div > button{
+    width: 40px;
+    height: 40px;
+    margin-bottom: 10px;
+    border-radius: 9px;
+    border: none;
+    font-size: 16px;
+    font-weight: 500;
+    color: white;
+    background-color: #15161D;
+}
+.btn-address-div > button:hover{
+    opacity: 0.9;
+    cursor: pointer;
+}
+
+
+@media screen and (max-width: 992px){
+    .container-profile{
+        flex-direction: column;
+    }
+    .option-section{
+        width: 100%;
+        flex-direction: row;
+        padding-right: 0;
+    }
+    .option-container{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .option{
+        padding: 0;
+        width: 200px;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 40px;
+    }
+    .details-section{
+        width: 100%;
+        margin-top: 10px;
+    }
+}
+@media screen and (max-width: 768px){
+    .option-container{
+        flex-direction: column;
+    }
+    .address-details{
+        width: 100%;
+    }
+    .profile-details .profile-form input{
+        width: 100%;
+    }
+    .option{
+        width: 100%;
+    }
 }

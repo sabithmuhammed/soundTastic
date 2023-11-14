@@ -1,0 +1,115 @@
+<%- include("../layouts/userHeader") %> <%- include("../layouts/userNavbar") %>
+<!-- SECTION -->
+<div class="section mb-5">
+  <!-- container -->
+  <div class="container">
+    <!-- row -->
+    <div class="row">
+      <!-- section title -->
+      <div class="col-md-5 option-section">
+        <div class="name-container">
+          <div class="avatar">
+            <img src="/user/img/1.jpg" alt="" />
+          </div>
+          <div class="name">
+            <p>Hello,</p>
+            <h3><%= userData.name %></h3>
+          </div>
+        </div>
+        <div class="option-container">
+          <div class="option"><h4>Orders</h4></div>
+          <div class="option"><h4>Edit profile</h4></div>
+          <div class="option"><h4>Change password</h4></div>
+        </div>
+        <div class="wallet-container">
+          <div class="wallet-head">
+            <h2>WALLET</h2>
+            <h2>SOUNDASTIC</h2>
+          </div>
+          <div class="wallet-balance">
+            <h3>BALANCE:</h3>
+            <h2>&#8377;2000</h2>
+          </div>
+          <div class="wallet-name"><h4><%= userData.name %></h4></div>
+        </div>
+      </div>
+      <div class="col-md-7 details-section">
+        <div class="profile-details">
+          <div>
+            <h3>Personal Information</h3>
+            <div class="profile-form">
+              <label for="name">Name</label>
+              <input
+                type="text"
+                name=""
+                id="name"
+                value="<%= userData.name %>"
+                readonly
+              />
+            </div>
+            <div class="profile-form">
+              <label for="email">Email</label>
+              <input
+                type="email"
+                name=""
+                id="email"
+                value="<%= userData.email %>"
+                readonly
+              />
+            </div>
+            <div class="profile-form">
+              <label for="phone">Phone</label>
+              <input
+                type="number"
+                name=""
+                id="phone"
+                value="<%= userData.phone %>"
+                readonly
+              />
+            </div>
+          </div>
+        </div>
+        <div class="profile-details">
+          <h3>Address</h3>
+          
+          <div class="address">
+            <input type="radio" name="address" id="address1" checked />
+            <div class="address-details">
+              <p>safdfads, dfkhdsjfdshl, kjdskjkfa jfkjskadjfk ,fjdsjfk</p>
+            </div>
+            <div class="btn-address-div">
+              <button class="address-edit">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </button>
+              <button class="address-edit">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </div>
+          <div class="address">
+            <input type="radio" name="address" id="address2" />
+            <div class="address-details">
+              <p>safdfads</p>
+            </div>
+            <div class="btn-address-div">
+              <button class="address-edit">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </button>
+              <button class="address-edit">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </div>
+          <button class="add-address">Add address</button>
+        </div>
+      </div>
+      <!-- /section title -->
+    </div>
+    <!-- /row -->
+
+    <!-- /container -->
+  </div>
+
+  <!-- /SECTION -->
+</div>
+<%- include("../layouts/userFooter") %>

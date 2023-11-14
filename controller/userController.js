@@ -6,6 +6,9 @@ const sendMail = require("../services/sendMail");
 const UserOTP = require("../model/userOTPVerification");
 const securePassword = require("../services/securePassword");
 
+const home=async (req,res)=>{
+  res.redirect('/home');
+}
 const loadHome = async (req, res) => {
   try {
     const user = req.session.userId ? req.session.user : null;
@@ -322,7 +325,44 @@ const userLogout = async (req, res) => {
   }
 };
 
+const showProductPage=async (req,res) =>{
+  try {
+    const id=req.params.id;
+    const product = await Product.findById({_id:id});
+    if(product){
+      const stock={}
+      if(product.quantity===0){
+        stock.lowStock=true;
+        stock.status="Out of stock"
+      }else if(product.quantity<=5){
+        stock.lowStock=true;
+        stock.status=`Only ${product.quantity} left`
+      }else{
+        stock.lowStock=false;
+        stock.status="In stock"
+      }
+      res.render("user/productPage.ejs",{product,stock});
+    }else{ 
+      res.redirect('/');
+    }
+  } catch (error) {
+    
+  }
+}
+
+const showProfile=async (req,res)=>{
+  try {
+    const id=req.session.userId;
+    const user=req.session.user
+    const userData=await User.findById({_id:id})
+    res.render('user/profile',{user,userData})
+  } catch (error) {
+    
+  }
+}
+
 module.exports = {
+  home,
   loadRegister,
   insertUser,
   checkOTP,
@@ -339,4 +379,6 @@ module.exports = {
   loadHome,
   showShop,
   userLogout,
+  showProductPage,
+  showProfile,
 };

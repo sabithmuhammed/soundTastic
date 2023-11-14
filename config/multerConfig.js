@@ -6,7 +6,8 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + "_" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + "_" + file.originalname);
+    let ext=file.originalname.slice(file.originalname.lastIndexOf("."))
+    cb(null, uniqueSuffix + "_" + ext);
   },
 });
 const upload = multer({ storage: storage });
