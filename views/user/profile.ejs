@@ -18,13 +18,13 @@
         </div>
         <div class="option-container">
           <div class="option"><h4>Orders</h4></div>
-          <div class="option"><h4>Edit profile</h4></div>
-          <div class="option"><h4>Change password</h4></div>
+          <div class="option" onclick="editProfile()"><h4>Edit profile</h4></div>
+          <div class="option" onclick="changePassword()"><h4>Change password</h4></div>
         </div>
         <div class="wallet-container">
           <div class="wallet-head">
             <h2>WALLET</h2>
-            <h2>SOUNDASTIC</h2>
+            <h2>SOUNDTASTIC</h2>
           </div>
           <div class="wallet-balance">
             <h3>BALANCE:</h3>
@@ -37,6 +37,7 @@
         <div class="profile-details">
           <div>
             <h3>Personal Information</h3>
+            <h6 class="profile-error text-danger"></h6>
             <div class="profile-form">
               <label for="name">Name</label>
               <input
@@ -44,6 +45,7 @@
                 name=""
                 id="name"
                 value="<%= userData.name %>"
+                data-value="<%= userData.name %>"
                 readonly
               />
             </div>
@@ -64,43 +66,50 @@
                 name=""
                 id="phone"
                 value="<%= userData.phone %>"
+                data-value="<%= userData.phone %>"
                 readonly
               />
+            </div>
+            <div class="profile-edit-buttons">
+              <button class="btn btn-primary" onclick="profileCancel()">Cancel</button>
+              <button class="btn btn-primary" onclick="profileSave()">Save</button>
             </div>
           </div>
         </div>
         <div class="profile-details">
           <h3>Address</h3>
+          <button class="add-address" onclick="window.location.href='/add-address'">Add address</button>
+         <% if(userData.address.length>0){
+            userData.address.forEach((item,index)=>{ %>
+
+              <div class="address" data-address="<%= item._id %>">
+                <div class="address-details">
+                  <p><%= item.name %>, <br>
+                    <%= item.mobile %>, <br>
+                    <%= item.address %>, <br>
+                    <%= item.city %>, <br>
+                    <%= item.state %>, <br>
+                    <%= item.pincode %> <br>
+                  </p>
+                </div>
+                <div class="btn-address-div">
+                  <button class="address-edit" onclick="window.location.href='/edit-address/<%= item._id %>'">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                  </button>
+                  <button class="address-edit " data-id="<%= item._id %>" onclick="showConfirm(this)">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+
+          <%  })
+          }else{ %>
+            <h5>No address found</h5>
+        <%  }  %>
           
-          <div class="address">
-            <input type="radio" name="address" id="address1" checked />
-            <div class="address-details">
-              <p>safdfads, dfkhdsjfdshl, kjdskjkfa jfkjskadjfk ,fjdsjfk</p>
-            </div>
-            <div class="btn-address-div">
-              <button class="address-edit">
-                <i class="fa-solid fa-pen-to-square"></i>
-              </button>
-              <button class="address-edit">
-                <i class="fa-solid fa-trash"></i>
-              </button>
-            </div>
-          </div>
-          <div class="address">
-            <input type="radio" name="address" id="address2" />
-            <div class="address-details">
-              <p>safdfads</p>
-            </div>
-            <div class="btn-address-div">
-              <button class="address-edit">
-                <i class="fa-solid fa-pen-to-square"></i>
-              </button>
-              <button class="address-edit">
-                <i class="fa-solid fa-trash"></i>
-              </button>
-            </div>
-          </div>
-          <button class="add-address">Add address</button>
+
+
+          
         </div>
       </div>
       <!-- /section title -->
@@ -109,7 +118,57 @@
 
     <!-- /container -->
   </div>
+  
 
   <!-- /SECTION -->
 </div>
+
+
+<!-- The Modal -->
+<div id="confirm-modal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <h5>Are you sure you want to delete this address?</h5>
+    <div class="confirm-modal-buttons">
+      <input type="hidden" value="" id="address-id">
+      <button class="btn btn-primary confirm-close">CLOSE</button> <button class="btn btn-danger" onclick="deleteAddress()">YES, DELETE</button>
+    </div>
+    
+  </div>
+   
+</div>
+
+
+<div id="password-modal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+   
+    <h6 class="change-pwd-error text-danger"></h6>
+    <div class="old-password-div">
+      <div class="change-pwd-container">
+        <h5>Enter your current password</h5>
+        <input type="password" name="" id="old-password">
+        <button class="btn btn-primary" onclick="checkPassword()">
+          Check
+        </button>
+      </div>
+    </div>
+    <div class="new-password-div">
+      <div class="change-pwd-container">
+        <h5>Enter new password</h5>
+        <input type="password" name="" id="new-password">
+        <h5>Confirm password</h5>
+        <input type="password" name="" id="c-new-password">
+        <button class="btn btn-primary">
+          Change
+        </button>
+      </div>
+    </div>
+  </div>
+   
+</div>
+
+<script src="/user/js/utils/profile.js"></script>
 <%- include("../layouts/userFooter") %>

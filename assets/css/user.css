@@ -175,6 +175,7 @@ input[type="number"]::-webkit-inner-spin-button,.otp::-webkit-outer-spin-button{
 
 
 
+
 @media only screen and (max-width: 576px) {
     .login-input {
         width: 100%;

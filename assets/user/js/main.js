@@ -169,7 +169,6 @@
  
 const path=window.location.pathname;
 const all=document.querySelectorAll('.nav li')
-console.log(all);
 all.forEach((item)=>{
 	if(item.lastChild.href.includes(`${path}`)){
 		item.classList.add('active');

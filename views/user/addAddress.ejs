@@ -1,0 +1,86 @@
+<%- include("../layouts/userHeader") %> <%- include("../layouts/userNavbar") %>
+<!-- SECTION -->
+<div class="section mb-5">
+  <!-- container -->
+  <div class="container">
+    <div class="row item-center">
+      <div class="col-xs-12 col-md-8 ">
+        <div class="error" id="error"></div>
+        <form id="form-address">
+          <div class="form-group">
+            <label for="name">Full Name <span class="red">*</span></label>
+            <input type="text" class="form-control" id="name">
+          </div>
+          <div class="form-group">
+            <label for="mobile">Mobile <span class="red">*</span></label>
+            <input type="number" class="form-control" id="mobile">
+          </div>
+          <div class="form-group">
+            <label for="address">Address (Area and Street) <span class="red">*</span></label>
+            <input type="text" class="form-control" id="address">
+          </div>
+          <div class="form-group">
+            <label for="city">City / District / Town <span class="red">*</span></label>
+            <input type="text" class="form-control" id="city">
+          </div>
+          <div class="form-group">
+            <label for="state">State <span class="red">*</span></label>
+            <input type="text" class="form-control" id="state">
+          </div>
+          <div class="form-group">
+            <label for="pincode">Pincode <span class="red">*</span></label>
+            <input type="number" class="form-control" id="pincode">
+          </div>
+          <button type="submit" class="btn primary-btn">Save</button>
+        </form>
+      </div>
+      
+    </div>
+  </div>
+  
+
+  <!-- /SECTION -->
+</div>
+
+
+<script>
+  const form=document.getElementById('form-address');
+  form.addEventListener('submit',async (e)=>{
+    e.preventDefault();
+    const name=document.getElementById('name').value.trim()
+    const mobile=document.getElementById('mobile').value
+    const address=document.getElementById('address').value.trim()
+    const city=document.getElementById('city').value.trim()
+    const state=document.getElementById('state').value.trim()
+    const pincode=document.getElementById('pincode').value
+    const error=document.getElementById('error');
+    if(!name || !mobile || !address || !city || !state || !pincode){
+      return error.innerText="Please fill all the fields"
+    }
+
+    if (!/^[a-z ,.'-]+$/i.test(name)) {
+      return (error.innerText = "Invalid name");
+    }
+    if (!/^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$/.test(mobile)) {
+      return (error.innerText = "Invalid phone number");
+    }
+    if(!/^[1-9]{1}[0-9]{2}\s{0,1}[0-9]{3}$/.test(pincode)){
+      return (error.innerText = "Invalid pin code");
+    }
+    const rawData=await fetch('/add-address',{
+      method:"POST",
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify({name,mobile,city,address,state,pincode})
+    })
+    if(rawData.ok){
+      const data=await rawData.json();
+      if(data.status==="success"){
+       return window.location.href="/my-profile"
+      }
+    }
+    return error.innerText="Something went wrong try again"
+  })
+</script>
+<%- include("../layouts/userFooter") %>

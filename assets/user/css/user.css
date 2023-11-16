@@ -3,6 +3,29 @@
     margin: 0;
 }
 
+/* util */
+.item-center{
+    display: flex;
+    justify-content: center;
+}
+input[type="number"]::-webkit-inner-spin-button,input[type="number"]::-webkit-inner-outer-button{
+    display: none;
+}
+.error{
+    height: 40px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #f80029;
+    font-weight: 700;
+}
+.red{
+    color: #D10024;
+}
+/* util */
+
+
 .banner{
     height: 390px;
 }
@@ -387,6 +410,79 @@
 .btn-address-div > button:hover{
     opacity: 0.9;
     cursor: pointer;
+}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  
+  /* Modal Content/Box */
+  .modal-content {
+    background-color: #ffffff;
+    margin: 10% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 450Px; /* Could be more or less, depending on screen size */
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+  }
+  .confirm-modal-buttons >button{
+    width: 150px;
+    height: 50px;
+    margin: 0 5px;
+  }
+  /* The Close Button */
+  .close {
+    color: #000000;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .profile-edit-buttons{
+    display: none;
+  }
+
+.profile-edit-buttons > button{
+    width: 100px;
+}
+.change-pwd-container > input{
+ width: 300px;
+ height: 40px;
+ font-size: 18px;
+ font-family: Verdana, Geneva, Tahoma, sans-serif;
+ margin-bottom:  20px;
+
+}
+
+.change-pwd-container{
+    display: flex;
+    flex-direction: column;
+}
+button:focus{
+    border: none !important;
+    outline: none !important;
+}
+.new-password-div{
+    display: none;
 }
 
 
