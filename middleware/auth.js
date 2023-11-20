@@ -3,7 +3,7 @@ const isLogin=async (req,res,next)=>{
         if(req.session.userId){
             next();
         }else{
-            res.redirect('/login');
+            res.redirect('/home');
         }
     } catch (error) {
         console.log(error.message);
@@ -14,7 +14,7 @@ const isLogin=async (req,res,next)=>{
 const isLogout=async(req,res,next)=>{
      try {
         if(req.session.userId){
-          return  res.redirect('back');
+          return  res.redirect('/home');
         }
         next();
         
@@ -36,10 +36,10 @@ const changePassword=async(req,res,next)=>{
 
 const tempAccess=async(req,res,next)=>{
     try {
-        if(req.session.tempUserId){
+        if(req.session.tempUserId  && !req.session.otpVerified){
             next()
         }else{
-            res.redirect('/home');
+            res.redirect('back');
         }
     } catch (error) {
         console.log(error.message);

@@ -1,27 +1,8 @@
-const User = require("../model/userModel");
+const User = require("../../model/userModel");
 const bcrypt = require("bcrypt");
-const Category = require("../model/categoryModel");
-const Product = require("../model/productModel");
-const sendMail = require("../services/sendMail");
-const UserOTP = require("../model/userOTPVerification");
-const securePassword = require("../services/securePassword");
-const { json } = require("express");
-
-const home = async (req, res) => {
-  res.redirect("/home");
-};
-const loadHome = async (req, res) => {
-  try {
-    const user = req.session.userId ? req.session.user : null;
-    const products = await Product.find({ listed: 1 })
-      .limit(4)
-      .populate("category")
-      .exec();
-    if (products) {
-      res.render("user/home", { products, user });
-    }
-  } catch (error) {}
-};
+const sendMail = require("../../services/sendMail");
+const UserOTP = require("../../model/userOTPVerification");
+const securePassword = require("../../services/securePassword");
 
 const loadRegister = async (req, res) => {
   try {
@@ -63,6 +44,7 @@ const insertUser = async (req, res) => {
     console.log(error.message);
   }
 };
+
 const showVerify = async (req, res) => {
   try {
     const userId = req.session.tempUserId;
@@ -153,7 +135,6 @@ const loginLoad = async (req, res) => {
     console.log(error.message);
   }
 };
-
 const verifyLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -218,6 +199,7 @@ const forgetVerify = async (req, res) => {
     console.log(error.message);
   }
 };
+
 const showPasswordOtp = async (req, res) => {
   try {
     const userId = req.session.tempUserId;
@@ -244,6 +226,7 @@ const showPasswordOtp = async (req, res) => {
     console.log(error.message);
   }
 };
+
 const passwordCheckOTP = async (req, res) => {
   try {
     const { otp } = req.body;
@@ -266,7 +249,6 @@ const passwordCheckOTP = async (req, res) => {
 
 const showChangePassword = async (req, res) => {
   try {
-    req.session.otpVerified = null;
     res.render("user/changePassword");
   } catch (error) {
     console.log(error.message);
@@ -275,7 +257,7 @@ const showChangePassword = async (req, res) => {
 
 const changePassword = async (req, res) => {
   try {
-    const id = req.session.tempUserId;
+    const id = req.session.tempUserId ?? req.session.userId;
     const password = req.body.password;
     const hashPassword = await securePassword(password);
     if (hashPassword) {
@@ -285,6 +267,7 @@ const changePassword = async (req, res) => {
         { new: true }
       );
       if (userData) {
+        req.session.otpVerified = null;
         req.session.tempUserId = null;
         req.session.userId = userData._id;
         req.session.user = userData.name;
@@ -299,19 +282,28 @@ const changePassword = async (req, res) => {
     console.log(error.message);
   }
 };
-
-const showShop = async (req, res) => {
+const checkPassword = async (req, res) => {
   try {
-    const user = req.session.user ?? null;
-    const products = await Product.find({ listed: 1 })
-      .populate("category")
-      .exec();
-    res.render("user/shop", { products });
-  } catch (error) {}
-  const user = req.session.user ?? null;
-  const products = await Product.find();
-  res.render("user/shop", { products });
+    const id = req.session.userId;
+    const { password } = req.body;
+    const userData = await User.findById({ _id: id });
+    if (userData) {
+      const passwordCheck = await bcrypt.compare(password, userData.password);
+      if (passwordCheck) {
+        return res.json({ status: "success" });
+      } else {
+        return res.json({
+          status: "failed",
+          message: "Password doesn't match",
+        });
+      }
+    }
+    res.json({ status: "failed", message: "Something went wrong! Try again" });
+  } catch (error) {
+    console.log(error.message);
+  }
 };
+
 const userLogout = async (req, res) => {
   try {
     req.session.destroy((err) => {
@@ -326,192 +318,20 @@ const userLogout = async (req, res) => {
   }
 };
 
-const showProductPage = async (req, res) => {
-  try {
-    const id = req.params.id;
-    const product = await Product.findById({ _id: id });
-    if (product) {
-      const stock = {};
-      if (product.quantity === 0) {
-        stock.lowStock = true;
-        stock.status = "Out of stock";
-      } else if (product.quantity <= 5) {
-        stock.lowStock = true;
-        stock.status = `Only ${product.quantity} left`;
-      } else {
-        stock.lowStock = false;
-        stock.status = "In stock";
-      }
-      res.render("user/productPage", { product, stock });
-    } else {
-      res.redirect("/");
-    }
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
-const showProfile = async (req, res) => {
-  try {
-    const id = req.session.userId;
-    const user = req.session.user;
-    const userData = await User.findById({ _id: id });
-    res.render("user/profile", { user, userData });
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
-const showAddAddress = async (req, res) => {
-  try {
-    res.render("user/addAddress", { user: req.session.user });
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
-const addAddress = async (req, res) => {
-  try {
-    const { name, mobile, address, city, pincode, state } = req.body;
-    const newAddress = await User.findByIdAndUpdate(
-      { _id: req.session.userId },
-      {
-        $push: { address: { name, mobile, address, city, pincode, state } },
-      }
-    );
-    if (newAddress) {
-      res.json({ status: "success" });
-    }
-  } catch (error) {}
-};
-const showEditAddress = async (req, res) => {
-  try {
-    const addressId = req.params.id;
-    const userData = await User.findById(
-      { _id: req.session.userId },
-      { address: { $elemMatch: { _id: addressId } } }
-    );
-    const address = userData.address[0];
-    res.render("user/editAddress", { user: req.session.user, address });
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
-const editAddress = async (req, res) => {
-  try {
-    const { name, mobile, address, city, pincode, state, id } = req.body;
-    const updatedAddress = await User.findOneAndUpdate(
-      {"address._id": id },
-      {
-        $set: {
-          "address.$": {
-            name,
-            mobile,
-            address,
-            city,
-            pincode,
-            state,
-          },
-        },
-      }
-    );
-    if (updatedAddress) {
-      return res.json({ status: "success" });
-    }
-    res.json({ status: "failed" });
-  } catch (error) {
-    console.log(error.message);
-    res.json({ status: "failed" });
-  }
-};
-
-const deleteAddress = async (req,res)=>{
-  try {
-    const {addressId}=req.body;
-    const updatedAddress =await User.findOneAndUpdate({_id:req.session.userId},{$pull:{
-      address:{
-        _id:addressId
-      }
-    }});
-    console.log(req.session.userId,addressId,updatedAddress);
-    if(updatedAddress){
-      return res.json({status:"success"})
-    }
-return res.json({status:"failed"});
-
-  } catch (error) {
-    console.log(error.message);
-    res.json({ status: "failed" });
-  }
-}
-
-const editProfile=async (req,res)=>{
-  try {
-    const {name,phone}=req.body;
-    const userData=await User.findByIdAndUpdate({_id:req.session.userId},{name,phone},{new:true})
-    if(userData){
-    return  res.json({
-        status:"success",
-        data:{
-          name:userData.name,
-          phone:userData.phone
-        }
-      })
-    }
-
-    res.json({status:"failed"})
-  } catch (error) {
-    console.log(error.message);
-    res.json({status:"failed"})
-  }
-}
-const checkPassword=async (req,res)=>{
-  try {
-    const id=req.session.userId;
-    const {password}=req.body;
-    const userData=await User.findById({_id:id});
-    if(userData){
-      const passwordCheck=await bcrypt.compare(password,userData.password);
-      if(passwordCheck){
-       return res.json({status:"success"});
-      }else{
-       return res.json({status:"failed",message:"Password doesn't match"})
-      }
-    }
-    res.json({status:"failed",message:"Something went wrong! Try again"})
-  } catch (error) {
-    console.log(error.message);
-  }
-}
-
 module.exports = {
-  home,
   loadRegister,
   insertUser,
+  showVerify,
   checkOTP,
   resendOTP,
   loginLoad,
   verifyLogin,
   forgetPassword,
   forgetVerify,
-  showVerify,
   showPasswordOtp,
   passwordCheckOTP,
   showChangePassword,
   changePassword,
-  loadHome,
-  showShop,
-  userLogout,
-  showProductPage,
-  showProfile,
-  showAddAddress,
-  addAddress,
-  showEditAddress,
-  editAddress,
-  deleteAddress,
-  editProfile,
   checkPassword,
-  
-
+  userLogout,
 };

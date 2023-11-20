@@ -1,7 +1,7 @@
 const express = require('express');
 const adminController =require('../controller/adminController');
 const admin_route = express.Router();
-const imageUpload =require('../config/multerConfig');
+const imageUpload =require('../middleware/multerConfig');
 const auth =require('../middleware/adminAuth');
 
 

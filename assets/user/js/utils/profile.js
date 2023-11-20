@@ -1,6 +1,7 @@
 const cmodal = document.getElementById("confirm-modal");
 const pmodal = document.getElementById("password-modal");
 const close = document.getElementsByClassName("confirm-close")[0];
+const pClose = document.getElementsByClassName("password-close")[0];
 
 function showConfirm(item) {
   const id = item.dataset.id;
@@ -12,13 +13,18 @@ function changePassword() {
   const error = document.querySelector(".change-pwd-error");
   const oldPwdContainer = document.querySelector(".old-password-div");
   const newPwdContainer = document.querySelector(".new-password-div");
+  const message=document.querySelector(".message-div");
   oldPwdContainer.style.display = "block";
   newPwdContainer.style.display = "none";
+  message.style.display = "none";
   error.innerText = "";
   pmodal.style.display = "block";
 }
+
 close.onclick = function () {
   cmodal.style.display = "none";
+};
+pClose.onclick = function () {
   pmodal.style.display = "none";
 };
 window.onclick = function (event) {
@@ -129,12 +135,13 @@ async function checkPassword() {
   try {
     const oldPwdContainer = document.querySelector(".old-password-div");
     const newPwdContainer = document.querySelector(".new-password-div");
-    const oldPassword = document.getElementById("old-password").value.trim();
+    const oldPasswordInput = document.getElementById("old-password")
+    const oldPassword = oldPasswordInput.value.trim();
     const error = document.querySelector(".change-pwd-error");
     if (!oldPassword) {
       return (error.innerText = "Enter a valid password");
     }
-    const rawData = await fetch("check-password", {
+    const rawData = await fetch("/check-password", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -145,14 +152,56 @@ async function checkPassword() {
       const data = await rawData.json();
       if (data.status === "success") {
         error.innerText = "";
+        oldPasswordInput.value=''
         oldPwdContainer.style.display = "none";
         newPwdContainer.style.display = "block";
-
+        
         return;
       } else {
         return (error.innerHTML = data.message);
       }
     }
     error.innerHTML = "Something went wrong! Try again";
-  } catch (error) {}
+  } catch (error) {
+    error.innerHTML = "Something went wrong! Try again";
+  }
+}
+async function newPassword(){
+  try {
+    const newPwdContainer = document.querySelector(".new-password-div");
+    const error = document.querySelector(".change-pwd-error");
+    const passwordInput=document.getElementById('new-password')
+    const confPasswordInput=document.getElementById('c-new-password')
+    const password=passwordInput.value.trim();
+    const confPassword=confPasswordInput.value.trim();
+
+    const message=document.querySelector('.message-div');
+    if(!password || !confPassword){
+    return error.innerText="Fields can't be empty"
+    }
+    if(password!==confPassword){
+    return error.innerText="Passwords doesn't match!"
+    }
+    const rawData=await fetch("/change-password",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({password})
+    })
+    if(rawData.ok){
+      const data=await rawData.json();
+      if(data.status==="success"){
+        newPwdContainer.style.display="none"
+        error.innerText=''
+        passwordInput.value=''
+        confPasswordInput.value=''
+        message.style.display="block"
+      }else{
+        error.innerText=data.message
+      }
+    }
+  } catch (error) {
+    
+  }
 }

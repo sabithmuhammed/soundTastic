@@ -30,14 +30,22 @@
       <!-- row -->
       <div class="row">
         <!-- /shop -->
-        <% products.forEach((item)=>{ %>
+        <% if(!products.length>0){ %>
+        <div class="col-md-12 col-xs-12 text-center">
+          <h4>No products found</h4>
+        </div>
+        <% } %> <% products.forEach((item)=>{ %>
         <div class="col-md-3 col-xs-6">
-          <div class="product" onclick="window.location.href='product/<%= item._id %>'">
+          <div
+            class="product"
+            onclick="window.location.href='product/<%= item._id %>'"
+          >
             <div class="product-img">
               <img src="/images/products/<%= item.images[0] %>" alt="" />
             </div>
             <div class="product-body">
               <p><%= item.category.name %></p>
+              <p><%= item.brand %></p>
               <h5><%= item.name %></h5>
               <div class="price">
                 <span class="original-price">&#8377;<%= item.price %></span>
@@ -46,10 +54,25 @@
                 >
               </div>
               <div class="add-to-cart-div">
+                <% if(locals.user) { %>
                 <div class="circle"><i class="fa-regular fa-heart"></i></div>
                 <div class="circle">
                   <i class="fa-solid fa-cart-shopping"></i>
                 </div>
+                <% }else{ %>
+                <div
+                  class="circle"
+                  onclick="event.stopPropagation(); showLogin()"
+                >
+                  <i class="fa-regular fa-heart"></i>
+                </div>
+                <div
+                  class="circle"
+                  onclick="event.stopPropagation(); showLogin()"
+                >
+                  <i class="fa-solid fa-cart-shopping"></i>
+                </div>
+                <% } %>
               </div>
             </div>
           </div>
@@ -64,17 +87,37 @@
     <!-- /SECTION -->
 
     <!-- product-end -->
-    <!-- <div class="section">
-  <div class="container">
-    <div class="row">
-      <div class="col-12 show-more">
-        <button class="primary-btn mx-auto ">SHOW MORE</button>
+    <div class="section">
+      <div class="container">
+        <div class="row">
+          <div class="col-12 show-more">
+            <div>
+              <% if ( page > 1) { %>
+              <a
+                href="/shop?page=<%= page - 1 %>&search=<%= search %>&category=<%= category %>"
+                class="pagination-btn"
+                ><i class="fa-solid fa-chevron-left"></i
+              ></a>
+              <% }else{ %>
+              <a class="pagination-disabled"
+                ><i class="fa-solid fa-chevron-left"></i
+              ></a>
+              <%} %> <% if (page < totalPages) { %>
+              <a
+                href="/shop?page=<%= page + 1 %>&search=<%= search %>&category=<%= category %>"
+                class="pagination-btn"
+                ><i class="fa-solid fa-chevron-right"></i
+              ></a>
+              <% }else{ %>
+              <a class="pagination-disabled"
+                ><i class="fa-solid fa-chevron-right"></i
+              ></a>
+              <%} %>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div> -->
-
- 
   </div>
 </div>
 <%- include("../layouts/userFooter") %>

@@ -14,7 +14,7 @@
           </div>
           <div class="shop-body">
             <h3>Speakers</h3>
-            <a href="#" class="cta-btn"
+            <a href="/shop?category=Speakers" class="cta-btn"
               >Shop now <i class="fa fa-arrow-circle-right"></i
             ></a>
           </div>
@@ -29,7 +29,7 @@
           </div>
           <div class="shop-body">
             <h3>Wired</h3>
-            <a href="#" class="cta-btn"
+            <a href="/shop?category=Wired" class="cta-btn"
               >Shop now <i class="fa fa-arrow-circle-right"></i
             ></a>
           </div>
@@ -45,7 +45,7 @@
           </div>
           <div class="shop-body">
             <h3>Wireless</h3>
-            <a href="#" class="cta-btn"
+            <a href="/shop?category=Wireless" class="cta-btn"
               >Shop now <i class="fa fa-arrow-circle-right"></i
             ></a>
           </div>
@@ -61,7 +61,7 @@
           </div>
           <div class="shop-body">
             <h3>Truly wireless</h3>
-            <a href="#" class="cta-btn"
+            <a href="/shop?category=Truly wireless" class="cta-btn"
               >Shop now <i class="fa fa-arrow-circle-right"></i
             ></a>
           </div>
@@ -138,10 +138,17 @@
                       <span class="mrk-down"><strike>&#8377;<%= item.md_price %></strike></span>
                     </div>
                     <div class="add-to-cart-div">
-                      <div class="circle"><i class="fa-regular fa-heart"></i></div>
-                      <div class="circle">
-                        <i class="fa-solid fa-cart-shopping"></i>
-                      </div>
+                      <% if(locals.user) { %>
+                        <div class="circle"><i class="fa-regular fa-heart"></i></div>
+                        <div class="circle" data-addToCart data-id="<%= item.id %>">
+                          <i class="fa-solid fa-cart-shopping"></i>
+                        </div>
+                        <% }else{ %>
+                        <div class="circle" onclick="event.stopPropagation(); showLogin()"><i class="fa-regular fa-heart"></i></div>
+                        <div class="circle" onclick="event.stopPropagation(); showLogin()">
+                          <i class="fa-solid fa-cart-shopping"></i>
+                        </div>
+                        <% } %>
                     </div>
                   </div>
                 </div>
