@@ -1,149 +1,111 @@
-<%- include("../layouts/userHeader") %>
-<%- include("../layouts/userNavbar") %>
-
+<%- include("../layouts/userHeader") %> <%- include("../layouts/userNavbar") %>
+<script src="/user/js/utils/cart.js" defer></script>
 <div class="section mb-5">
   <!-- container -->
   <div class="container">
     <!-- row -->
     <div class="row cart">
-        <div class="col-md-8 cart-products">
-            <div class="row cart-card">
-                <div class="col-md-10">
-                    <h2>Shoping Cart</h2>
-
-                </div>
-                <div class="col-md-2">
-                    <h5>3 items</h5>
-
-                </div>
-             
-            </div>
-            <div class="row cart-card">
-                <div class="col-sm-3 col-12">
-                    <div class="cart-image">
-                        <img src="\images\products\1699590618359_158303549_twireless4.webp" alt="" >
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="cart-title ">
-                        <h4>Boat headphones with mic</h4>
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="cart-counter">
-                        <button class="btn-counter">
-                            &ndash;
-                        </button>
-                        <input type="number" name="" id="" class="counter" readonly value="1">
-                        <button class="btn-counter">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="cart-price-div d-flex justify-between">
-                        <h4>&#8377;456</h4>
-                        <button class="cart-remove">&times;</button>
-                    </div>
-                </div>
-            
-            </div>
-
-            <div class="row cart-card">
-                <div class="col-sm-3 col-12">
-                    <div class="cart-image">
-                        <img src="\images\products\1699590618359_158303549_twireless4.webp" alt="" >
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="cart-title ">
-                        <h4>Boat headphones with mic</h4>
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="cart-counter">
-                        <button class="btn-counter">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                        <input type="number" name="" id="" class="counter">
-                        <button class="btn-counter">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="cart-price-div d-flex justify-between">
-                        <h4>&#8377;456</h4>
-                        <button class="cart-remove">&times;</button>
-                    </div>
-                </div>
-            
-            </div>
-
-            <div class="row cart-card">
-                <div class="col-sm-3 col-12">
-                    <div class="cart-image">
-                        <img src="\images\products\1699590618359_158303549_twireless4.webp" alt="" >
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="cart-title ">
-                        <h4>Boat headphones with mic</h4>
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="cart-counter">
-                        <button class="btn-counter">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                        <input type="number" name="" id="" class="counter">
-                        <button class="btn-counter">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="cart-price-div d-flex justify-between">
-                        <h4>&#8377;456</h4>
-                        <button class="cart-remove">&times;</button>
-                    </div>
-                </div>
-            
-            </div>
-            
+      <% if(locals.cartItems){ %>
+      <div class="col-md-8 cart-products">
+        <div class="row cart-card">
+          <div class="col-md-10">
+            <h2>Shoping Cart</h2>
+          </div>
+          <div class="col-md-2">
+            <h5><%= cartItems.items.length > 1 ?`${cartItems.items.length} Items`:`${cartItems.items.length} Item` %></h5>
+          </div>
         </div>
-        <div class="col-md-4 cart-details">
-            <h2>Summary</h2>
-            <hr>
-            <div class="d-flex w-100 justify-between">
-                <h4 class="fs-4">ITEMS - 3</h4><h4>&#8377;2999</h4>
-            </div>
-            <div class="shipping d-flex justify-between">
-                <h4>SHIPPING</h4>
-                <h5 class="red">FREE</h5>
-            </div>
-            <div class="coupon d-flex">
-                <h4>COUPON CODE</h4>
-                <div class="coupon-input d-flex">
-                    <input type="text" id="coupon">
-                    <button class="btn-apply">APPLY</button>
+        <% cartItems.items.forEach((item)=>{ %>
+            <div class="row cart-card">
+                <div class="col-sm-3 col-12">
+                  <div class="cart-image">
+                    <img
+                      src="/images/products/<%= item.productId?.images?.[0] %>"
+                      alt=""
+                    />
+                  </div>
                 </div>
-                
-                <label for="coupon">Enter your code</label>
-            </div>
-            <div class="coupon-container">
-                <div class="d-flex justify-between coupon-price"><h4>Coupon name</h4><h4>-&#8377;200</h4></div>
+                <div class="col-sm-3">
+                  <div class="cart-title">
+                    <h4><%= item.productId.name %></h4>
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="cart-counter">
+                    <button class="btn-counter" data-btnCartMinus data-id="<%= item.productId._id %>">&ndash;</button>
+                    <input
+                      type="number"
+                      name=""
+                      id=""
+                      class="counter"
+                      readonly
+                      value="<%= item.quantity %>"
+                      data-input="<%= item.productId._id %>"
+                    />
+                    <button class="btn-counter" data-btnCartPlus data-id="<%= item.productId._id %>">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="cart-price-div d-flex justify-between">
+                    <h4>&#8377;<span><%= item.quantity * item.productId.price %></span></h4>
+                    <button class="cart-remove">&times;</button>
+                  </div>
+                </div>
+              </div>
+       <% }) %>
 
-            </div>
-            <hr>
-            
-            <div class="total d-flex justify-between">
-                <h4>TOTAL</h4>
-                <h4>&#8377;2999</h4>
-            </div>
-            <button class="btn-checkout">CHECKOUT</button>
+        
+
+
+      </div>
+      <div class="col-md-4 cart-details">
+        <h2>Summary</h2>
+        <hr />
+        <div class="d-flex w-100 justify-between">
+          <h4 class="fs-4"><%= cartItems.items.length > 1 ?`ITEMS ${cartItems.items.length}`:`ITEM ${cartItems.items.length}` %></h4>
+          <h4>&#8377;<span data-total><%= cartItems.totalPrice %></span></h4>
         </div>
-    </div>    
+        <div class="shipping d-flex justify-between">
+          <h4>SHIPPING</h4>
+          <h5 class="red">FREE</h5>
+        </div>
+        <div class="coupon d-flex">
+          <h4>COUPON CODE</h4>
+          <div class="coupon-input d-flex">
+            <input type="text" id="coupon" />
+            <button class="btn-apply">APPLY</button>
+          </div>
+
+          <label for="coupon">Enter your code</label>
+        </div>
+        <div class="coupon-container">
+          <div class="d-flex justify-between coupon-price">
+            <h4>Coupon name</h4>
+            <h4>-&#8377;200</h4>
+          </div>
+        </div>
+        <hr />
+
+        <div class="total d-flex justify-between">
+          <h4>TOTAL</h4>
+          <h4>&#8377;<span data-total><%= cartItems.totalPrice %></span></h4>
+        </div>
+        <button class="btn-checkout">CHECKOUT</button>
+      </div>
+
+      <% } else { %>
+      <div class="col-md-12 item-center">
+        <div class="d-flex flex-column align-center">
+          <div class="cart-empty-image item-center">
+            <h3>Your cart is empty!</h3>
+          </div>
+          <a href="">SHOP NOW</a>
+        </div>
+      </div>
+      <% } %>
+    </div>
   </div>
 </div>
 

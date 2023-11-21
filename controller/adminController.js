@@ -102,7 +102,7 @@ const seeCustomers = async (req, res) => {
         },
       ],
     });
-    res.render("admin/customers", { customers });
+    res.render("admin/customers", { customers,search });
   } catch (error) {
     console.log(error.message);
   }

@@ -36,6 +36,9 @@ input[type="number"]::-webkit-inner-spin-button,input[type="number"]::-webkit-in
 .justify-between{
     justify-content: space-between;
 }
+.flex-column{
+    flex-direction: column;
+}
 /* util */
 
 
@@ -601,6 +604,9 @@ button:focus{
 .btn-counter:hover{
     opacity: .9;
 }
+.btn-counter:disabled{
+    opacity: 0.9;
+}
 .counter{
     width: 50px;
     height: 30px;
@@ -617,7 +623,16 @@ button:focus{
     font-size: 25px;
     border: none;
 }
-
+.cart-empty-image{
+    width: 80vw;
+    height: 80vw;
+    max-width: 400px;
+    max-height: 400px;
+    background-image: url("/user/img/empty-cart.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
 @media screen and (max-width: 992px){
     .container-profile{
         flex-direction: column;

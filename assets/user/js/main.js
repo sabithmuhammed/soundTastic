@@ -48,8 +48,9 @@ const addTOCart = async (event) => {
   try {
     event.stopPropagation();
     const cartCount = document.querySelector("[data-cartQuantity]");
-	const modalMessage=document.querySelector("#add-to-cart-msg");
-    const productId = event.target.dataset.id;
+    const modalMessage = document.querySelector("#add-to-cart-msg");
+    const productId = event.currentTarget.dataset.id;
+    console.log(productId);
     const rawData = await fetch("/add-to-cart", {
       method: "POST",
       headers: {
@@ -60,14 +61,15 @@ const addTOCart = async (event) => {
     if (rawData.ok) {
       const data = await rawData.json();
       if (data.status === "success") {
-		cartCount.classList.add("qty");
+        cartCount.classList.add("qty");
         cartCount.innerText = data.count;
-		modalMessage.innerText=data.message
-        cModal.style.display = "block";
-      } else {
-		modalMessage.innerText=data.message
+        modalMessage.innerText = data.message;
         cModal.style.display = "block";
       }
+    } else {
+      const data = await rawData.json();
+      modalMessage.innerText = data.message;
+      cModal.style.display = "block";
     }
   } catch (error) {}
 };

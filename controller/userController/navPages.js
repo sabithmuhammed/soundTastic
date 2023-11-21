@@ -1,5 +1,6 @@
 const Category = require("../../model/categoryModel");
 const Product = require("../../model/productModel");
+const cartUtils = require("../../utilities/cartUtilities");
 
 const home = async (req, res) => {
   res.redirect("/home");
@@ -11,8 +12,9 @@ const loadHome = async (req, res) => {
       .limit(4)
       .populate("category")
       .exec();
+    const cartCount = await cartUtils.getCartCount(req.session.userId);
     if (products) {
-      res.render("user/home", { products, user });
+      res.render("user/home", { products, user,cartCount });
     }
   } catch (error) {}
 };
@@ -57,6 +59,7 @@ const showShop = async (req, res) => {
       .limit(PAGE_SIZE)
       .populate("category")
       .exec();
+    const cartCount = await cartUtils.getCartCount(req.session.userId);
     res.render("user/shop", {
       products,
       user,
@@ -64,21 +67,19 @@ const showShop = async (req, res) => {
       totalPages,
       search,
       category,
+      cartCount,
     });
   } catch (error) {
     console.log(error);
   }
-  const user = req.session.user ?? null;
-  const products = await Product.find();
-  res.render("user/shop", { products });
 };
-
 
 const showProductPage = async (req, res) => {
   try {
     const user = req.session.userId ? req.session.user : null;
     const id = req.params.id;
     const product = await Product.findById({ _id: id });
+    const cartCount = await cartUtils.getCartCount(req.session.userId);
     if (product) {
       const stock = {};
       if (product.quantity === 0) {
@@ -91,7 +92,7 @@ const showProductPage = async (req, res) => {
         stock.lowStock = false;
         stock.status = "In stock";
       }
-      res.render("user/productPage", { product, stock, user });
+      res.render("user/productPage", { product, stock, user,cartCount });
     } else {
       res.redirect("/");
     }

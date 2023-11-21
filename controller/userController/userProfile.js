@@ -1,11 +1,13 @@
 const User = require("../../model/userModel");
-
+const cartUtils = require("../../utilities/cartUtilities");
 const showProfile = async (req, res) => {
     try {
+      
       const id = req.session.userId;
       const user = req.session.user;
       const userData = await User.findById({ _id: id });
-      res.render("user/profile", { user, userData });
+      const cartCount = await cartUtils.getCartCount(id)
+      res.render("user/profile", { user, userData ,cartCount});
     } catch (error) {
       console.log(error.message);
     }
@@ -13,7 +15,8 @@ const showProfile = async (req, res) => {
 
   const showAddAddress = async (req, res) => {
     try {
-      res.render("user/addAddress", { user: req.session.user });
+      const cartCount = await cartUtils.getCartCount(req.session.userId)
+      res.render("user/addAddress", { user: req.session.user ,cartCount});
     } catch (error) {
       console.log(error.message);
     }
@@ -42,8 +45,9 @@ const showProfile = async (req, res) => {
         { _id: req.session.userId },
         { address: { $elemMatch: { _id: addressId } } }
       );
+      const cartCount = await cartUtils.getCartCount(req.session.userId)
       const address = userData.address[0];
-      res.render("user/editAddress", { user: req.session.user, address });
+      res.render("user/editAddress", { user: req.session.user, address,cartCount });
     } catch (error) {
       console.log(error.message);
     }
