@@ -1,7 +1,7 @@
 const btnMinus=document.querySelectorAll('[data-btnCartMinus]');
 const btnPlus=document.querySelectorAll('[data-btnCartPlus]');
 const cartConfirm=document.querySelectorAll('[data-cartConfirm]')
-const cartModal=document.querySelector('#cart-modal');
+const cartModal=document.querySelector('#cart-confirm-modal');
 
 // funcion for change cart quantity
 const changeCartQuantity=async(event,operation)=>{

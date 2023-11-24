@@ -127,21 +127,20 @@
   </div>
 </div>
 
-<div id="cart-modal" class="modal">
+<div id="cart-confirm-modal" class="modal">
   <!-- Modal content -->
   <div class="modal-content">
     <h6 class="change-pwd-error text-danger"></h6>
-    <div class="old-password-div">
-      <div class="change-pwd-container warning-div">
+    <div class="warning-div">
+      <div class="">
         <h5>Do you really want to remove this item from your cart ?</h5>
-        <input type="password" name="" id="old-password" />
-        <button class="btn btn-primary" data-id="" data-cartRemove>Check</button>
-      </div>
-    </div>
-    <div class="message-div">
-      <div class="change-pwd-container">
-        <h5>Password changed successfully</h5>
-        <button class="password-close btn btn-primary">Ok</button>
+        <div class="confirm-modal-buttons">
+          <input type="hidden" value="" id="address-id" />
+          <button class="btn btn-primary confirm-close">CLOSE</button>
+          <button class="btn btn-danger" onclick="deleteAddress()">
+            YES, DELETE
+          </button>
+        </div>
       </div>
     </div>
   </div>
