@@ -101,7 +101,18 @@ const addToCart = async (req, res) => {
 
 const changeQuantity = async (req, res) => {
   try {
-    const { productId, operation } = req.body;
+    const { productId, operation, curQuantity } = req.body;
+    const productDetails = await Product.findById({ _id: productId });
+    if (!productDetails) {
+      return res
+        .status(404)
+        .json({ status: "failed", message: "product not found" });
+    }
+    if (productDetails.quantity <= curQuantity && operation===1) {
+      return res
+      .status(422)
+      .json({ status: "failed", message: "Stock unavailable" });
+    }
     const updatedCart = await Cart.findOneAndUpdate(
       {
         userId: req.session.userId,
@@ -110,18 +121,20 @@ const changeQuantity = async (req, res) => {
       {
         $inc: {
           "items.$.quantity": operation,
+          totalPrice:productDetails.price*operation
         },
       },
       { new: true }
     );
     if (updatedCart) {
-      const product=updatedCart.items.find((item)=>{
-        return item._id.equals(productId);
-      })
-      const data={
+      const product = updatedCart.items.find((item) => {
+        return item.productId.equals(productId);
+      });
+      const data = {
         product,
-        total:updatedCart.totalPrice,
-      }
+        total: parseFloat(updatedCart.totalPrice),
+        price:productDetails.price*product.quantity
+      };
       return res.status(200).json({ status: "success", data });
     }
   } catch (error) {

@@ -12,59 +12,77 @@
             <h2>Shoping Cart</h2>
           </div>
           <div class="col-md-2">
-            <h5><%= cartItems.items.length > 1 ?`${cartItems.items.length} Items`:`${cartItems.items.length} Item` %></h5>
+            <h5>
+              <%= cartItems.items.length > 1 ?`${cartItems.items.length}
+              Items`:`${cartItems.items.length} Item` %>
+            </h5>
           </div>
         </div>
         <% cartItems.items.forEach((item)=>{ %>
-            <div class="row cart-card">
-                <div class="col-sm-3 col-12">
-                  <div class="cart-image">
-                    <img
-                      src="/images/products/<%= item.productId?.images?.[0] %>"
-                      alt=""
-                    />
-                  </div>
-                </div>
-                <div class="col-sm-3">
-                  <div class="cart-title">
-                    <h4><%= item.productId.name %></h4>
-                  </div>
-                </div>
-                <div class="col-sm-3">
-                  <div class="cart-counter">
-                    <button class="btn-counter" data-btnCartMinus data-id="<%= item.productId._id %>">&ndash;</button>
-                    <input
-                      type="number"
-                      name=""
-                      id=""
-                      class="counter"
-                      readonly
-                      value="<%= item.quantity %>"
-                      data-input="<%= item.productId._id %>"
-                    />
-                    <button class="btn-counter" data-btnCartPlus data-id="<%= item.productId._id %>">
-                      <i class="fas fa-plus"></i>
-                    </button>
-                  </div>
-                </div>
-                <div class="col-sm-3">
-                  <div class="cart-price-div d-flex justify-between">
-                    <h4>&#8377;<span><%= item.quantity * item.productId.price %></span></h4>
-                    <button class="cart-remove">&times;</button>
-                  </div>
-                </div>
-              </div>
-       <% }) %>
-
-        
-
-
+        <div class="row cart-card" data-cartCard="<%= item.productId._id %>">
+          <div class="col-sm-3 col-12">
+            <div class="cart-image">
+              <img
+                src="/images/products/<%= item.productId?.images?.[0] %>"
+                alt=""
+              />
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="cart-title">
+              <h4><%= item.productId.name %></h4>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="cart-counter">
+              <button
+                class="btn-counter"
+                data-btnCartMinus
+                data-id="<%= item.productId._id %>"
+              >
+                &ndash;
+              </button>
+              <input
+                type="number"
+                name=""
+                id=""
+                class="counter"
+                readonly
+                value="<%= item.quantity %>"
+                data-input="<%= item.productId._id %>"
+              />
+              <button
+                class="btn-counter"
+                data-btnCartPlus
+                data-id="<%= item.productId._id %>"
+              >
+                <i class="fas fa-plus"></i>
+              </button>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="cart-price-div d-flex justify-between">
+              <h4>
+                &#8377;<span data-prodAmount="<%= item.productId._id %>"
+                  ><%= item.quantity * item.productId.price %></span
+                >
+              </h4>
+              <button class="cart-remove" data-id="<%= item.productId._id %>" data-cartConfirm>
+                &times;
+              </button>
+            </div>
+          </div>
+        </div>
+        <% }) %>
       </div>
       <div class="col-md-4 cart-details">
         <h2>Summary</h2>
         <hr />
         <div class="d-flex w-100 justify-between">
-          <h4 class="fs-4"><%= cartItems.items.length > 1 ?`ITEMS ${cartItems.items.length}`:`ITEM ${cartItems.items.length}` %></h4>
+          <h4 class="fs-4">
+            <%= cartItems.items.length > 1 ?`ITEMS
+            ${cartItems.items.length}`:`ITEM ${cartItems.items.length}` %>
+          </h4>
           <h4>&#8377;<span data-total><%= cartItems.totalPrice %></span></h4>
         </div>
         <div class="shipping d-flex justify-between">
@@ -105,6 +123,26 @@
         </div>
       </div>
       <% } %>
+    </div>
+  </div>
+</div>
+
+<div id="cart-modal" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <h6 class="change-pwd-error text-danger"></h6>
+    <div class="old-password-div">
+      <div class="change-pwd-container warning-div">
+        <h5>Do you really want to remove this item from your cart ?</h5>
+        <input type="password" name="" id="old-password" />
+        <button class="btn btn-primary" data-id="" data-cartRemove>Check</button>
+      </div>
+    </div>
+    <div class="message-div">
+      <div class="change-pwd-container">
+        <h5>Password changed successfully</h5>
+        <button class="password-close btn btn-primary">Ok</button>
+      </div>
     </div>
   </div>
 </div>
