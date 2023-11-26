@@ -88,7 +88,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <input type="number" class="form-control-plaintext border border-1 border-dark ps-3" id="product-quantity" name="quantity" placeholder="Please add values greater than zero" min="1">
+        <input type="number" class="form-control-plaintext border border-1 border-dark ps-3" id="product-quantity" name="quantity" placeholder="Please add values greater than zero" min="1" oninput="this.value = Math.abs(this.value)" required>
         <input type="hidden" name="id" id="product-id" value="">
       </div>
       <div class="modal-footer">

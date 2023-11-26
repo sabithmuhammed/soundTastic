@@ -46,5 +46,6 @@ user_route.post('/check-password',authController.checkPassword)
 
 user_route.get('/cart',auth.isLogin,cartController.showCart);
 user_route.post('/add-to-cart',auth.isLogin,cartController.addToCart);
-user_route.patch('/change-cart-quantity',cartController.changeQuantity)
+user_route.patch('/change-cart-quantity',cartController.changeQuantity);
+user_route.delete('/cart-remove',cartController.removeFromCart)
 module.exports = user_route;

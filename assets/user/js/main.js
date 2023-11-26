@@ -50,7 +50,6 @@ const addTOCart = async (event) => {
     const cartCount = document.querySelector("[data-cartQuantity]");
     const modalMessage = document.querySelector("#add-to-cart-msg");
     const productId = event.currentTarget.dataset.id;
-    console.log(productId);
     const rawData = await fetch("/add-to-cart", {
       method: "POST",
       headers: {

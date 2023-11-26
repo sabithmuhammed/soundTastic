@@ -5,14 +5,14 @@
   <div class="container">
     <!-- row -->
     <div class="row cart">
-      <% if(locals.cartItems){ %>
+      <% if(locals.cartItems?.items?.length){ %>
       <div class="col-md-8 cart-products">
         <div class="row cart-card">
           <div class="col-md-10">
             <h2>Shoping Cart</h2>
           </div>
           <div class="col-md-2">
-            <h5>
+            <h5 class="item-count">
               <%= cartItems.items.length > 1 ?`${cartItems.items.length}
               Items`:`${cartItems.items.length} Item` %>
             </h5>
@@ -79,7 +79,7 @@
         <h2>Summary</h2>
         <hr />
         <div class="d-flex w-100 justify-between">
-          <h4 class="fs-4">
+          <h4 class="fs-4 item-count">
             <%= cartItems.items.length > 1 ?`ITEMS
             ${cartItems.items.length}`:`ITEM ${cartItems.items.length}` %>
           </h4>
@@ -110,7 +110,7 @@
           <h4>TOTAL</h4>
           <h4>&#8377;<span data-total><%= cartItems.totalPrice %></span></h4>
         </div>
-        <button class="btn-checkout">CHECKOUT</button>
+        <button class="btn-checkout" data-checkout data-id="<%= cartItems._id %>">CHECKOUT</button>
       </div>
 
       <% } else { %>
@@ -119,7 +119,7 @@
           <div class="cart-empty-image item-center">
             <h3>Your cart is empty!</h3>
           </div>
-          <a href="">SHOP NOW</a>
+          <a href="/shop">SHOP NOW</a>
         </div>
       </div>
       <% } %>
@@ -130,17 +130,22 @@
 <div id="cart-confirm-modal" class="modal">
   <!-- Modal content -->
   <div class="modal-content">
-    <h6 class="change-pwd-error text-danger"></h6>
     <div class="warning-div">
       <div class="">
-        <h5>Do you really want to remove this item from your cart ?</h5>
-        <div class="confirm-modal-buttons">
-          <input type="hidden" value="" id="address-id" />
-          <button class="btn btn-primary confirm-close">CLOSE</button>
-          <button class="btn btn-danger" onclick="deleteAddress()">
-            YES, DELETE
+        <h4>Remove item</h4>
+        <h5 class="mb-5">Are you sure you want to remove this item?</h5>
+        <div class="confirm-modal-buttons w-100 item-center">
+          <button class="btn btn-primary confirm-close" data-cartModalClose>CLOSE</button>
+          <button class="btn btn-danger"  data-cartDelete data-id="">
+            YES, REMOVE
           </button>
         </div>
+      </div>
+    </div>
+    <div class="message-div">
+      <div class="change-pwd-container">
+        <h5>Item removed from cart</h5>
+        <button class="btn btn-primary" data-cartModalClose>Ok</button>
       </div>
     </div>
   </div>

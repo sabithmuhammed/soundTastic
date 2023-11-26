@@ -108,10 +108,10 @@ const changeQuantity = async (req, res) => {
         .status(404)
         .json({ status: "failed", message: "product not found" });
     }
-    if (productDetails.quantity <= curQuantity && operation===1) {
+    if (productDetails.quantity <= curQuantity && operation === 1) {
       return res
-      .status(422)
-      .json({ status: "failed", message: "Stock unavailable" });
+        .status(422)
+        .json({ status: "failed", message: "Stock unavailable" });
     }
     const updatedCart = await Cart.findOneAndUpdate(
       {
@@ -121,7 +121,7 @@ const changeQuantity = async (req, res) => {
       {
         $inc: {
           "items.$.quantity": operation,
-          totalPrice:productDetails.price*operation
+          totalPrice: productDetails.price * operation,
         },
       },
       { new: true }
@@ -133,10 +133,47 @@ const changeQuantity = async (req, res) => {
       const data = {
         product,
         total: parseFloat(updatedCart.totalPrice),
-        price:productDetails.price*product.quantity
+        price: productDetails.price * product.quantity,
       };
       return res.status(200).json({ status: "success", data });
     }
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({
+      error: "Inrernal Server Error",
+      message: "An unexpected error occured in server! please try again",
+    });
+  }
+};
+
+const removeFromCart = async (req, res) => {
+  try {
+    const { productId,quantity } = req.body;
+    const product = await Product.findById({_id:productId});
+    const reduceTotal = product.price * quantity;
+    const updatedCart = await Cart.findOneAndUpdate(
+      { userId: req.session.userId },
+      {
+        $pull: {
+          items: {
+            productId,
+          },
+        },
+        $inc:{
+          totalPrice:-reduceTotal
+        }
+
+      },
+      {
+        new: true,
+      }
+    );
+    const data={
+      items:updatedCart.items.length,
+      total:updatedCart.totalPrice
+    }
+    
+    res.status(200).json({status:"success",data})
   } catch (error) {
     console.log(error.message);
     return res.status(500).json({
@@ -150,4 +187,5 @@ module.exports = {
   showCart,
   addToCart,
   changeQuantity,
+  removeFromCart
 };
