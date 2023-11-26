@@ -6,6 +6,7 @@ const navPagesController = require('../controller/userController/navPages');
 const cartController = require('../controller/userController/cart');
 const userPageController=require('../controller/userController/userProfile');
 const authController = require('../controller/userController/authentication');
+const checkoutController = require('../controller/userController/checkout')
 
 user_route.get("/", navPagesController.home);
 user_route.get("/home", navPagesController.loadHome);
@@ -47,5 +48,8 @@ user_route.post('/check-password',authController.checkPassword)
 user_route.get('/cart',auth.isLogin,cartController.showCart);
 user_route.post('/add-to-cart',auth.isLogin,cartController.addToCart);
 user_route.patch('/change-cart-quantity',cartController.changeQuantity);
-user_route.delete('/cart-remove',cartController.removeFromCart)
+user_route.delete('/cart-remove',cartController.removeFromCart);
+user_route.get('/check-stock',cartController.checkStock);
+
+user_route.get('/checkout',checkoutController.showCheckout);
 module.exports = user_route;

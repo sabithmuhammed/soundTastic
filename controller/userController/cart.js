@@ -148,8 +148,8 @@ const changeQuantity = async (req, res) => {
 
 const removeFromCart = async (req, res) => {
   try {
-    const { productId,quantity } = req.body;
-    const product = await Product.findById({_id:productId});
+    const { productId, quantity } = req.body;
+    const product = await Product.findById({ _id: productId });
     const reduceTotal = product.price * quantity;
     const updatedCart = await Cart.findOneAndUpdate(
       { userId: req.session.userId },
@@ -159,21 +159,20 @@ const removeFromCart = async (req, res) => {
             productId,
           },
         },
-        $inc:{
-          totalPrice:-reduceTotal
-        }
-
+        $inc: {
+          totalPrice: -reduceTotal,
+        },
       },
       {
         new: true,
       }
     );
-    const data={
-      items:updatedCart.items.length,
-      total:updatedCart.totalPrice
-    }
-    
-    res.status(200).json({status:"success",data})
+    const data = {
+      items: updatedCart.items.length,
+      total: updatedCart.totalPrice,
+    };
+
+    res.status(200).json({ status: "success", data });
   } catch (error) {
     console.log(error.message);
     return res.status(500).json({
@@ -183,9 +182,48 @@ const removeFromCart = async (req, res) => {
   }
 };
 
+const checkStock = async (req, res) => {
+  try {
+    const { userId } = req.session;
+    const cart = await Cart.findOne({ userId })
+      .populate({
+        path: "items.productId",
+        select: "name quantity listed",
+      })
+      .exec();
+    if (!cart) {
+      return res
+        .status(404)
+        .json({ status: "failed", message: "Cart not found" });
+    }
+    const data = [];
+    cart.items.forEach((item) => {
+      const product = item.productId;
+      if (!product.listed) {
+        return data.push({ name: product.name, stock: 0 });
+      }
+      if (item.quantity > product.quantity) {
+        return data.push({ name: product.name, stock: product.quantity });
+      }
+    });
+
+    res.status(200).json({ status: "success", data });
+  } catch (error) {
+    res
+      .status(500)
+      .json({
+        error: "Inrernal Server Error",
+        message: "An unexpected error occured in server! please try again",
+      });
+
+    console.log(error.message);
+  }
+};
+
 module.exports = {
   showCart,
   addToCart,
   changeQuantity,
-  removeFromCart
+  removeFromCart,
+  checkStock,
 };

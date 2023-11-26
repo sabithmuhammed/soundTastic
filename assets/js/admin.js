@@ -141,13 +141,14 @@ function removeWhiteSpace(item) {
   item.value = content.trim();
 }
 function editCategory(item) {
+  const prevName=document.querySelector(`[data-name="${item.dataset.id}"]`).innerText;
   const element = document.getElementById("edit-category-modal");
   const name = document.getElementById("cat-name");
   const error = document.querySelector(".error-modal");
   categoryModal = new bootstrap.Modal(element);
   const catId = document.getElementById("cat-id");
   catId.value = item.dataset.id;
-  name.value = "";
+  name.value = prevName;
   error.innerText = "";
   categoryModal.show();
 }

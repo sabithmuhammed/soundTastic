@@ -7,6 +7,9 @@
     <div class="row cart">
       <% if(locals.cartItems?.items?.length){ %>
       <div class="col-md-8 cart-products">
+        <div>
+
+       
         <div class="row cart-card">
           <div class="col-md-10">
             <h2>Shoping Cart</h2>
@@ -75,7 +78,9 @@
         </div>
         <% }) %>
       </div>
+      </div>
       <div class="col-md-4 cart-details">
+        <div>
         <h2>Summary</h2>
         <hr />
         <div class="d-flex w-100 justify-between">
@@ -110,7 +115,8 @@
           <h4>TOTAL</h4>
           <h4>&#8377;<span data-total><%= cartItems.totalPrice %></span></h4>
         </div>
-        <button class="btn-checkout" data-checkout data-id="<%= cartItems._id %>">CHECKOUT</button>
+        <button class="btn-checkout" data-checkout>CHECKOUT</button>
+      </div>
       </div>
 
       <% } else { %>
@@ -145,9 +151,19 @@
     <div class="message-div">
       <div class="change-pwd-container">
         <h5>Item removed from cart</h5>
-        <button class="btn btn-primary" data-cartModalClose>Ok</button>
+        <button class="btn btn-primary" data-cartModalClose>OK</button>
       </div>
     </div>
+  </div>
+</div>
+
+<div id="checkout-stock-modal" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <h4>Not enough stock</h4>
+    <ul id="checkout-stock">
+    </ul>
+    <button class="btn btn-primary btn-ok" data-checkoutStockClose>OK</button>
   </div>
 </div>
 

@@ -60,7 +60,6 @@ const showVerify = async (req, res) => {
       });
       const otpSave = await userOtp.save();
       if (otpSave) {
-        console.log(userData);
         await sendMail.sendVerifyMail(userData.name, userData.email, otp);
         return res.render("user/verifyMail", { email: userData.email });
       }
@@ -75,7 +74,6 @@ const checkOTP = async (req, res) => {
   try {
     const { otp } = req.body;
     const userId = req.session.tempUserId;
-    console.log(otp);
     const userOtp = await UserOTP.findOne({ userId: userId });
     if (userOtp) {
       const otpMatch = await bcrypt.compare(otp, userOtp.otp);
@@ -216,7 +214,6 @@ const showPasswordOtp = async (req, res) => {
       });
       const otpSave = await userOtp.save();
       if (otpSave) {
-        console.log(userData);
         await sendMail.sendVerifyMail(userData.name, userData.email, otp);
         return res.render("user/changePasswordOtp", { email: userData.email });
       }

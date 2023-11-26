@@ -40,7 +40,7 @@ app.use("/", userRoute);
 app.use("/admin", adminRoute);
 
 app.get('*', function(req, res){
-  res.status(404).send('what???');
+  res.status(404).render('404')
 });
 app.listen(PORT, () =>
   console.log(`Server is running on http://localhost:${PORT}`)

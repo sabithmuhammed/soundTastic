@@ -1,0 +1,125 @@
+<%- include("../layouts/userHeader") %> <%- include("../layouts/userNavbar") %>
+
+<div class="section mb-5">
+  <!-- container -->
+  <div class="container">
+    <div class="row mb-5">
+        <div class="col-md-12"><h2>CHECKOUT PAGE</h2></div>
+    </div>
+    <!-- row -->
+    <div class="row checkout">
+      <div class="col-md-6">
+        <div class="address-div">
+          <h3>Select Address</h3>
+          <div class="address">
+            <label for=""><input type="radio" name="a" id="" /></label>
+            <div class="address-details">
+              <h5>Full Name:</h5>
+              <p>Muhammed sabith</p>
+              <h5>Mobile:</h5>
+              <p>954876321</p>
+              <h5>Address (Area and Street):</h5>
+              <p>Calicut</p>
+              <h5>City / District / Town:</h5>
+              <p>kakkanchery</p>
+              <h5>State:</h5>
+              <p>Kerala</p>
+              <h5>Pincode:</h5>
+              <p>673983</p>
+            </div>
+          </div>
+          <div class="address">
+            <label for=""><input type="radio" name="a" id="" /></label>
+            <div class="address-details">
+              <h5>Name:</h5>
+              <p>Muhammed sabith</p>
+              <h5>Phone:</h5>
+              <p>954876321</p>
+              <h5>Address (Area and Street):</h5>
+              <p>Calicut</p>
+              <h5>City / District / Town:</h5>
+              <p>kakkanchery</p>
+              <h5>State:</h5>
+              <p>Kerala</p>
+              <h5>Pincode:</h5>
+              <p>673983</p>
+            </div>
+          </div>
+          <div class="address">
+            <form id="checkout-address">
+              <div class="form-group">
+                <label for="name">Full Name <span class="red">*</span></label>
+                <input type="text" class="form-control" id="name" />
+              </div>
+              <div class="form-group">
+                <label for="mobile">Mobile <span class="red">*</span></label>
+                <input type="number" class="form-control" id="mobile" />
+              </div>
+              <div class="form-group">
+                <label for="address"
+                  >Address (Area and Street) <span class="red">*</span></label
+                >
+                <input type="text" class="form-control" id="address" />
+              </div>
+              <div class="form-group">
+                <label for="city"
+                  >City / District / Town <span class="red">*</span></label
+                >
+                <input type="text" class="form-control" id="city" />
+              </div>
+              <div class="form-group">
+                <label for="state">State <span class="red">*</span></label>
+                <input type="text" class="form-control" id="state" />
+              </div>
+              <div class="form-group">
+                <label for="pincode">Pincode <span class="red">*</span></label>
+                <input type="number" class="form-control" id="pincode" />
+              </div>
+              <button type="submit" class="btn primary-btn">Add Address</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="order-summary">
+          <div class="d-flex justify-between">
+            <h3>Order Summary</h3>
+            <h4>3 Items</h4>
+          </div>
+          <div class="row">
+            <div class="pro-details col-md-10">
+              <div class="pro-name">
+                JBL sound bar with bluetooth connectivity
+              </div>
+              <div class="prod-qnty">Qty:1</div>
+            </div>
+            <div class="price col-md-2">&#8377;48642</div>
+          </div>
+          <div class="row">
+            <div class="col-md-10 shipping">Shipping</div>
+            <div class="col-md-2 sh-price">Free</div>
+          </div>
+          <!-- <div class="row">
+            <div class="col-md-12"><h4>Coupons</h4></div>
+          </div>
+          <div class="row">
+            <div class="col-md-10 coupon-name">name</div>
+            <div class="col-md-2 cp-price">&#8377;568756</div>
+          </div> -->
+          <div class="row total-div">
+            <div class="col-md-10 total">TOTAL</div>
+            <div class="col-md-2 total-price">&#8377;56875</div>
+          </div>
+        </div>
+        <div class="payment d-flex">
+          <h3>Payment</h3>
+          <div class="cod"><label for="cod"><input type="radio" name="payment-method" id="cod" class="payment-method" checked>Cah on delivery</label></div>
+          <div class="cod"><label for="online"><input type="radio" name="payment-method" id="online" class="payment-method">Online payment</label></div>
+          <button class="btn-checkout">PLACE ORDER</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include("../layouts/userFooter") %>
