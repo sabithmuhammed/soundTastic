@@ -44,6 +44,7 @@ user_route.post('/edit-address/',userPageController.editAddress)
 user_route.post('/delete-address/',userPageController.deleteAddress)
 user_route.post('/edit-profile/',userPageController.editProfile)
 user_route.post('/check-password',authController.checkPassword)
+user_route.patch('/default-address',userPageController.setDefaultAddress)
 
 user_route.get('/cart',auth.isLogin,cartController.showCart);
 user_route.post('/add-to-cart',auth.isLogin,cartController.addToCart);

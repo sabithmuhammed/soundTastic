@@ -32,7 +32,7 @@
           </div>
           <div class="wallet-balance">
             <h3>BALANCE:</h3>
-            <h2>&#8377;2000</h2>
+            <h2>&#8377;<%= userData.wallet.balance %></h2>
           </div>
           <div class="wallet-name"><h4><%= userData.name %></h4></div>
         </div>
@@ -94,8 +94,27 @@
           </button>
           <% if(userData.address.length>0){
           userData.address.forEach((item,index)=>{ %>
-
           <div class="address" data-address="<%= item._id %>">
+            <% if(userData.defaultAddress.equals(item._id)){ %>
+            <label for=""
+              ><input
+                type="radio"
+                name="a"
+                id=""
+                value="<%= item._id %>"
+                checked
+                data-addressDefault
+            /></label>
+            <% }else{ %>
+            <label for=""
+              ><input
+                type="radio"
+                name="a"
+                id=""
+                value="<%= item._id %>"
+                data-addressDefault
+            /></label>
+            <% } %>
             <div class="address-details">
               <p>
                 <%= item.name %>, <br />

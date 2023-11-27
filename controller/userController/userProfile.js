@@ -130,6 +130,19 @@ const showProfile = async (req, res) => {
     }
   };
 
+const setDefaultAddress=async(req,res)=>{
+  try {
+    const {defaultAddress}=req.body
+     const userData=await User.findByIdAndUpdate({_id:req.session.userId},{$set:{defaultAddress}})
+     if(userData){
+      res.status(204).send();
+     }
+     res.status(404).json({status:"failed",message:"resource not found"})
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
   module.exports={
     showProfile,
     showAddAddress,
@@ -138,4 +151,5 @@ const showProfile = async (req, res) => {
     editAddress,
     deleteAddress,
     editProfile,
+    setDefaultAddress,
   }

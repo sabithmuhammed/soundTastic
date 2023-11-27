@@ -2,16 +2,17 @@ const cmodal = document.getElementById("confirm-modal");
 const pmodal = document.getElementById("password-modal");
 const close = document.getElementsByClassName("confirm-close")[0];
 const pClose = document.getElementsByClassName("password-close")[0];
+const radio = document.querySelectorAll("[data-addressDefault]");
 
 //show confirmation modal before deleting address
-function showConfirm(item) {
+const showConfirm = (item) => {
   const id = item.dataset.id;
   document.getElementById("address-id").value = id;
   cmodal.style.display = "block";
-}
+};
 
 //show password modal
-function changePassword() {
+const changePassword = () => {
   const error = document.querySelector(".change-pwd-error");
   const oldPwdContainer = document.querySelector(".old-password-div");
   const newPwdContainer = document.querySelector(".new-password-div");
@@ -21,7 +22,7 @@ function changePassword() {
   message.style.display = "none";
   error.innerText = "";
   pmodal.style.display = "block";
-}
+};
 
 // close modal when pressed close
 close.onclick = function () {
@@ -41,7 +42,7 @@ window.onclick = function (event) {
 };
 
 //fetch request for address deletion
-async function deleteAddress() {
+const deleteAddress = async () => {
   try {
     const addressId = document.getElementById("address-id").value;
     const address = document.querySelector(`[data-address="${addressId}"]`);
@@ -62,10 +63,10 @@ async function deleteAddress() {
   } catch (error) {
     console.log(error.message);
   }
-}
+};
 
 //when press edit profile profile details area willbe editable
-function editProfile() {
+const editProfile = () => {
   const name = document.getElementById("name");
   const phone = document.getElementById("phone");
   name.readOnly = false;
@@ -73,10 +74,10 @@ function editProfile() {
   const buttons = document.querySelector(".profile-edit-buttons");
   buttons.style.display = "block";
   name.focus();
-}
+};
 
 //while editing profile when pressed cancel it will go to previous state
-function profileCancel() {
+const profileCancel = () => {
   const name = document.getElementById("name");
   const phone = document.getElementById("phone");
   name.value = name.dataset.value;
@@ -87,9 +88,9 @@ function profileCancel() {
   const buttons = document.querySelector(".profile-edit-buttons");
   buttons.style.display = "none";
   error.innerText = "";
-}
+};
 // function for saving profile changes
-async function profileSave() {
+const profileSave = async () => {
   try {
     const nameInput = document.getElementById("name");
     const phoneInput = document.getElementById("phone");
@@ -137,10 +138,10 @@ async function profileSave() {
   } catch (error) {
     error.innerText = "Something went wrong! try again";
   }
-}
+};
 
 // verifying old password
-async function checkPassword() {
+const checkPassword = async () => {
   try {
     const oldPwdContainer = document.querySelector(".old-password-div");
     const newPwdContainer = document.querySelector(".new-password-div");
@@ -174,10 +175,10 @@ async function checkPassword() {
   } catch (error) {
     error.innerHTML = "Something went wrong! Try again";
   }
-}
+};
 
 // changing password to new one
-async function newPassword() {
+const newPassword = async () => {
   try {
     const newPwdContainer = document.querySelector(".new-password-div");
     const error = document.querySelector(".change-pwd-error");
@@ -212,5 +213,30 @@ async function newPassword() {
         error.innerText = data.message;
       }
     }
-  } catch (error) {}
-}
+  } catch (error) {
+    console.error(error.message);
+  }
+};
+
+const setDefaultAddress = async (event) => {
+  try {
+    event.preventDefault()
+    const defaultAddress = event.currentTarget.value;
+    const rawData = await fetch("/default-address", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ defaultAddress }),
+    });
+    if (rawData.ok) {
+      return event.target.checked=true
+    }
+
+  } catch (error) {
+    console.error(error.message);
+    event.preventDefault();
+  }
+};
+
+radio.forEach((item) => {
+  item.addEventListener("click", setDefaultAddress);
+});

@@ -1,52 +1,57 @@
 <%- include("../layouts/userHeader") %> <%- include("../layouts/userNavbar") %>
-
+<script src="/user/js/utils/checkout.js" defer></script>
 <div class="section mb-5">
   <!-- container -->
   <div class="container">
     <div class="row mb-5">
-        <div class="col-md-12"><h2>CHECKOUT PAGE</h2></div>
+      <div class="col-md-12"><h2>CHECKOUT PAGE</h2></div>
     </div>
     <!-- row -->
     <div class="row checkout">
       <div class="col-md-6">
         <div class="address-div">
           <h3>Select Address</h3>
+          <% if(address.length){ address.forEach((item)=>{ %>
           <div class="address">
-            <label for=""><input type="radio" name="a" id="" /></label>
+            <% if(defaultAddress.equals(item._id)){ %>
+            <label for=""
+              ><input
+                type="radio"
+                name="address"
+                id=""
+                value="<%= item._id %>"
+                checked
+                data-addressDefault
+            /></label>
+            <% }else{ %>
+            <label for=""
+              ><input
+                type="radio"
+                name="address"
+                id=""
+                value="<%= item._id %>"
+                data-addressDefault
+            /></label>
+            <% } %>
             <div class="address-details">
               <h5>Full Name:</h5>
-              <p>Muhammed sabith</p>
+              <p><%= item.name %></p>
               <h5>Mobile:</h5>
-              <p>954876321</p>
+              <p><%= item.mobile %></p>
               <h5>Address (Area and Street):</h5>
-              <p>Calicut</p>
+              <p><%= item.address %></p>
               <h5>City / District / Town:</h5>
-              <p>kakkanchery</p>
+              <p><%= item.city %></p>
               <h5>State:</h5>
-              <p>Kerala</p>
+              <p><%= item.state %></p>
               <h5>Pincode:</h5>
-              <p>673983</p>
+              <p><%= item.pincode %></p>
             </div>
           </div>
-          <div class="address">
-            <label for=""><input type="radio" name="a" id="" /></label>
-            <div class="address-details">
-              <h5>Name:</h5>
-              <p>Muhammed sabith</p>
-              <h5>Phone:</h5>
-              <p>954876321</p>
-              <h5>Address (Area and Street):</h5>
-              <p>Calicut</p>
-              <h5>City / District / Town:</h5>
-              <p>kakkanchery</p>
-              <h5>State:</h5>
-              <p>Kerala</p>
-              <h5>Pincode:</h5>
-              <p>673983</p>
-            </div>
-          </div>
+          <% })} %>
           <div class="address">
             <form id="checkout-address">
+              <div class="error" id="error"></div>
               <div class="form-group">
                 <label for="name">Full Name <span class="red">*</span></label>
                 <input type="text" class="form-control" id="name" />
@@ -86,36 +91,69 @@
             <h3>Order Summary</h3>
             <h4>3 Items</h4>
           </div>
+          <% cart.items.forEach((item)=>{ %>
           <div class="row">
             <div class="pro-details col-md-10">
-              <div class="pro-name">
-                JBL sound bar with bluetooth connectivity
-              </div>
-              <div class="prod-qnty">Qty:1</div>
+              <div class="pro-name"><%= item.productId.name %></div>
+              <div class="prod-qnty">Qty:<%= item.quantity %></div>
             </div>
-            <div class="price col-md-2">&#8377;48642</div>
+            <div class="price col-md-2 right">
+              <span>&#8377;<%= item.productId.price*item.quantity %></span>
+            </div>
           </div>
+          <% }) %>
           <div class="row">
             <div class="col-md-10 shipping">Shipping</div>
-            <div class="col-md-2 sh-price">Free</div>
-          </div>
-          <!-- <div class="row">
-            <div class="col-md-12"><h4>Coupons</h4></div>
+            <div class="col-md-2 sh-price right"><span>Free</span></div>
           </div>
           <div class="row">
-            <div class="col-md-10 coupon-name">name</div>
-            <div class="col-md-2 cp-price">&#8377;568756</div>
-          </div> -->
+            <div class="col-md-12 coupon d-flex">
+              <h4>COUPON CODE</h4>
+              <div class="coupon-input d-flex">
+                <input type="text" id="coupon" />
+                <button class="btn-apply">APPLY</button>
+              </div>
+    
+              <label for="coupon">Enter your code</label>
+            </div>
+          </div>
+          
+          <div class="row coupon-container">
+            <div class="col-md-9 coupon-price">name</div>
+            <div class="col-md-3 coupon-price right"><span>-&#8377;5680</span></div>
+          </div>
           <div class="row total-div">
-            <div class="col-md-10 total">TOTAL</div>
-            <div class="col-md-2 total-price">&#8377;56875</div>
+            <div class="col-md-9 total">TOTAL</div>
+            <div class="col-md-3 total-price right">
+              <span>&#8377;<%= cart.totalPrice %></span>
+              
+            </div>
           </div>
         </div>
         <div class="payment d-flex">
           <h3>Payment</h3>
-          <div class="cod"><label for="cod"><input type="radio" name="payment-method" id="cod" class="payment-method" checked>Cah on delivery</label></div>
-          <div class="cod"><label for="online"><input type="radio" name="payment-method" id="online" class="payment-method">Online payment</label></div>
-          <button class="btn-checkout">PLACE ORDER</button>
+          <div class="cod">
+            <label for="cod"
+              ><input
+                type="radio"
+                name="payment-method"
+                id="cod"
+                class="payment-method"
+                checked
+              />Cah on delivery</label
+            >
+          </div>
+          <div class="cod">
+            <label for="online"
+              ><input
+                type="radio"
+                name="payment-method"
+                id="online"
+                class="payment-method"
+              />Online payment</label
+            >
+          </div>
+          <button class="btn-checkout" data-placeOrder>PLACE ORDER</button>
         </div>
       </div>
     </div>

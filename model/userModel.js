@@ -15,6 +15,10 @@ const userSchema = new mongoose.Schema({
     required: true,
     default: 0,
   },
+  defaultAddress: {
+    type: mongoose.Types.ObjectId,
+    default: null,
+  },
   address: [
     {
       name: { type: String, required: true },
@@ -26,6 +30,29 @@ const userSchema = new mongoose.Schema({
       state: { type: String, required: true },
     },
   ],
+  wallet: {
+    balance: {
+      type: mongoose.Types.Decimal128,
+      required: true,
+      default: 0,
+    },
+    history: [
+      {
+        amount: {
+          type: mongoose.Types.Decimal128,
+        },
+        type: {
+          type: String,
+        },
+        date: {
+          type: Date,
+        },
+        details: {
+          type: String,
+        },
+      },
+    ],
+  },
 });
 
 module.exports = mongoose.model("user", userSchema);

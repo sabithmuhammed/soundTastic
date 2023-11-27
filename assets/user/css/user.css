@@ -598,7 +598,7 @@ button:focus{
     height: 40px;
     width: 75%;
 }
-.coupon-price *{
+.coupon-price{
     color: rgb(9, 139, 9);
 }
 .btn-apply{
@@ -726,9 +726,6 @@ li::marker{
  padding-top: 10px;
  border-top: 2px solid rgba(128, 128, 128, 0.705);
 }
-.order-summary :is(.price, .sh-price, .cp-price) {
-    font-weight: 600;
-}
 .order-summary .sh-price{
     color: rgb(66, 183, 66);
 
@@ -754,6 +751,11 @@ li::marker{
 .payment > .btn-checkout{
     margin: 10px 0;
     align-self: center;
+}
+.right{
+    display: flex;
+    justify-content: flex-end;
+    
 }
 @media screen and (max-width: 992px){
     .container-profile{
