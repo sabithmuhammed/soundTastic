@@ -696,7 +696,7 @@ li::marker{
 #checkout-stock span{
     color: rgb(246, 47, 47);
 }
-.checkout .address-div,.order-summary,.payment, .orders > .row{
+.checkout .address-div,.order-summary,.payment, .orders > .row, .order-details{
     background-color: rgb(209, 242, 209);
     border-radius: 9px;
     flex-direction: column;
@@ -760,6 +760,17 @@ li::marker{
 .orders > .row button{
     margin: 5px 0;
 }
+.order-details{
+    margin-bottom: 5px;
+}
+.order-details::before{
+    border: none;
+}
+.bold > div{
+    font-weight: 500;
+    font-size: 16px;
+}
+
 @media screen and (max-width: 992px){
     .container-profile{
         flex-direction: column;
@@ -795,6 +806,9 @@ li::marker{
     }
     .right{
         display: block;
+    }
+    .details-div{
+        padding:0;
     }
 }
 @media screen and (max-width: 768px){

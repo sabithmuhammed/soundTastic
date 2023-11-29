@@ -2,42 +2,122 @@
 
 <div class="section mb-5">
   <!-- container -->
-  <div class="container">
+  <div class="container bold">
     <h3>Order details</h3>
     <div class="row mb-5 orders">
       <div class="col-md-7 orders">
+        <% order.products.forEach((item)=>{ %>
         <div class="row">
           <div class="col-md-3">
             <div class="cart-image">
-                <img src="\images\products\1699589967313_861230709_246312_1_nusqsj.webp" alt="">
+              <img
+                src="/images/products/<%= item.productId.images[0] %>"
+                alt=""
+              />
             </div>
           </div>
           <div class="col-md-4">
-            <p>hjsldfhjldshfhdskjshfjdsl</p>
-            <p>Qty:3</p>
+            <p><%= item.productId.name %></p>
+            <p>Qty:<%= item.quantity %></p>
+            <p>Price/unit: &#8377;<%= item.unitPrice %></p>
           </div>
-          <div class="col-md-2">3452</div>
-          <div class="col-md-3">button.btn.btn.</div>
+          <div class="col-md-2">
+            &#8377;<%= item.unitPrice * item.quantity %>
+          </div>
+          <div class="col-md-3 d-flex flex-column">
+            <button
+              class="btn btn-primary <%= order.status==='Delivered'?'':'disabled' %>"
+            >
+              Give rating
+            </button>
+            <button
+              class="btn btn-danger <%= order.status==='Delivered'?'':'disabled' %>"
+            >
+              Return item
+            </button>
+          </div>
         </div>
-        <div class="row">
-          <div class="col-md-3">fhfghfg</div>
-          <div class="col-md-4">
-            fsadfdsagfsgfdsgfsgdsfd jfdsjgklsjhkkjshkjkllhskj
-          </div>
-          <div class="col-md-2">dsfads</div>
-          <div class="col-md-3">dassd</div>
-        </div>
-        <div class="row">
-            <div class="col-md-3">fhfghfg</div>
-            <div class="col-md-4">
-              fsadfdsagfsgfdsgfsgdsfd jfdsjgklsjhkkjshkjkllhskj
-            </div>
-            <div class="col-md-2">dsfads</div>
-            <div class="col-md-3">dassd</div>
-          </div>
+        <% }) %>
       </div>
 
-      <div class="col-md-5 bg-primary">dsdskgjdklgjkl</div>
+      <div class="col-md-5 details-div">
+        <div class="order-details">
+          <div class="row">
+            <div class="col-md-12"><h5>Order Details</h5></div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">Date</div>
+            <div class="col-md-8">
+              : <%= order.orderDate.toLocaleString('en-US') %>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">Order ID</div>
+            <div class="col-md-8">: <%= order._id %></div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">Status</div>
+            <div class="col-md-8">: <%= order.status %></div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">Payment</div>
+            <div class="col-md-8">: <%= order.payment %></div>
+          </div>
+        </div>
+        <div class="order-details">
+          <div class="row">
+            <div class="col-md-12"><h5>Payment Details</h5></div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">Total Amount</div>
+            <div class="col-md-8">: &#8377;<%= order.totalAmount %></div>
+          </div>
+          <% if(parseInt(order.walletUsed)){ %>
+          <div class="row">
+            <div class="col-md-4">Wallet</div>
+            <div class="col-md-8">: -&#8377;<%= order.walletUsed %></div>
+          </div>
+          <% } %> <% if(order.coupon){ %>
+          <div class="row">
+            <div class="col-md-4">Coupon</div>
+            <div class="col-md-8">: -&#8377;<%= order.coupon %></div>
+          </div>
+          <% } %>
+          <div class="row">
+            <div class="col-md-4">Final Amount</div>
+            <div class="col-md-8">: -&#8377;<%= order.finalAmount %></div>
+          </div>
+        </div>
+        <div class="order-details">
+          <div class="row">
+            <div class="col-md-12"><h5>Shipping Address</h5></div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">Name</div>
+            <div class="col-md-8">: <%= order.address.name %></div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">Mobile</div>
+            <div class="col-md-8">: <%= order.address.mobile %></div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">Address</div>
+            <div class="col-md-8">: <%= order.address.address %></div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">City</div>
+            <div class="col-md-8">: <%= order.address.city %></div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">State</div>
+            <div class="col-md-8">: <%= order.address.state %></div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">Pincode</div>
+            <div class="col-md-8">: <%= order.address.pincode %></div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

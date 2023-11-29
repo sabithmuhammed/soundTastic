@@ -1,40 +1,49 @@
 const express = require('express');
-const adminController =require('../controller/adminController');
+const dashboard=require('../controller/adminController/dashboard');
+const authAndCustomer =require('../controller/adminController/authAndCustomer');
+const productAndCategory =require('../controller/adminController/productAndCategory');
+const orderManagement = require("../controller/adminController/orderManagment")
 const admin_route = express.Router();
 const imageUpload =require('../middleware/multerConfig');
 const auth =require('../middleware/adminAuth');
 
 
-admin_route.get('/',auth.isLogout,adminController.loginLoad);
-admin_route.get('/login',auth.isLogout,adminController.loginLoad);
-admin_route.post('/login',adminController.verifyLogin);
-admin_route.get('/logout',auth.isLogin,adminController.adminLogout)
-// admin_route.post('/signup',adminController.createAdmin);
+admin_route.get('/',auth.isLogout,authAndCustomer.loginLoad);
+admin_route.get('/login',auth.isLogout,authAndCustomer.loginLoad);
+admin_route.post('/login',authAndCustomer.verifyLogin);
+admin_route.get('/logout',auth.isLogin,authAndCustomer.adminLogout)
+// admin_route.post('/signup',authAndCustomer.createAdmin);
 
-admin_route.get('/dashboard',auth.isLogin,adminController.loadDashboard);
+admin_route.get('/dashboard',auth.isLogin,dashboard.loadDashboard);
 
 // customer routes start
-admin_route.get('/customers',auth.isLogin,adminController.seeCustomers);
-admin_route.post('/block-customer/:id',adminController.updateCustomers);
+admin_route.get('/customers',auth.isLogin,authAndCustomer.seeCustomers);
+admin_route.post('/block-customer/:id',authAndCustomer.updateCustomers);
 // customer routes end
 
 // category routes start
-admin_route.get('/categories',auth.isLogin,adminController.seeCategories);
-admin_route.post('/list-category/:id',adminController.updateCategories);
-admin_route.post('/add-category',adminController.addCategory);
-admin_route.post('/edit-category',adminController.editCategory);
+admin_route.get('/categories',auth.isLogin,productAndCategory.seeCategories);
+admin_route.post('/list-category/:id',productAndCategory.updateCategories);
+admin_route.post('/add-category',productAndCategory.addCategory);
+admin_route.post('/edit-category',productAndCategory.editCategory);
 // category routes end
 
 // product routes start
-admin_route.get('/products',auth.isLogin,adminController.seeProducts);
-admin_route.get('/add-product',auth.isLogin,adminController.showAddProduct);
-admin_route.post('/add-product',imageUpload,adminController.addProduct);
-admin_route.get('/edit-product/:id',auth.isLogin,adminController.showEditProduct);
-admin_route.post('/edit-product',auth.isLogin,imageUpload,adminController.editProduct);
-admin_route.post('/add-stock',adminController.addStock);
-admin_route.post('/list-product/:id',adminController.updateProducts);
+admin_route.get('/products',auth.isLogin,productAndCategory.seeProducts);
+admin_route.get('/add-product',auth.isLogin,productAndCategory.showAddProduct);
+admin_route.post('/add-product',imageUpload,productAndCategory.addProduct);
+admin_route.get('/edit-product/:id',auth.isLogin,productAndCategory.showEditProduct);
+admin_route.post('/edit-product',auth.isLogin,imageUpload,productAndCategory.editProduct);
+admin_route.post('/add-stock',productAndCategory.addStock);
+admin_route.post('/list-product/:id',productAndCategory.updateProducts);
 // product routes end
 
-admin_route.get("/*",auth.isLogout,adminController.loginLoad)
+//orders routes start
+admin_route.get('/orders',orderManagement.showOrders);
+admin_route.get('/manage-order/:orderId',orderManagement.showManageOrder);
+
+//orders routes end
+
+admin_route.get("/*",auth.isLogout,authAndCustomer.loginLoad)
 
 module.exports = admin_route;

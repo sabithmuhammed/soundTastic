@@ -52,9 +52,9 @@ user_route.patch('/change-cart-quantity',cartController.changeQuantity);
 user_route.delete('/cart-remove',cartController.removeFromCart);
 user_route.get('/check-stock',cartController.checkStock);
 
-user_route.get('/checkout',ordersController.showCheckout);
+user_route.get('/checkout',auth.isLogin,ordersController.showCheckout);
 user_route.post('/place-order',ordersController.placeOrder)
-user_route.get('/orders',ordersController.showOrders)
-user_route.get('/order-details',ordersController.showOrderDetails)
+user_route.get('/orders',auth.isLogin,ordersController.showOrders)
+user_route.get('/order-details/:orderId',auth.isLogin,ordersController.showOrderDetails)
 
 module.exports = user_route;

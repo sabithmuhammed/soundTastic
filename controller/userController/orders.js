@@ -139,7 +139,11 @@ const showOrders = async (req, res) => {
 
 const showOrderDetails = async (req,res)=>{
   try {
-    res.render('user/orderDetails')
+    const {orderId} = req.params;
+    const { user,userId } = req.session;
+    const cartCount = await cartUtils.getCartCount(userId);
+    const order=await Order.findById({_id:orderId}).populate({path:"products.productId",select:"name images"}).exec()
+    res.render('user/orderDetails',{order,user,cartCount})
 
 
   } catch (error) {

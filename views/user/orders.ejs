@@ -38,12 +38,10 @@
       </div>
       <div class="col-md-1"><%= item.status%></div>
       <div class="col-md-2 d-flex flex-column">
-        <button class="btn btn-success my-2">View details</button>
+        <button class="btn btn-success my-2" onclick="window.location.href='/order-details/<%= item._id%>'">View details</button>
         <% if(item.status==="Pending"){ %>
           <button class="btn btn-danger">Cancel order</button>
-        <% }else if(item.status==="Delivered"){ %>
-          <button class="btn btn-primary">Give rating</button>
-         <% } %>
+        <% }else %>
         
       </div>
     </div>

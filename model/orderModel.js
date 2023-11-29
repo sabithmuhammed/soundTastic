@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema({
-  userId: { type: mongoose.Types.ObjectId, required: true },
+  userId: { type: mongoose.Types.ObjectId, required: true ,ref:"user"},
   address:{type:Object, required: true},
   products: [
     {
@@ -14,11 +14,10 @@ const orderSchema = new mongoose.Schema({
   finalAmount: { type: mongoose.Types.Decimal128 }, 
   orderDate: { type: Date },
   walletUsed: { type: mongoose.Types.Decimal128 },
-  coupon: [
+  coupon:
     {
       couponId: { type: mongoose.Types.ObjectId, ref: "coupon" },
     },
-  ],
   payment: { type: String },
   status: { type: String },
   return: [

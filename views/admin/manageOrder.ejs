@@ -1,0 +1,113 @@
+<%- include("../layouts/adminHeader") %>
+
+<!--  Main wrapper -->
+<div class="body-wrapper">
+  <%- include("../layouts/adminNavbar") %>
+  <div class="container-fluid">
+    <h2 class="my-3">Manage order</h2>
+        <div class="row  mt-4">
+            <div class="col-md-6">
+                <div class="width-100">
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col" colspan="2"><h4>Order details</h4></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <th scope="row">Order ID</th>
+                            <td><%= order._id%></td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Date</th>
+                            <td><%= order.orderDate.toLocaleString('en-US') %></td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Customer Name</th>
+                            <td><%= order.userId.name%></td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Payment Method</th>
+                            <td><%= order.payment %></td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Total Amount</th>
+                            <td>&#8377; <%= order.totalAmount %></td>
+                          </tr>
+                          <% if(parseInt(order.walletUsed)){ %>
+                          <tr>
+                            <th scope="row">Wallet Amount</th>
+                            <td>-&#8377; <%= order.walletUsed %></td>
+                          </tr>
+                          <% } %>
+                          <% if(order.coupon){ %>
+                            <tr>
+                              <th scope="row">Coupont</th>
+                              <td>-&#8377; <%= order.coupon.discountAmount %></td>
+                            </tr>
+                            <% } %>
+                          <tr>
+                            <th scope="row">Bill Amount</th>
+                            <td>&#8377; <%= order.finalAmount %></td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Status</th>
+                            <td><%= order.status %></td>
+                          </tr>
+                          <tr>
+                            <td ><button class="btn btn-primary <%= order.status==='Delivered'?'disabled':''%>">Change status</button></td>
+                            <td><button class="btn btn-danger <%= order.status==='Delivered'?'disabled':''%>">Cancel Order</button></td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="width-100">
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col" colspan="2"><h4>Shipping Address</h4></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <th scope="row">Name</th>
+                            <td><%= order.address.name%></td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Mobile</th>
+                            <td><%= order.address.mobile%></td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Address</th>
+                            <td><%= order.address.address%></td>
+                          </tr>
+                          <tr>
+                            <th scope="row">City</th>
+                            <td><%= order.address.city%></td>
+                          </tr>
+                          <tr>
+                            <th scope="row">State</th>
+                            <td><%= order.address.state%></td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Pincode</th>
+                            <td><%= order.address.pincode%></td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                </div>
+            </div>
+        </div>
+        <div class="row bg-primary"><div class="col-md-12">
+            <h4>Products</h4>
+            <div class="row"></div>
+        </div></div>
+  </div>
+</div>
+
+<%- include("../layouts/adminFooter") %>
