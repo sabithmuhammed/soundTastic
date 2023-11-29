@@ -4,7 +4,7 @@
   <!-- container -->
   <div class="container">
     <div class="row mb-5">
-      <div class="col-md-12"><h2>CHECKOUT PAGE</h2></div>
+      <div class="col-md-12"><h2>CHECKOUT</h2></div>
     </div>
     <!-- row -->
     <div class="row checkout">
@@ -137,9 +137,9 @@
               ><input
                 type="radio"
                 name="payment-method"
-                id="cod"
                 class="payment-method"
                 checked
+                value="cod"
               />Cah on delivery</label
             >
           </div>
@@ -148,8 +148,8 @@
               ><input
                 type="radio"
                 name="payment-method"
-                id="online"
                 class="payment-method"
+                value="online"
               />Online payment</label
             >
           </div>
@@ -157,6 +157,14 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<div id="checkout-modal" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <h4 class="red" data-checkoutError></h4>
+    <button class="btn btn-primary btn-ok" data-checkoutStockClose>OK</button>
   </div>
 </div>
 

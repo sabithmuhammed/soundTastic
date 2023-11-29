@@ -1,4 +1,18 @@
+const placeOrderBtn=document.querySelector('[data-placeOrder]');
+const checkoutModal=document.querySelector('#checkout-modal');
+const closeModal = document.querySelector("[data-checkoutStockClose]");
+const error=document.querySelector(`[data-checkoutError]`)
 
+
+window.onclick = function (event) {
+  if (event.target == checkoutModal) {
+    checkoutModal.style.display = "none";
+  }
+};
+closeModal.addEventListener('click',()=>{
+  checkoutModal.style.display="none"
+})
+//creting a new address
 const form=document.getElementById('checkout-address');
   form.addEventListener('submit',async (e)=>{
     e.preventDefault();
@@ -37,3 +51,39 @@ const form=document.getElementById('checkout-address');
     }
     return error.innerText="Something went wrong try again"
   })
+
+
+  //placing order
+  const placeOrder=async ()=>{
+    try {
+        const addressId=document.querySelector(`input[name="address"]:checked`)?.value
+        const payment=document.querySelector(`input[name="payment-method"]:checked`)?.value
+        const coupon=null
+        if(!addressId){
+          error.innerText="Please select an address";
+          return checkoutModal.style.display="block"
+        }
+        if (payment==="online") {
+          
+        }
+        const rawData=await fetch('/place-order',{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({addressId,payment,coupon})
+        })
+        const data = await rawData.json();
+        if(rawData.ok){
+          if(data.status==="success"){
+           return window.location.href="/home"
+          }
+        }
+        error.innerHTML=data.message;
+        checkoutModal.style.display="block"
+    } catch (error) {
+        console.log(error.message)
+    }
+  }
+
+  placeOrderBtn.addEventListener('click',placeOrder);

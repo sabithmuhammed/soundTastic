@@ -370,7 +370,7 @@ input[type=radio] {
     margin-top: 20px;
     width: 100%;
     height: 270px;
-    background-color: #15161D;
+    background-color: rgb(84, 177, 107);
     border-radius: 9px;
     padding: 20px;
     display: flex;
@@ -404,7 +404,7 @@ input[type=radio] {
 
 .profile-details {
     padding: 20px;
-    background-color: rgb(198, 197, 197);
+    background-color: rgb(209, 242, 209);
     border-radius: 9px;
     margin: 0 10px 10px;
 }
@@ -424,15 +424,8 @@ input[type=radio] {
     font-weight: 500;
 }
 .add-address{
-    width: 200px;
-    height: 50px;
-    font-size: 18px;
-    font-weight: bolder;
-    background-color: #D10024;
-    color: white;
-    border: none;
-    border-radius: 9px;
-    cursor: pointer;
+    width: 150px;
+    height: 45px;
 }
 .add-address:hover,.add-address:active{
     opacity: 0.9;
@@ -703,7 +696,7 @@ li::marker{
 #checkout-stock span{
     color: rgb(246, 47, 47);
 }
-.checkout .address-div,.order-summary,.payment{
+.checkout .address-div,.order-summary,.payment, .orders > .row{
     background-color: rgb(209, 242, 209);
     border-radius: 9px;
     flex-direction: column;
@@ -757,6 +750,16 @@ li::marker{
     justify-content: flex-end;
     
 }
+.orders > .row{
+    margin-bottom: 5px;
+}
+.orders > .heading > div{
+    font-weight: 700;
+    font-size: large;
+}
+.orders > .row button{
+    margin: 5px 0;
+}
 @media screen and (max-width: 992px){
     .container-profile{
         flex-direction: column;
@@ -789,6 +792,9 @@ li::marker{
     }
     .order-summary{
         margin-top: 15px;
+    }
+    .right{
+        display: block;
     }
 }
 @media screen and (max-width: 768px){

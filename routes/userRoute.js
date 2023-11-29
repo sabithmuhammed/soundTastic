@@ -6,7 +6,7 @@ const navPagesController = require('../controller/userController/navPages');
 const cartController = require('../controller/userController/cart');
 const userPageController=require('../controller/userController/userProfile');
 const authController = require('../controller/userController/authentication');
-const checkoutController = require('../controller/userController/checkout')
+const ordersController = require('../controller/userController/orders')
 
 user_route.get("/", navPagesController.home);
 user_route.get("/home", navPagesController.loadHome);
@@ -52,5 +52,9 @@ user_route.patch('/change-cart-quantity',cartController.changeQuantity);
 user_route.delete('/cart-remove',cartController.removeFromCart);
 user_route.get('/check-stock',cartController.checkStock);
 
-user_route.get('/checkout',checkoutController.showCheckout);
+user_route.get('/checkout',ordersController.showCheckout);
+user_route.post('/place-order',ordersController.placeOrder)
+user_route.get('/orders',ordersController.showOrders)
+user_route.get('/order-details',ordersController.showOrderDetails)
+
 module.exports = user_route;

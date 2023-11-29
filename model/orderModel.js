@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema({
   userId: { type: mongoose.Types.ObjectId, required: true },
+  address:{type:Object, required: true},
   products: [
     {
       productId: { type: mongoose.Types.ObjectId, ref: "product" },
@@ -9,9 +10,10 @@ const orderSchema = new mongoose.Schema({
       quantity: { type: Number },
     },
   ],
-  totalPrice: { type: mongoose.Types.Decimal128 },
+  totalAmount: { type: mongoose.Types.Decimal128 },
+  finalAmount: { type: mongoose.Types.Decimal128 }, 
   orderDate: { type: Date },
-  walletAmount: { type: mongoose.Types.Decimal128 },
+  walletUsed: { type: mongoose.Types.Decimal128 },
   coupon: [
     {
       couponId: { type: mongoose.Types.ObjectId, ref: "coupon" },

@@ -1,0 +1,55 @@
+<%- include("../layouts/userHeader") %> <%- include("../layouts/userNavbar") %>
+
+<% if(!locals.orders.length) { %>
+<div class="section mb-5">
+  <div class="container orders">
+    <h3>Your orders</h3>
+    <div class="row mb-5 heading">
+      <div class="col-md-12 item-center">No orders</div>
+    </div>
+  </div>
+</div>
+<% } else { %>
+<div class="section mb-5">
+  <!-- container -->
+  <div class="container orders">
+    <h3>Your orders</h3>
+    <div class="row mb-5 heading">
+      <div class="col-md-2">Date</div>
+      <div class="col-md-3">Order Id</div>
+      <div class="col-md-1">Amount</div>
+      <div class="col-md-3">Item(s)</div>
+      <div class="col-md-1">Status</div>
+
+      <div class="col-md-2 d-flex flex-column">Actions</div>
+    </div>
+
+    <% orders.forEach((item)=>{ %>
+    <div class="row mb-5">
+      <div class="col-md-2"><%= item.orderDate.toLocaleString('en-US') %></div>
+      <div class="col-md-3"><%= item._id %></div>
+      <div class="col-md-1">&#8377;<%= item.finalAmount%></div>
+      <div class="col-md-3">
+        <ul>
+          <% item.products.forEach((product)=>{ %>
+          <li><%= product.productId.name%></li>
+          <% }) %>
+        </ul>
+      </div>
+      <div class="col-md-1"><%= item.status%></div>
+      <div class="col-md-2 d-flex flex-column">
+        <button class="btn btn-success my-2">View details</button>
+        <% if(item.status==="Pending"){ %>
+          <button class="btn btn-danger">Cancel order</button>
+        <% }else if(item.status==="Delivered"){ %>
+          <button class="btn btn-primary">Give rating</button>
+         <% } %>
+        
+      </div>
+    </div>
+
+    <% }) %>
+  </div>
+</div>
+
+<% } %> <%- include("../layouts/userFooter") %>
