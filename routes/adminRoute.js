@@ -39,8 +39,11 @@ admin_route.post('/list-product/:id',productAndCategory.updateProducts);
 // product routes end
 
 //orders routes start
-admin_route.get('/orders',orderManagement.showOrders);
-admin_route.get('/manage-order/:orderId',orderManagement.showManageOrder);
+admin_route.get('/orders',auth.isLogin,orderManagement.showOrders);
+admin_route.get('/manage-order/:orderId',auth.isLogin,orderManagement.showManageOrder);
+admin_route.patch('/cancel-order',orderManagement.cancelOrder);
+admin_route.patch('/change-status',orderManagement.changeStatus);
+admin_route.get('/cancel-request',auth.isLogin,orderManagement.showCancelRequest)
 
 //orders routes end
 

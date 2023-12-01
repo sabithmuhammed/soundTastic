@@ -13,7 +13,7 @@
           <h3>Select Address</h3>
           <% if(address.length){ address.forEach((item)=>{ %>
           <div class="address">
-            <% if(defaultAddress.equals(item._id)){ %>
+            <% if(defaultAddress && defaultAddress.equals(item._id)){ %>
             <label for=""
               ><input
                 type="radio"
@@ -113,20 +113,33 @@
                 <input type="text" id="coupon" />
                 <button class="btn-apply">APPLY</button>
               </div>
-    
+
               <label for="coupon">Enter your code</label>
             </div>
           </div>
-          
-          <div class="row coupon-container">
+
+          <!-- <div class="row coupon-container">
             <div class="col-md-9 coupon-price">name</div>
             <div class="col-md-3 coupon-price right"><span>- 5680</span></div>
+          </div> -->
+          <% if(walletAmount){ %>
+          <div class="row coupon-container">
+            <div class="col-md-9 coupon-price">
+              <input type="checkbox" name="wallet" id="" data-wallet />Use
+              Wallet Balance ( Available:&#8377;<span data-walletCurrent
+                ><%= walletAmount %></span
+              >
+              )
+            </div>
+            <div class="col-md-3 coupon-price right" data-walletShow style="visibility: hidden;">
+              - &#8377; <span data-walletUsed></span>
+            </div>
           </div>
+          <% } %>
           <div class="row total-div">
             <div class="col-md-9 total">TOTAL</div>
             <div class="col-md-3 total-price right">
-              <span>&#8377;<%= cart.totalPrice %></span>
-              
+              <span>&#8377;<span data-total><%= cart.totalPrice %></span></span>
             </div>
           </div>
         </div>
@@ -167,5 +180,9 @@
     <button class="btn btn-primary btn-ok" data-checkoutStockClose>OK</button>
   </div>
 </div>
+
+<script>
+ 
+</script>
 
 <%- include("../layouts/userFooter") %>

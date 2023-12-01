@@ -1,113 +1,258 @@
 <%- include("../layouts/adminHeader") %>
-
+<script src="/js/utils/manageOrder.js" defer></script>
 <!--  Main wrapper -->
 <div class="body-wrapper">
   <%- include("../layouts/adminNavbar") %>
   <div class="container-fluid">
     <h2 class="my-3">Manage order</h2>
-        <div class="row  mt-4">
-            <div class="col-md-6">
-                <div class="width-100">
-                    <table class="table">
-                        <thead>
-                          <tr>
-                            <th scope="col" colspan="2"><h4>Order details</h4></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <th scope="row">Order ID</th>
-                            <td><%= order._id%></td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Date</th>
-                            <td><%= order.orderDate.toLocaleString('en-US') %></td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Customer Name</th>
-                            <td><%= order.userId.name%></td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Payment Method</th>
-                            <td><%= order.payment %></td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Total Amount</th>
-                            <td>&#8377; <%= order.totalAmount %></td>
-                          </tr>
-                          <% if(parseInt(order.walletUsed)){ %>
-                          <tr>
-                            <th scope="row">Wallet Amount</th>
-                            <td>-&#8377; <%= order.walletUsed %></td>
-                          </tr>
-                          <% } %>
-                          <% if(order.coupon){ %>
-                            <tr>
-                              <th scope="row">Coupont</th>
-                              <td>-&#8377; <%= order.coupon.discountAmount %></td>
-                            </tr>
-                            <% } %>
-                          <tr>
-                            <th scope="row">Bill Amount</th>
-                            <td>&#8377; <%= order.finalAmount %></td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Status</th>
-                            <td><%= order.status %></td>
-                          </tr>
-                          <tr>
-                            <td ><button class="btn btn-primary <%= order.status==='Delivered'?'disabled':''%>">Change status</button></td>
-                            <td><button class="btn btn-danger <%= order.status==='Delivered'?'disabled':''%>">Cancel Order</button></td>
-                          </tr>
-                        </tbody>
-                      </table>
-
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="width-100">
-                    <table class="table">
-                        <thead>
-                          <tr>
-                            <th scope="col" colspan="2"><h4>Shipping Address</h4></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <th scope="row">Name</th>
-                            <td><%= order.address.name%></td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Mobile</th>
-                            <td><%= order.address.mobile%></td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Address</th>
-                            <td><%= order.address.address%></td>
-                          </tr>
-                          <tr>
-                            <th scope="row">City</th>
-                            <td><%= order.address.city%></td>
-                          </tr>
-                          <tr>
-                            <th scope="row">State</th>
-                            <td><%= order.address.state%></td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Pincode</th>
-                            <td><%= order.address.pincode%></td>
-                          </tr>
-                        </tbody>
-                      </table>
-
-                </div>
-            </div>
+    <div class="row mt-4">
+      <div class="col-md-6">
+        <div class="width-100">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col" colspan="2"><h4>Order details</h4></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Order ID</th>
+                <td><%= order._id%></td>
+              </tr>
+              <tr>
+                <th scope="row">Date</th>
+                <td><%= order.orderDate.toLocaleString('en-US') %></td>
+              </tr>
+              <tr>
+                <th scope="row">Customer Name</th>
+                <td><%= order.userId.name%></td>
+              </tr>
+              <tr>
+                <th scope="row">Payment Method</th>
+                <td><%= order.payment %></td>
+              </tr>
+              <tr>
+                <th scope="row">Total Amount</th>
+                <td>&#8377; <%= order.totalAmount %></td>
+              </tr>
+              <% if(parseInt(order.walletUsed)){ %>
+              <tr>
+                <th scope="row">Wallet Amount</th>
+                <td>-&#8377; <%= order.walletUsed %></td>
+              </tr>
+              <% } %> <% if(order.coupon){ %>
+              <tr>
+                <th scope="row">Coupont</th>
+                <td>-&#8377; <%= order.coupon.discountAmount %></td>
+              </tr>
+              <% } %>
+              <tr>
+                <th scope="row">Bill Amount</th>
+                <td>&#8377; <%= order.finalAmount %></td>
+              </tr>
+              <tr>
+                <th scope="row">Status</th>
+                <td data-status><%= order.status %></td>
+              </tr>
+              <tr>
+                <td>
+                  <button
+                    class="btn btn-primary <%= order.status==='Delivered' || order.status==='Cancelled' ?'disabled':''%>"
+                    data-statusBtn
+                  >
+                    Change status
+                  </button>
+                </td>
+                <td>
+                  <button
+                    class="btn btn-danger <%= order.status==='Delivered' || order.status==='Cancelled'?'disabled':''%>"
+                    data-cancelOrder
+                  >
+                    Cancel Order
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div class="row bg-primary"><div class="col-md-12">
-            <h4>Products</h4>
-            <div class="row"></div>
-        </div></div>
+      </div>
+      <div class="col-md-6">
+        <div class="width-100">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col" colspan="2"><h4>Shipping Address</h4></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Name</th>
+                <td><%= order.address.name%></td>
+              </tr>
+              <tr>
+                <th scope="row">Mobile</th>
+                <td><%= order.address.mobile%></td>
+              </tr>
+              <tr>
+                <th scope="row">Address</th>
+                <td><%= order.address.address%></td>
+              </tr>
+              <tr>
+                <th scope="row">City</th>
+                <td><%= order.address.city%></td>
+              </tr>
+              <tr>
+                <th scope="row">State</th>
+                <td><%= order.address.state%></td>
+              </tr>
+              <tr>
+                <th scope="row">Pincode</th>
+                <td><%= order.address.pincode%></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <h4>Products</h4>
+        <div class="row">
+          <table class="table text-wrap">
+            <thead>
+              <tr>
+                <th scope="col">Image</th>
+                <th scope="col">Name</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% order.products.forEach((item)=>{ %>
+              <tr>
+                <td class="product-img pb-0">
+                  <img
+                    src="/images/products/<%= item.productId.images[0] %>"
+                    alt=""
+                  />
+                </td>
+                <td><%= item.productId.name %></td>
+                <td><%= item.quantity %></td>
+                <td>&#8377;<%= item.unitPrice * item.quantity %></td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
+<!--Confirm Modal -->
+<div
+  class="modal fade"
+  id="confirm-modal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Are you sure?</h1>
+
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p class="error-modal"></p>
+        <p>Do you really want to cancel this order?</p>
+        <input type="hidden" name="id" id="action-id" value="" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          NO
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          id="action-btn"
+          data-cancelReqBtn
+          data-id="<%= order._id %>"
+        >
+          YES, CANCEL
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Confirm Modal -->
+<div
+  class="modal fade"
+  id="change-status-modal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Change status</h1>
+
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p class="error-modal" data-statusError></p>
+        <select
+          class="form-select"
+          aria-label="Default select example"
+          data-select
+        >
+          <option selected value="<%= order.status %>"><%= order.status %></option>
+          <% if(order.status !== "Pending") { %>
+          <option value="Pending">Pending</option>
+
+          <% } %>
+           <% if(order.status !== "Processing") { %>
+          <option value="Processing">Processing</option>
+
+          <% } %>
+           <% if(order.status !== "Shipped") { %>
+          <option value="Shipped">Shipped</option>
+
+          <% } %>
+          <% if(order.status !== "Delivered") { %>
+          <option value="Delivered">Delivered</option>
+
+          <% } %>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          id="action-btn"
+          data-changeStatusBtn
+          data-id="<%= order._id %>"
+        >
+          Change status
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 <%- include("../layouts/adminFooter") %>

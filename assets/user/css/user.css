@@ -770,6 +770,11 @@ li::marker{
     font-weight: 500;
     font-size: 16px;
 }
+.reason{
+    margin-bottom: 10px;
+    font-weight: 500;
+    text-indent: 5px;
+}
 
 @media screen and (max-width: 992px){
     .container-profile{

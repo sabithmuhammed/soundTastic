@@ -17,9 +17,9 @@
       <ul class="header-links pull-right">
         <li>
           <% if(locals.user){ %>
-          <a href="/my-profile"><i class="fa fa-user-o"></i> <%= user %> </a>
+          <a href="/my-profile"><i class="fa fa-user-o"></i> <%= user %> / Profile</a>
           <%}else{ %>
-          <a href="/login"><i class="fa fa-user-o"></i> My Account </a>
+          <a href="/login"><i class="fa fa-user-o"></i> Login / Sign up </a>
           <%} %> <% if(locals.user){ %>
           <a href="/logout"
             >&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-right-from-bracket"></i

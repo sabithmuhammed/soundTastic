@@ -2,41 +2,58 @@
 
 <!--  Main wrapper -->
 <div class="body-wrapper">
-<%- include("../layouts/adminNavbar") %>
+  <%- include("../layouts/adminNavbar") %>
   <div class="container-fluid">
     <div class="row justify-content-center mb-3">
-        <form class="search-container d-flex p-0" action="/admin/customers" method="get">
-            <input type="text" class="flex-grow-1 " placeholder="search..." name="search" value="<%= search %>"><button class="btn btn-primary h-100 rounded-start-0">Search</button>
-        </form>
+      <form
+        class="search-container d-flex p-0"
+        action="/admin/customers"
+        method="get"
+      >
+        <input
+          type="text"
+          class="flex-grow-1"
+          placeholder="search..."
+          name="search"
+          value="<%= search %>"
+        /><button class="btn btn-primary h-100 rounded-start-0">Search</button>
+      </form>
     </div>
     <h2 class="my-3">All customers</h2>
     <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Mobile</th>
-            <th scope="col">Action</th>
-          </tr>
-        </thead>
-        
-        <tbody>
-           <% if(customers.length>0){ %>
-            <% customers.forEach((item,index)=>{ %> 
-          <tr>
-            <td><%= item.name%></td>
-            <td><%= item.email%></td>
-            <td><%= item.phone%></td>
-            <td><button class="btn btn-block <%= item.blocked?'btn-success':'btn-danger' %> btn-block" id="<%= item._id %>" onclick="confirmShow(this)"><%= item.blocked?'Unblock':'Block' %></button></td>
-          </tr>
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Email</th>
+          <th scope="col">Mobile</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% if(customers.length>0){ %> <% customers.forEach((item,index)=>{ %>
+        <tr>
+          <td><%= item.name%></td>
+          <td><%= item.email%></td>
+          <td><%= item.phone%></td>
+          <td>
+            <button
+              class="btn btn-block <%= item.blocked?'btn-success':'btn-danger' %> btn-block"
+              id="<%= item._id %>"
+              onclick="confirmShow(this)"
+            >
+              <%= item.blocked?'Unblock':'Block' %>
+            </button>
+          </td>
+        </tr>
         <% })}else{ %>
-          <tr>
-            <td></td>
-            <td colspan="3" class="">No customers found</td>
-          </tr>
-          <%}%>
-        </tbody>
-      </table>
+        <tr>
+          <td></td>
+          <td colspan="3" class="">No customers found</td>
+        </tr>
+        <%}%>
+      </tbody>
+    </table>
   </div>
 </div>
 
@@ -62,7 +79,10 @@
       </div>
       <div class="modal-body">
         <p class="error-modal"></p>
-        <p>Do you really want to <strong id="action-text">block</strong> this user?</p>
+        <p>
+          Do you really want to <strong id="action-text">block</strong> this
+          user?
+        </p>
         <input type="hidden" name="id" id="action-id" value="" />
       </div>
       <div class="modal-footer">

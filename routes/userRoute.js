@@ -54,7 +54,10 @@ user_route.get('/check-stock',cartController.checkStock);
 
 user_route.get('/checkout',auth.isLogin,ordersController.showCheckout);
 user_route.post('/place-order',ordersController.placeOrder)
+user_route.get('/order-success',auth.isLogin,ordersController.showOrderSuccess)
 user_route.get('/orders',auth.isLogin,ordersController.showOrders)
 user_route.get('/order-details/:orderId',auth.isLogin,ordersController.showOrderDetails)
+user_route.get('/order-details/:orderId',auth.isLogin,ordersController.showOrderDetails)
+user_route.post('/cancel-request',ordersController.requestCancel)
 
 module.exports = user_route;

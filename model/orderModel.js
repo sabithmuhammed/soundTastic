@@ -14,10 +14,7 @@ const orderSchema = new mongoose.Schema({
   finalAmount: { type: mongoose.Types.Decimal128 }, 
   orderDate: { type: Date },
   walletUsed: { type: mongoose.Types.Decimal128 },
-  coupon:
-    {
-      couponId: { type: mongoose.Types.ObjectId, ref: "coupon" },
-    },
+  coupon:{ type: mongoose.Types.ObjectId, ref: "coupon" },
   payment: { type: String },
   status: { type: String },
   return: [

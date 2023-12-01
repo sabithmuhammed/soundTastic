@@ -1,0 +1,50 @@
+<%- include("../layouts/adminHeader") %>
+
+<!--  Main wrapper -->
+<div class="body-wrapper">
+<%- include("../layouts/adminNavbar") %>
+<div class="container-fluid">
+    <div class="row justify-content-center mb-3">
+        <form class="search-container d-flex p-0" action="/admin/customers" method="get">
+            <input type="text" class="flex-grow-1 " placeholder="search..." name="search" value=""><button class="btn btn-primary h-100 rounded-start-0">Search</button>
+        </form>
+    </div>
+    <h2 class="my-3">All Requests</h2>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Order ID</th>
+            <th scope="col">Ordered Date</th>
+            <th scope="col">Request Date</th>
+            <th scope="col">Reason</th>
+            <th scope="col">Customer</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        
+        <tbody>
+            <% if(requests.length>0){ %>
+                <% requests.forEach((item)=>{ %> 
+              <tr>
+                <td><%= item.orderId._id%></td>
+                <td><%= item.orderId.orderDate.toLocaleString('en-US')%></td>
+                <td><%= item.date.toLocaleString('en-US')%></td>
+                <td><%= item.reason%></td>
+                <td><%= item.userId.name%></td>
+                <td><button class="btn btn-primary" onclick="window.location.href='/admin/manage-order/<%= item.orderId._id %>'">Manage</button></td>
+              </tr>
+            <% })}else{ %>
+              <tr>
+                <td></td>
+                <td colspan="3" class="">No Requests found</td>
+              </tr>
+              <%}%>
+         
+        </tbody>
+      </table>
+  </div>
+
+
+</div>
+
+<%- include("../layouts/adminFooter") %>

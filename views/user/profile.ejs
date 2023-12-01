@@ -95,7 +95,7 @@
           <% if(userData.address.length>0){
           userData.address.forEach((item,index)=>{ %>
           <div class="address" data-address="<%= item._id %>">
-            <% if(userData.defaultAddress.equals(item._id)){ %>
+            <% if(userData.defaultAddress && userData.defaultAddress.equals(item._id)){ %>
             <label for=""
               ><input
                 type="radio"

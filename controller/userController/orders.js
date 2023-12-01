@@ -2,17 +2,20 @@ const User = require("../../model/userModel");
 const Cart = require("../../model/cartModel");
 const Product = require("../../model/productModel");
 const Order = require("../../model/orderModel");
+const CancelRequest = require("../../model/cancelModel");
 const cartUtils = require("../../utilities/cartUtilities");
+const { render } = require("ejs");
 
 const showCheckout = async (req, res) => {
   try {
     const { user, userId } = req.session;
-    const { address, defaultAddress } = await User.findById(
+    const { address, defaultAddress ,wallet} = await User.findById(
       { _id: userId },
       {
         address: 1,
         _id: 0,
         defaultAddress: 1,
+        wallet:1
       }
     );
     const cart = await Cart.findOne({ userId })
@@ -22,12 +25,14 @@ const showCheckout = async (req, res) => {
       })
       .exec();
     const cartCount = cart.items.length;
+    const walletAmount=Number(wallet.balance)
     res.render("user/checkout", {
       user,
       address,
       cart,
       cartCount,
       defaultAddress,
+      walletAmount
     });
   } catch (error) {
     console.log(error.message);
@@ -37,7 +42,7 @@ const showCheckout = async (req, res) => {
 const placeOrder = async (req, res) => {
   try {
     const userId = req.session.userId;
-    const { addressId, coupon, payment } = req.body;
+    const { addressId, coupon, payment ,useWallet} = req.body;
     const { wallet, address } = await User.findById(
       { _id: userId },
       { wallet: 1, address: { $elemMatch: { _id: addressId } } }
@@ -49,7 +54,7 @@ const placeOrder = async (req, res) => {
       select: "price",
     });
     const products = [];
-    let finalAmout = totalAmount;
+    let finalAmount = totalAmount;
     let walletUsed = 0;
     let walletAmount = wallet.balance;
     items.forEach((element) => {
@@ -59,23 +64,28 @@ const placeOrder = async (req, res) => {
         quantity: element.quantity,
       });
     });
-    if (walletAmount !== 0) {
-      if (walletAmount < parseFloat(totalAmount)) {
-        finalAmout = totalAmount - walletAmount;
-        walletUsed = walletAmount;
-        walletAmount = 0;
-      } else {
-        finalAmout = 0;
-        walletAmount = walletAmount - totalAmount;
-        walletUsed = wallet.balance - walletAmount;
+
+    // for using wallet amount
+    if(useWallet){
+      if (walletAmount !== 0) {
+        if (walletAmount < parseFloat(totalAmount)) {
+          finalAmount = totalAmount - walletAmount;
+          walletUsed = walletAmount;
+          walletAmount = 0;
+        } else {
+          finalAmount = 0;
+          walletAmount = walletAmount - totalAmount;
+          walletUsed = wallet.balance - walletAmount;
+        }
       }
     }
+  
     const orderObj = {
       userId,
       address: address[0],
       products,
       totalAmount,
-      finalAmout,
+      finalAmount,
       orderDate: Date.now(),
       walletUsed,
       payment,
@@ -86,7 +96,7 @@ const placeOrder = async (req, res) => {
       products.forEach(async (element) => {
         await Product.findByIdAndUpdate(
           { _id: element.productId },
-          { $inc: { quantity: element.quantity } }
+          { $inc: { quantity: -element.quantity } }
         );
       });
       if (walletUsed) {
@@ -123,6 +133,17 @@ const placeOrder = async (req, res) => {
   }
 };
 
+const showOrderSuccess=async(req,res)=>{
+  try {
+    const { userId, user } = req.session;
+    const cartCount = await cartUtils.getCartCount(userId);
+    res.render('user/orderSuccess',{user,cartCount})
+  } catch (error) {
+    console.log(error.message);
+    
+  }
+}
+
 const showOrders = async (req, res) => {
   try {
     const { userId, user } = req.session;
@@ -152,10 +173,37 @@ const showOrderDetails = async (req,res)=>{
   }
 }
 
+const requestCancel=async(req,res)=>{
+  try {
+    const {userId}=req.session;
+    const {reason,orderId}=req.body
+    const checkCancel=await CancelRequest.findOne({orderId});
+    if(checkCancel){
+      res.status(409).json({message:"Request is proccessing, please be patient"})
+    }
+    const newCancelRequest = await new CancelRequest({
+      orderId,
+      userId,
+      date:Date.now(),
+      reason,
+    }).save();
+    if(newCancelRequest){
+      res.status(200).json({status:"success",message:"Cancel request has been sent"})
+    }
+  } catch (error) {
+    console.log(error.message);
+    
+  }
+}
+
+
 module.exports = {
   showCheckout,
   placeOrder,
+  showOrderSuccess,
   showOrders,
   showOrderDetails,
+  requestCancel
+  
   
 };

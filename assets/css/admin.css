@@ -135,7 +135,6 @@ label{
 .product-img{
   width: 150px;
   height: 150px;
-  background-color: rgb(159, 161, 160) !important;
 }
 .product-img>img{
     width: 100%;
