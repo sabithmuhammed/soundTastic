@@ -21,8 +21,11 @@ async function customerBlock() {
     const actionId=document.getElementById('action-id');
     const item=document.getElementById(actionId.value)
     const rawData = await fetch(`/admin/block-customer/${item.id}`, {
-      method: "POST",
+      method: "PATCH",
     });
+    if(rawData.status===401){
+      window.location.href="/admin/login"
+    }
     if (rawData.ok) {
       const data = await rawData.json();
       item.classList.toggle("btn-danger");
@@ -45,6 +48,9 @@ async function addCategory(item) {
         body: JSON.stringify({ categoryName }),
         headers: { "Content-Type": "application/json" },
       });
+      if(rawData.status===401){
+        window.location.href="/admin/login"
+      }
       if (rawData.ok) {
         const alert = document.getElementById("category-alert");
         const data = await rawData.json();
@@ -90,8 +96,11 @@ async function categoryList() {
     const actionId=document.getElementById('action-id');
     const item=document.getElementById(actionId.value)
     const rawData = await fetch(`/admin/list-category/${item.dataset.id}`, {
-      method: "POST",
+      method: "PATCH",
     });
+    if(rawData.status===401){
+      window.location.href="/admin/login"
+    }
     if (rawData.ok) {
       const data = await rawData.json();
       item.classList.toggle("btn-danger");
@@ -109,8 +118,11 @@ async function productList() {
     const actionId=document.getElementById('action-id');
     const item=document.getElementById(actionId.value)
     const rawData = await fetch(`/admin/list-product/${item.dataset.id}`, {
-      method: "POST",
+      method: "PATCH",
     });
+    if(rawData.status===401){
+      window.location.href="/admin/login"
+    }
     if (rawData.ok) {
       const data = await rawData.json();
       item.classList.toggle("btn-danger");
@@ -158,10 +170,13 @@ async function sendEditRequest() {
     const name = document.getElementById("cat-name").value;
     const error = document.querySelector(".error-modal");
     const rawData = await fetch("/admin/edit-category", {
-      method: "POST",
+      method: "PUT",
       body: JSON.stringify({ id, name }),
       headers: { "Content-Type": "application/json" },
     });
+    if(rawData.status===401){
+      window.location.href="/admin/login"
+    }
 
     if (rawData.ok) {
       const data = await rawData.json();
@@ -195,10 +210,13 @@ async function sendStockRequest() {
       return false;
     }
     const rawData = await fetch("/admin/add-stock", {
-      method: "POST",
+      method: "PATCH",
       body: JSON.stringify({ id, quantity }),
       headers: { "Content-Type": "application/json" },
     });
+    if(rawData.status===401){
+      window.location.href="/admin/login"
+    }
 
     if (rawData.ok) {
       const data = await rawData.json();

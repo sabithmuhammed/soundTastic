@@ -22,6 +22,9 @@ const cancelRequest = async (event) => {
       },
       body: JSON.stringify({ orderId }),
     });
+    if(rawData.status===401){
+      window.location.href="/admin/login"
+    }
     if (rawData.ok) {
       cancelBtn.classList.add("disabled");
       changeStatus.classList.add("disabled");
@@ -49,6 +52,9 @@ const changeStatusReq=async(event)=>{
             },
             body:JSON.stringify({orderId,status})
         })
+        if(rawData.status===401){
+          window.location.href="/admin/login"
+        }
         if(rawData.ok){
             const data =await rawData.json();
             if(data.status==="success"){

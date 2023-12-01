@@ -24,7 +24,7 @@ const showCheckout = async (req, res) => {
         select: "name price",
       })
       .exec();
-    const cartCount = cart.items.length;
+    const cartCount = cart?.items?.length;
     const walletAmount=Number(wallet.balance)
     res.render("user/checkout", {
       user,

@@ -13,7 +13,7 @@ user_route.get("/home", navPagesController.loadHome);
 user_route.get("/login",auth.isLogout,authController.loginLoad);
 user_route.post("/login", authController.verifyLogin);
 user_route.get("/logout",authController.userLogout);
-
+user_route.get("/user-blocked",navPagesController.showUserBlock)
 
 
 user_route.get("/signup",auth.isLogout,authController.loadRegister);
@@ -31,33 +31,36 @@ user_route.get("/password-otp",auth.tempAccess,authController.showPasswordOtp)
 user_route.post("/check-password-otp",authController.passwordCheckOTP)
 
 user_route.get("/change-password",auth.changePassword,authController.showChangePassword);
-user_route.post("/change-password",authController.changePassword);
+user_route.patch("/change-password",authController.changePassword);
 
 user_route.get("/shop",navPagesController.showShop);
 user_route.get("/product/:id",navPagesController.showProductPage);
 
-user_route.get('/my-profile',auth.isLogin,userPageController.showProfile);
-user_route.get('/add-address',auth.isLogin,userPageController.showAddAddress)
-user_route.post('/add-address',userPageController.addAddress)
-user_route.get('/edit-address/:id',auth.isLogin,userPageController.showEditAddress)
-user_route.post('/edit-address/',userPageController.editAddress)
-user_route.post('/delete-address/',userPageController.deleteAddress)
-user_route.post('/edit-profile/',userPageController.editProfile)
-user_route.post('/check-password',authController.checkPassword)
-user_route.patch('/default-address',userPageController.setDefaultAddress)
+user_route.get('/my-profile',auth.isLogin,auth.userBlock,userPageController.showProfile);
+user_route.get('/add-address',auth.isLogin,auth.userBlock,userPageController.showAddAddress)
+user_route.post('/add-address',auth.jsonIsLogin,auth.jsonUserBlock,userPageController.addAddress)
+user_route.get('/edit-address/:id',auth.isLogin,auth.userBlock,userPageController.showEditAddress)
+user_route.put('/edit-address/',auth.jsonIsLogin,auth.jsonUserBlock,userPageController.editAddress)
+user_route.delete('/delete-address/',auth.jsonIsLogin,auth.jsonUserBlock,userPageController.deleteAddress)
+user_route.patch('/edit-profile/',auth.jsonIsLogin,auth.jsonUserBlock,userPageController.editProfile)
+user_route.post('/check-password',auth.jsonIsLogin,auth.jsonUserBlock,authController.checkPassword)
+user_route.patch('/default-address',auth.jsonIsLogin,auth.jsonUserBlock,userPageController.setDefaultAddress)
 
-user_route.get('/cart',auth.isLogin,cartController.showCart);
-user_route.post('/add-to-cart',auth.isLogin,cartController.addToCart);
-user_route.patch('/change-cart-quantity',cartController.changeQuantity);
-user_route.delete('/cart-remove',cartController.removeFromCart);
-user_route.get('/check-stock',cartController.checkStock);
+user_route.get('/cart',auth.isLogin,auth.userBlock,cartController.showCart);
+user_route.post('/add-to-cart',auth.jsonIsLogin,auth.jsonUserBlock,cartController.addToCart);
+user_route.patch('/change-cart-quantity',auth.jsonIsLogin,auth.jsonUserBlock,cartController.changeQuantity);
+user_route.delete('/cart-remove',auth.jsonIsLogin,auth.jsonUserBlock,cartController.removeFromCart);
+user_route.get('/check-stock',auth.jsonIsLogin,cartController.checkStock);
 
-user_route.get('/checkout',auth.isLogin,ordersController.showCheckout);
-user_route.post('/place-order',ordersController.placeOrder)
-user_route.get('/order-success',auth.isLogin,ordersController.showOrderSuccess)
-user_route.get('/orders',auth.isLogin,ordersController.showOrders)
-user_route.get('/order-details/:orderId',auth.isLogin,ordersController.showOrderDetails)
-user_route.get('/order-details/:orderId',auth.isLogin,ordersController.showOrderDetails)
-user_route.post('/cancel-request',ordersController.requestCancel)
+user_route.post('/add-to-wishlist',auth.jsonIsLogin,auth.jsonUserBlock,navPagesController.addToWishlist);
+
+
+user_route.get('/checkout',auth.isLogin,auth.userBlock,ordersController.showCheckout);
+user_route.post('/place-order',auth.jsonIsLogin,auth.jsonUserBlock,ordersController.placeOrder)
+user_route.get('/order-success',auth.isLogin,auth.userBlock,ordersController.showOrderSuccess)
+user_route.get('/orders',auth.isLogin,auth.userBlock,ordersController.showOrders)
+user_route.get('/order-details/:orderId',auth.isLogin,auth.userBlock,ordersController.showOrderDetails)
+user_route.get('/order-details/:orderId',auth.isLogin,auth.userBlock,ordersController.showOrderDetails)
+user_route.post('/cancel-request',auth.jsonIsLogin,auth.jsonUserBlock,ordersController.requestCancel)
 
 module.exports = user_route;

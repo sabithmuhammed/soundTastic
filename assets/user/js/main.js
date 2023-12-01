@@ -57,6 +57,15 @@ const addTOCart = async (event) => {
       },
       body: JSON.stringify({ productId }),
     });
+
+    if(rawData.status===401){
+      window.location.href="/login"
+    }
+    if(rawData.status===403){
+      window.location.href="/user-blocked"
+    }
+
+
     if (rawData.ok) {
       const data = await rawData.json();
       if (data.status === "success") {

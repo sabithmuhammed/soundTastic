@@ -1,5 +1,8 @@
 <%- include("../layouts/userHeader") %> <%- include("../layouts/userNavbar") %>
 <script src="/user/js/utils/checkout.js" defer></script>
+
+
+
 <div class="section mb-5">
   <!-- container -->
   <div class="container">
@@ -7,6 +10,7 @@
       <div class="col-md-12"><h2>CHECKOUT</h2></div>
     </div>
     <!-- row -->
+    <% if(cart){ %> 
     <div class="row checkout">
       <div class="col-md-6">
         <div class="address-div">
@@ -170,6 +174,15 @@
         </div>
       </div>
     </div>
+    <% }else{ %>
+          <div class="row">
+            <div class="md-md-12 item-center">
+              <h4>Your cart is empty! <a href="/shop">Continue shopping</a></h4>
+            </div>
+          </div>
+    
+      <% } %>
+
   </div>
 </div>
 
@@ -181,8 +194,5 @@
   </div>
 </div>
 
-<script>
- 
-</script>
 
 <%- include("../layouts/userFooter") %>

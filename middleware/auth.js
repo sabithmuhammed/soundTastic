@@ -1,3 +1,4 @@
+const checkBlock = require('../utilities/checkBlock')
 const isLogin=async (req,res,next)=>{
     try {
         if(req.session.userId){
@@ -22,6 +23,18 @@ const isLogout=async(req,res,next)=>{
         console.log(error.message);
      }
 };
+
+const jsonIsLogin =async(req,res,next)=>{
+    try {
+        if(req.session.userId){
+            next();
+        }else{
+            res.status(401).send();
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 const changePassword=async(req,res,next)=>{
     try {
         if(req.session.otpVerified){
@@ -45,10 +58,41 @@ const tempAccess=async(req,res,next)=>{
         console.log(error.message);
     }
 }
+
+const userBlock = async (req,res,next)=>{
+    try {
+        if( await checkBlock(req.session.userId)){
+            req.session.destroy();
+            res.redirect("/user-blocked")
+        }else{
+            next();
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+const jsonUserBlock = async (req,res,next)=>{
+    try {
+        if( await checkBlock(req.session.userId)){
+            req.session.destroy();
+            res.status(403).send();
+        }else{
+            next();
+        }
+    } catch (error) {
+        console.log(error.message);
+        
+    }
+}
+
 module.exports={
     isLogin,
     isLogout,
     changePassword,
     tempAccess,
+    userBlock,
+    jsonIsLogin,
+    jsonUserBlock
 
 };

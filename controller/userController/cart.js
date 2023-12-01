@@ -220,10 +220,12 @@ const checkStock = async (req, res) => {
   }
 };
 
+
 module.exports = {
   showCart,
   addToCart,
   changeQuantity,
   removeFromCart,
   checkStock,
+
 };

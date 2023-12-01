@@ -1,7 +1,8 @@
 const cancelBtn = document.querySelector("[data-cancelBtn]");
 const sendReqBtn = document.querySelector("[data-sendReqBtn]");
 const cancelRequestModal = document.getElementById("order-cancel-modal");
-const closeModalBtn = document.querySelector(".confirm-close");
+const cancelRequestMessage = document.getElementById("order-cancel-message");
+const closeModalBtn = document.querySelectorAll(".confirm-close");
 
 const showModal = (event) => {
   const error = document.querySelector("[data-error]");
@@ -29,10 +30,19 @@ const sendCancelRequest = async () => {
       },
       body: JSON.stringify({ orderId, reason }),
     });
+
+    if (rawData.status === 401) {
+      window.location.href = "/login";
+    }
+    if (rawData.status === 403) {
+      window.location.href = "/user-blocked";
+    }
+
     const data = await rawData.json();
     if (rawData.ok) {
       if (data.status === "success") {
         cancelRequestModal.style.display = "none";
+        cancelRequestMessage.style.display = "block";
         return;
       }
     }
@@ -44,13 +54,19 @@ const sendCancelRequest = async () => {
 
 const closeModal = () => {
   cancelRequestModal.style.display = "none";
+  cancelRequestMessage.style.display = "none";
 };
 
 cancelBtn.addEventListener("click", showModal);
 sendReqBtn.addEventListener("click", sendCancelRequest);
-closeModalBtn.addEventListener("click", closeModal);
+closeModalBtn.forEach((item) => {
+  item.addEventListener("click", closeModal);
+});
 window.addEventListener("click", (event) => {
-  if (event.target == cancelRequestModal) {
+  if (
+    event.target == cancelRequestModal ||
+    event.target == cancelRequestMessage
+  ) {
     closeModal();
   }
 });

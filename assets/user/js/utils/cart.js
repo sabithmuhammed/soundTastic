@@ -29,6 +29,14 @@ const changeCartQuantity = async (event, operation) => {
         curQuantity: input.value,
       }),
     });
+
+    if(rawData.status===401){
+      window.location.href="/login"
+    }
+    if(rawData.status===403){
+      window.location.href="/user-blocked"
+    }
+
     if (rawData.ok) {
       const data = await rawData.json();
       if (data?.status === "success") {
@@ -88,6 +96,14 @@ const removeFromCart = async (event) => {
       },
       body: JSON.stringify({ productId, quantity }),
     });
+
+    if(rawData.status===401){
+      window.location.href="/login"
+    }
+    if(rawData.status===403){
+      window.location.href="/user-blocked"
+    }
+
     if (rawData.ok) {
       const data = await rawData.json();
       if (data.status === "success") {
@@ -136,6 +152,14 @@ const checkStock = async (event) => {
     const checkOutStock = document.querySelector("#checkout-stock");
     checkOutStock.innerHTML = "";
     const rawData = await fetch("/check-stock");
+
+    if(rawData.status===401){
+      window.location.href="/login"
+    }
+    if(rawData.status===403){
+      window.location.href="/user-blocked"
+    }
+
     if (rawData.ok) {
       const data = await rawData.json();
       if (data.status === "success") {

@@ -43,6 +43,14 @@ form.addEventListener("submit", async (e) => {
     },
     body: JSON.stringify({ name, mobile, city, address, state, pincode }),
   });
+
+  if(rawData.status===401){
+    window.location.href="/login"
+  }
+  if(rawData.status===403){
+    window.location.href="/user-blocked"
+  }
+
   if (rawData.ok) {
     const data = await rawData.json();
     if (data.status === "success") {
@@ -62,7 +70,7 @@ const placeOrder = async () => {
       `input[name="payment-method"]:checked`
     )?.value;
     const coupon = null;
-    const useWallet =walletBtn.checked
+    const useWallet =walletBtn?.checked
     if (!addressId) {
       error.innerText = "Please select an address";
       return (checkoutModal.style.display = "block");
@@ -76,6 +84,13 @@ const placeOrder = async () => {
       },
       body: JSON.stringify({ addressId, payment, coupon ,useWallet}),
     });
+    if(rawData.status===401){
+      window.location.href="/login"
+    }
+    if(rawData.status===403){
+      window.location.href="/user-blocked"
+    }
+
     const data = await rawData.json();
     if (rawData.ok) {
       if (data.status === "success") {
@@ -113,5 +128,5 @@ const controlWallet = () => {
   }
 };
 
-walletBtn.addEventListener("click", controlWallet);
+walletBtn?.addEventListener("click", controlWallet);
 placeOrderBtn.addEventListener("click", placeOrder);

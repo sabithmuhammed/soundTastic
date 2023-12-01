@@ -1,5 +1,6 @@
 const Category = require("../../model/categoryModel");
 const Product = require("../../model/productModel");
+const Wishlist = require("../../model/wishlistModel");
 const cartUtils = require("../../utilities/cartUtilities");
 
 const home = async (req, res) => {
@@ -101,9 +102,52 @@ const showProductPage = async (req, res) => {
   }
 };
 
+const showUserBlock = async(req,res)=>{
+  try {
+    res.render('user/userBlocked');
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+const addToWishlist =async(req,res)=>{
+  try {
+    const {productId} = req.body
+    const {userId}=req.session
+    const checkWishlist = await Wishlist.findOne({userId})
+    if(!checkWishlist){
+      const newWishlist=await new Wishlist({userId,products:[productId]}).save()
+      return res.status(200).json({status:"success",wishlistCount:1})
+    }
+
+    const exist = checkWishlist.products.find((product) => {
+      return product.equals(productId);
+    });
+    if(exist){
+      return res.status(200).json({status:"success",wishlistCount:checkWishlist.products.length})
+    }
+    const updatedWishList = await Wishlist.findOneAndUpdate(
+      { userId: req.session.userId },
+      {
+        $push: {
+          items: productId,
+        },
+      },
+      { new: true }
+    );
+    return res.status(200).json({status:"success",wishlistCount:updatedWishList.products.length})
+  } catch (error) {
+    console.log(error.message);
+    
+  }
+  }
+
 module.exports = {
   loadHome,
   showShop,
   showProductPage,
   home,
+  showUserBlock,
+  addToWishlist,
+
 };

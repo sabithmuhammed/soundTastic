@@ -18,14 +18,14 @@ admin_route.get('/dashboard',auth.isLogin,dashboard.loadDashboard);
 
 // customer routes start
 admin_route.get('/customers',auth.isLogin,authAndCustomer.seeCustomers);
-admin_route.post('/block-customer/:id',authAndCustomer.updateCustomers);
+admin_route.patch('/block-customer/:id',auth.jsonIsLogin,authAndCustomer.updateCustomers);
 // customer routes end
 
 // category routes start
 admin_route.get('/categories',auth.isLogin,productAndCategory.seeCategories);
-admin_route.post('/list-category/:id',productAndCategory.updateCategories);
-admin_route.post('/add-category',productAndCategory.addCategory);
-admin_route.post('/edit-category',productAndCategory.editCategory);
+admin_route.patch('/list-category/:id',auth.jsonIsLogin,productAndCategory.updateCategories);
+admin_route.post('/add-category',auth.jsonIsLogin,productAndCategory.addCategory);
+admin_route.put('/edit-category',auth.jsonIsLogin,productAndCategory.editCategory);
 // category routes end
 
 // product routes start
@@ -34,16 +34,16 @@ admin_route.get('/add-product',auth.isLogin,productAndCategory.showAddProduct);
 admin_route.post('/add-product',imageUpload,productAndCategory.addProduct);
 admin_route.get('/edit-product/:id',auth.isLogin,productAndCategory.showEditProduct);
 admin_route.post('/edit-product',auth.isLogin,imageUpload,productAndCategory.editProduct);
-admin_route.post('/add-stock',productAndCategory.addStock);
-admin_route.post('/list-product/:id',productAndCategory.updateProducts);
+admin_route.patch('/add-stock',auth.jsonIsLogin,productAndCategory.addStock);
+admin_route.patch('/list-product/:id',auth.jsonIsLogin,productAndCategory.updateProducts);
 // product routes end
 
 //orders routes start
 admin_route.get('/orders',auth.isLogin,orderManagement.showOrders);
 admin_route.get('/manage-order/:orderId',auth.isLogin,orderManagement.showManageOrder);
-admin_route.patch('/cancel-order',orderManagement.cancelOrder);
-admin_route.patch('/change-status',orderManagement.changeStatus);
-admin_route.get('/cancel-request',auth.isLogin,orderManagement.showCancelRequest)
+admin_route.patch('/cancel-order',auth.jsonIsLogin,orderManagement.cancelOrder);
+admin_route.patch('/change-status',auth.jsonIsLogin,orderManagement.changeStatus);
+admin_route.get('/cancel-request',auth.jsonIsLogin,auth.isLogin,orderManagement.showCancelRequest)
 
 //orders routes end
 

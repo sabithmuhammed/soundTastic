@@ -11,6 +11,18 @@ const isLogin=async (req,res,next)=>{
     }
   };
   
+  const jsonIsLogin =async(req,res,next)=>{
+    try {
+        if(req.session.admin){
+            next();
+        }else{
+            res.status(401).send();
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
   const isLogout=async(req,res,next)=>{
      try {
         if(req.session.admin){
@@ -26,5 +38,7 @@ const isLogin=async (req,res,next)=>{
   module.exports={
       isLogin,
       isLogout,
+      jsonIsLogin,
+
       
   }

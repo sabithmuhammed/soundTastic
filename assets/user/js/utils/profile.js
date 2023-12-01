@@ -47,12 +47,20 @@ const deleteAddress = async () => {
     const addressId = document.getElementById("address-id").value;
     const address = document.querySelector(`[data-address="${addressId}"]`);
     const rawData = await fetch("/delete-address", {
-      method: "POST",
+      method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ addressId }),
     });
+
+    if(rawData.status===401){
+      window.location.href="/login"
+    }
+    if(rawData.status===403){
+      window.location.href="/user-blocked"
+    }
+
     if (rawData.ok) {
       const data = await rawData.json();
       if (data.status === "success") {
@@ -112,12 +120,19 @@ const profileSave = async () => {
     }
 
     const rawData = await fetch("/edit-profile", {
-      method: "POST",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ name, phone }),
     });
+
+    if(rawData.status===401){
+      window.location.href="/login"
+    }
+    if(rawData.status===403){
+      window.location.href="/user-blocked"
+    }
 
     if (rawData.ok) {
       const data = await rawData.json();
@@ -158,6 +173,14 @@ const checkPassword = async () => {
       },
       body: JSON.stringify({ password: oldPassword }),
     });
+
+    if(rawData.status===401){
+      window.location.href="/login"
+    }
+    if(rawData.status===403){
+      window.location.href="/user-blocked"
+    }
+
     if (rawData.ok) {
       const data = await rawData.json();
       if (data.status === "success") {
@@ -195,12 +218,19 @@ const newPassword = async () => {
       return (error.innerText = "Passwords doesn't match!");
     }
     const rawData = await fetch("/change-password", {
-      method: "POST",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ password }),
     });
+
+    if(rawData.status===401){
+      window.location.href="/login"
+    }
+    if(rawData.status===403){
+      window.location.href="/user-blocked"
+    }
     if (rawData.ok) {
       const data = await rawData.json();
       if (data.status === "success") {
@@ -227,6 +257,14 @@ const setDefaultAddress = async (event) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ defaultAddress }),
     });
+
+    if(rawData.status===401){
+      window.location.href="/login"
+    }
+    if(rawData.status===403){
+      window.location.href="/user-blocked"
+    }
+
     if (rawData.ok) {
       return event.target.checked=true
     }
