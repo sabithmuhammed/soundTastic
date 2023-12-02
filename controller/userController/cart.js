@@ -1,19 +1,22 @@
 const Cart = require("../../model/cartModel");
 const Product = require("../../model/productModel");
 const cartUtils = require("../../utilities/cartUtilities");
+const wishUtils = require("../../utilities/wishlistUtilities");
 
 const showCart = async (req, res) => {
   try {
     const user = req.session.user;
-    const cartItems = await Cart.findOne({ userId: req.session.userId })
+    const userId=req.session.userId
+    const cartItems = await Cart.findOne({ userId })
       .populate({
         path: "items.productId",
         select: "name price quantity images",
       })
       .exec();
-    const cartCount = await cartUtils.getCartCount(req.session.userId);
+    const { wishlistCount } = await wishUtils.wishlistDetails(userId);
+    const cartCount = await cartUtils.getCartCount(userId);
 
-    res.render("user/cart", { cartItems, user, cartCount });
+    res.render("user/cart", { cartItems, user, cartCount,wishlistCount });
   } catch (error) {
     console.log(error.message);
   }

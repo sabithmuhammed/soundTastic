@@ -1,13 +1,15 @@
 const User = require("../../model/userModel");
 const cartUtils = require("../../utilities/cartUtilities");
+const wishUtils = require("../../utilities/wishlistUtilities");
 const showProfile = async (req, res) => {
     try {
       
-      const id = req.session.userId;
+      const {userId} = req.session;
       const user = req.session.user;
-      const userData = await User.findById({ _id: id });
-      const cartCount = await cartUtils.getCartCount(id)
-      res.render("user/profile", { user, userData ,cartCount});
+      const userData = await User.findById({ _id: userId });
+      const cartCount = await cartUtils.getCartCount(userId)
+      const { wishlistCount } = await wishUtils.wishlistDetails(userId);
+      res.render("user/profile", { user, userData ,cartCount,wishlistCount});
     } catch (error) {
       console.log(error.message);
     }
@@ -15,8 +17,10 @@ const showProfile = async (req, res) => {
 
   const showAddAddress = async (req, res) => {
     try {
-      const cartCount = await cartUtils.getCartCount(req.session.userId)
-      res.render("user/addAddress", { user: req.session.user ,cartCount});
+      const {userId}=req.session
+      const cartCount = await cartUtils.getCartCount(userId)
+      const { wishlistCount } = await wishUtils.wishlistDetails(userId);
+      res.render("user/addAddress", { user: req.session.user ,cartCount,wishlistCount});
     } catch (error) {
       console.log(error.message);
     }
@@ -41,13 +45,15 @@ const showProfile = async (req, res) => {
   const showEditAddress = async (req, res) => {
     try {
       const addressId = req.params.id;
+      const {userId}=req.session
       const userData = await User.findById(
         { _id: req.session.userId },
         { address: { $elemMatch: { _id: addressId } } }
       );
-      const cartCount = await cartUtils.getCartCount(req.session.userId)
+      const cartCount = await cartUtils.getCartCount(userId)
+      const { wishlistCount } = await wishUtils.wishlistDetails(userId);
       const address = userData.address[0];
-      res.render("user/editAddress", { user: req.session.user, address,cartCount });
+      res.render("user/editAddress", { user: req.session.user, address,cartCount,wishlistCount });
     } catch (error) {
       console.log(error.message);
     }

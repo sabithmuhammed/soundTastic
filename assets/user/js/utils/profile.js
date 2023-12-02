@@ -3,6 +3,10 @@ const pmodal = document.getElementById("password-modal");
 const close = document.getElementsByClassName("confirm-close")[0];
 const pClose = document.getElementsByClassName("password-close")[0];
 const radio = document.querySelectorAll("[data-addressDefault]");
+const wModal = document.getElementById("wallet-modal");
+const walletBtn =document.querySelector('[data-walletHistoryBtn]');
+const walletClose =document.querySelector('.wallet-close');
+
 
 //show confirmation modal before deleting address
 const showConfirm = (item) => {
@@ -32,14 +36,14 @@ pClose.onclick = function () {
   pmodal.style.display = "none";
 };
 //close modal when pressed outside modal
-window.onclick = function (event) {
+window.addEventListener("click", (event) => {
   if (event.target == cmodal) {
     cmodal.style.display = "none";
   }
-  if (event.target == pmodal) {
-    pmodal.style.display = "none";
+  if (event.target == wModal) {
+    wModal.style.display = "none";
   }
-};
+});
 
 //fetch request for address deletion
 const deleteAddress = async () => {
@@ -54,11 +58,11 @@ const deleteAddress = async () => {
       body: JSON.stringify({ addressId }),
     });
 
-    if(rawData.status===401){
-      window.location.href="/login"
+    if (rawData.status === 401) {
+      window.location.href = "/login";
     }
-    if(rawData.status===403){
-      window.location.href="/user-blocked"
+    if (rawData.status === 403) {
+      window.location.href = "/user-blocked";
     }
 
     if (rawData.ok) {
@@ -127,20 +131,23 @@ const profileSave = async () => {
       body: JSON.stringify({ name, phone }),
     });
 
-    if(rawData.status===401){
-      window.location.href="/login"
+    if (rawData.status === 401) {
+      window.location.href = "/login";
     }
-    if(rawData.status===403){
-      window.location.href="/user-blocked"
+    if (rawData.status === 403) {
+      window.location.href = "/user-blocked";
     }
 
     if (rawData.ok) {
       const data = await rawData.json();
       if (data.status === "success") {
+        document.querySelector("[data-bigname]").innerText = data.data.name;
         nameInput.value = data.data.name;
         nameInput.dataset.value = data.data.name;
         phoneInput.value = data.data.phone;
         phoneInput.dataset.value = data.data.phone;
+        nameInput.readOnly = true;
+        phoneInput.readOnly = true;
         buttons.style.display = "none";
         buttons.style.display = "none";
         error.innerText = "";
@@ -174,11 +181,11 @@ const checkPassword = async () => {
       body: JSON.stringify({ password: oldPassword }),
     });
 
-    if(rawData.status===401){
-      window.location.href="/login"
+    if (rawData.status === 401) {
+      window.location.href = "/login";
     }
-    if(rawData.status===403){
-      window.location.href="/user-blocked"
+    if (rawData.status === 403) {
+      window.location.href = "/user-blocked";
     }
 
     if (rawData.ok) {
@@ -225,11 +232,11 @@ const newPassword = async () => {
       body: JSON.stringify({ password }),
     });
 
-    if(rawData.status===401){
-      window.location.href="/login"
+    if (rawData.status === 401) {
+      window.location.href = "/login";
     }
-    if(rawData.status===403){
-      window.location.href="/user-blocked"
+    if (rawData.status === 403) {
+      window.location.href = "/user-blocked";
     }
     if (rawData.ok) {
       const data = await rawData.json();
@@ -250,7 +257,7 @@ const newPassword = async () => {
 
 const setDefaultAddress = async (event) => {
   try {
-    event.preventDefault()
+    event.preventDefault();
     const defaultAddress = event.currentTarget.value;
     const rawData = await fetch("/default-address", {
       method: "PATCH",
@@ -258,23 +265,31 @@ const setDefaultAddress = async (event) => {
       body: JSON.stringify({ defaultAddress }),
     });
 
-    if(rawData.status===401){
-      window.location.href="/login"
+    if (rawData.status === 401) {
+      window.location.href = "/login";
     }
-    if(rawData.status===403){
-      window.location.href="/user-blocked"
+    if (rawData.status === 403) {
+      window.location.href = "/user-blocked";
     }
 
     if (rawData.ok) {
-      return event.target.checked=true
+      return (event.target.checked = true);
     }
-
   } catch (error) {
     console.error(error.message);
     event.preventDefault();
   }
 };
 
+const showWalletHistory =()=>{
+  wModal.style.display="block"
+}
+
 radio.forEach((item) => {
   item.addEventListener("click", setDefaultAddress);
 });
+
+walletBtn.addEventListener('click',showWalletHistory)
+walletClose.addEventListener('click',()=>{
+  wModal.style.display="none"
+})

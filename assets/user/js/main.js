@@ -79,7 +79,9 @@ const addTOCart = async (event) => {
       modalMessage.innerText = data.message;
       cModal.style.display = "block";
     }
-  } catch (error) {}
+  } catch (error) {
+    console.log(error.message);
+  }
 };
 const addCartBtn = document.querySelectorAll("[data-addToCart]");
 addCartBtn.forEach((item) => {

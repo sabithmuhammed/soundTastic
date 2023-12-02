@@ -62,10 +62,26 @@
           <h3>&#8377;<%= product.price %></h3>
           <h5><strike>&#8377;<%= product.md_price %></strike></h5>
         </div>
-        <div class="prod-buttons">
+        <div
+          class="prod-buttons" 
+        >
           <% if(locals.user) { %>
-          <button class="btn yellow-btn">Add to wishlist</button>
-          <button class="btn primary-btn" data-addToCart data-id="<%= product._id %>">Add to Cart</button>
+          <button class="btn yellow-btn"
+          data-prodpage="true"
+          data-addToWishlist
+          data-id="<%= product._id%>"
+          data-status="<%= wishlist?.includes(product._id)?'true':'false' %>"
+          >
+            <% if(wishlist?.includes(product._id)){ %> REMOVE FROM WISHLIST <%
+            }else{ %> ADD TO WISHLIST <% } %>
+          </button>
+          <button
+            class="btn primary-btn"
+            data-addToCart
+            data-id="<%= product._id %>"
+          >
+            Add to Cart
+          </button>
           <% }else{ %>
           <button class="btn yellow-btn" onclick="showLogin()">
             Add to wishlist
@@ -106,3 +122,4 @@
 <script src="/user/js/main.js"></script>
 
 <script src="/user/js/utils/imageZoom.js"></script>
+<script src="/user/js/utils/navPages.js"></script>

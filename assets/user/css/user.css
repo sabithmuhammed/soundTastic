@@ -91,6 +91,10 @@ input[type=radio] {
     cursor: pointer;
     
   }
+.cursor-pointer{
+    cursor: pointer;
+}
+
 
 /* util */
 
@@ -153,7 +157,6 @@ input[type=radio] {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    border: 2px solid rgb(8, 0, 255)(145, 71, 71) ;
     font-size: 20px;
     display: flex;
     justify-content: center;
@@ -165,6 +168,12 @@ input[type=radio] {
     background-color: #D10024;
     color: white;
     transform: rotate(360deg);
+}
+.wishlist-active{
+    color:#D10024; 
+}
+.wishlist-active:hover{
+    color: white;
 }
 .header-logo > a{
     display: block;
@@ -253,11 +262,12 @@ input[type=radio] {
     width: 200px;
     border-radius: 10px;
     margin-bottom: 10px;
+    font-size: 12px;
 }
 .yellow-btn {
     margin-right: 10px;
     display: inline-block;
-    padding: 12px 30px;
+    padding: 12px 12px;
     background-color: #c86000;
     border: none;
     border-radius: 40px;
@@ -774,6 +784,29 @@ li::marker{
     margin-bottom: 10px;
     font-weight: 500;
     text-indent: 5px;
+}
+
+.w-modal{
+    padding: 10px;
+}
+.w-modal >.row{
+    width: 100%;
+    background-color: #eabfbf;
+    margin-bottom: 5px;
+    border-radius: 9px;
+    padding: 5px;
+}
+.w-modal p{
+    font-weight: 500;
+    font-size: 16px;
+}
+.w-modal > button{
+    width: 100px;
+    height: 40px;
+    margin-top: 10px;
+}
+.black{
+    color: #000;
 }
 
 @media screen and (max-width: 992px){

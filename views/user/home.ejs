@@ -122,39 +122,61 @@
     <div class="container">
       <!-- row -->
       <div class="row">
-        
         <!-- /shop -->
         <% products.forEach((item)=>{ %>
-            <div class="col-md-3 col-xs-6">
-                <div class="product" onclick="window.location.href='product/<%= item._id %>'">
-                  <div class="product-img">
-                    <img src="/images/products/<%= item.images[0] %>" alt="" />
-                  </div>
-                  <div class="product-body">
-                    <p><%= item.category.name %></p>
-                    <h5><%= item.name %></h5>
-                    <div class="price">
-                      <span class="original-price">&#8377;<%= item.price %></span>
-                      <span class="mrk-down"><strike>&#8377;<%= item.md_price %></strike></span>
-                    </div>
-                    <div class="add-to-cart-div">
-                      <% if(locals.user) { %>
-                        <div class="circle" data-addToWishlist data-id="<%= item._id%>" data-status="false" ><i class="fa-regular fa-heart"></i></div>
-                        <div class="circle" data-addToCart data-id="<%= item._id %>" >
-                          <i class="fa-solid fa-cart-shopping"></i>
-                        </div>
-                        <% }else{ %>
-                        <div class="circle" onclick="event.stopPropagation(); showLogin()"><i class="fa-regular fa-heart"></i></div>
-                        <div class="circle" onclick="event.stopPropagation(); showLogin()">
-                          <i class="fa-solid fa-cart-shopping"></i>
-                        </div>
-                        <% } %>
-                    </div>
-                  </div>
-                </div>
+        <div class="col-md-3 col-xs-6">
+          <div
+            class="product"
+            onclick="window.location.href='product/<%= item._id %>'"
+          >
+            <div class="product-img">
+              <img src="/images/products/<%= item.images[0] %>" alt="" />
+            </div>
+            <div class="product-body">
+              <p><%= item.category.name %></p>
+              <h5><%= item.name %></h5>
+              <div class="price">
+                <span class="original-price">&#8377;<%= item.price %></span>
+                <span class="mrk-down"
+                  ><strike>&#8377;<%= item.md_price %></strike></span
+                >
               </div>
+              <div class="add-to-cart-div">
+                <% if(locals.user) { %>
+                <div
+                  class="circle <%= wishlist?.includes(item._id)?'wishlist-active':'' %>"
+                  data-addToWishlist
+                  data-id="<%= item._id%>"
+                  data-status="<%= wishlist?.includes(item._id)?'true':'false' %>"
+                >
+                  <% if(wishlist?.includes(item._id)){ %><i
+                    class="fa fa-heart-o"
+                  ></i>
+                  <% }else{ %><i class="fa-regular fa-heart"></i> <% } %>
+                </div>
+                <div class="circle" data-addToCart data-id="<%= item._id %>">
+                  <i class="fa-solid fa-cart-shopping"></i>
+                </div>
+                <% }else{ %>
+                <div
+                  class="circle"
+                  onclick="event.stopPropagation(); showLogin()"
+                >
+                  <i class="fa-regular fa-heart"></i>
+                </div>
+                <div
+                  class="circle"
+                  onclick="event.stopPropagation(); showLogin()"
+                >
+                  <i class="fa-solid fa-cart-shopping"></i>
+                </div>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        </div>
 
-       <% }) %>
+        <% }) %>
 
         <!-- /row -->
       </div>
@@ -163,15 +185,15 @@
     <!-- /SECTION -->
 
     <!-- product-end -->
-<div class="section">
-  <div class="container">
-    <div class="row">
-      <div class="col-12 show-more">
-        <a href="/shop" class="primary-btn mx-auto ">SHOW MORE</a>
+    <div class="section">
+      <div class="container">
+        <div class="row">
+          <div class="col-12 show-more">
+            <a href="/shop" class="primary-btn mx-auto">SHOW MORE</a>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
     <!-- SECTION -->
     <div class="section">
       <!-- container -->
@@ -190,7 +212,6 @@
     </div>
     <!-- /SECTION -->
   </div>
-  
 </div>
 <script src="/user/js/utils/navPages.js"></script>
 <%- include("../layouts/userFooter") %>

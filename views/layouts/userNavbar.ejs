@@ -68,10 +68,14 @@
               <a href="#">
                 <i class="fa fa-heart-o"></i>
                 <span>Your Wishlist</span>
-                <div class="qty" data-wishlistQuantity></div>
+                <% if(locals.wishlistCount){ %>
+                <div class="qty" data-wishlistQuantity><%= wishlistCount %></div>
+                <% }else{ %>
+                  <div class="qty" data-wishlistQuantity="" style="display:none"></div>
+                  <% } %>
               </a>
               <% }else{ %>
-              <a onclick="showLogin()">
+              <a onclick="showLogin()" class="cursor-pointer">
                 <i class="fa fa-heart-o"></i>
                 <span>Your Wishlist</span>
                 <!-- <div class="qty"></div> -->
@@ -93,7 +97,7 @@
                   <% } %>
               </a>
               <% }else{ %>
-              <a onclick="showLogin()">
+              <a onclick="showLogin()" class="cursor-pointer">
                 <i class="fa fa-shopping-cart"></i>
                 <span>Your Cart</span>
               </a>

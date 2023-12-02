@@ -53,6 +53,7 @@ user_route.delete('/cart-remove',auth.jsonIsLogin,auth.jsonUserBlock,cartControl
 user_route.get('/check-stock',auth.jsonIsLogin,cartController.checkStock);
 
 user_route.post('/add-to-wishlist',auth.jsonIsLogin,auth.jsonUserBlock,navPagesController.addToWishlist);
+user_route.delete('/remove-from-wishlist',auth.jsonIsLogin,auth.jsonUserBlock,navPagesController.removeFromWishlist);
 
 
 user_route.get('/checkout',auth.isLogin,auth.userBlock,ordersController.showCheckout);

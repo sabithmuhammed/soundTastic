@@ -4,8 +4,7 @@ const Product = require("../../model/productModel");
 const Order = require("../../model/orderModel");
 const CancelRequest = require("../../model/cancelModel");
 const cartUtils = require("../../utilities/cartUtilities");
-const { render } = require("ejs");
-
+const wishUtils = require("../../utilities/wishlistUtilities");
 const showCheckout = async (req, res) => {
   try {
     const { user, userId } = req.session;
@@ -25,14 +24,16 @@ const showCheckout = async (req, res) => {
       })
       .exec();
     const cartCount = cart?.items?.length;
-    const walletAmount=Number(wallet.balance)
+    const walletAmount=Number(wallet.balance);
+    const { wishlistCount } = await wishUtils.wishlistDetails(userId);
     res.render("user/checkout", {
       user,
       address,
       cart,
       cartCount,
       defaultAddress,
-      walletAmount
+      walletAmount,
+      wishlistCount
     });
   } catch (error) {
     console.log(error.message);
@@ -137,7 +138,8 @@ const showOrderSuccess=async(req,res)=>{
   try {
     const { userId, user } = req.session;
     const cartCount = await cartUtils.getCartCount(userId);
-    res.render('user/orderSuccess',{user,cartCount})
+    const { wishlistCount } = await wishUtils.wishlistDetails(userId);
+    res.render('user/orderSuccess',{user,cartCount,wishlistCount})
   } catch (error) {
     console.log(error.message);
     
@@ -152,7 +154,8 @@ const showOrders = async (req, res) => {
       path: "products.productId",
       select: "name",
     }).exec();
-    res.render("user/orders", { orders, user, cartCount });
+    const { wishlistCount } = await wishUtils.wishlistDetails(userId);
+    res.render("user/orders", { orders, user, cartCount,wishlistCount });
   } catch (error) {
     console.log(error.message);
   }
@@ -163,8 +166,9 @@ const showOrderDetails = async (req,res)=>{
     const {orderId} = req.params;
     const { user,userId } = req.session;
     const cartCount = await cartUtils.getCartCount(userId);
+    const { wishlistCount } = await wishUtils.wishlistDetails(userId);
     const order=await Order.findById({_id:orderId}).populate({path:"products.productId",select:"name images"}).exec()
-    res.render('user/orderDetails',{order,user,cartCount})
+    res.render('user/orderDetails',{order,user,cartCount,wishlistCount})
 
 
   } catch (error) {

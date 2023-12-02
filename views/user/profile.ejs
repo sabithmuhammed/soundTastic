@@ -13,11 +13,13 @@
           </div>
           <div class="name">
             <p>Hello,</p>
-            <h3><%= userData.name %></h3>
+            <h3 data-bigname><%= userData.name %></h3>
           </div>
         </div>
         <div class="option-container">
-          <div class="option" onclick="window.location.href='/orders'"><h4>Orders</h4></div>
+          <div class="option" onclick="window.location.href='/orders'">
+            <h4>Orders</h4>
+          </div>
           <div class="option" onclick="editProfile()">
             <h4>Edit profile</h4>
           </div>
@@ -34,7 +36,12 @@
             <h3>BALANCE:</h3>
             <h2>&#8377;<%= userData.wallet.balance %></h2>
           </div>
-          <div class="wallet-name"><h4><%= userData.name %></h4></div>
+          <div class="wallet-name d-flex justify-between">
+            <h4><%= userData.name %></h4>
+            <button class="btn btn-primary" data-walletHistoryBtn>
+              Wallet history
+            </button>
+          </div>
         </div>
       </div>
       <div class="col-md-7 details-section">
@@ -95,7 +102,8 @@
           <% if(userData.address.length>0){
           userData.address.forEach((item,index)=>{ %>
           <div class="address" data-address="<%= item._id %>">
-            <% if(userData.defaultAddress && userData.defaultAddress.equals(item._id)){ %>
+            <% if(userData.defaultAddress &&
+            userData.defaultAddress.equals(item._id)){ %>
             <label for=""
               ><input
                 type="radio"
@@ -198,6 +206,45 @@
         <button class="password-close btn btn-primary">Ok</button>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- wallet history modal -->
+
+<div id="wallet-modal" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content w-modal">
+    <h5>Wallet history</h5>
+    <% if(userData.wallet.history.length>0){
+    userData.wallet.history.reverse().forEach((item)=>{ %>
+    <div class="row">
+      <div class="col-xs-8">
+        <p class="black"><%= item.date.toLocaleString('en-us') %></p>
+        <p class="black"><%= item.details %></p>
+      </div>
+      <div class="col-xs-4 right">
+        <div class="div">
+         <% if(item.type === "Credit"){ %>
+          <p class="coupon-price">+&#8377;<%= item.amount %></p>
+          <p class="coupon-price"><%= item.type %></p>
+         <% }else{ %>
+            <p class="red">-&#8377;<%= item.amount %></p>
+            <p class="red"><%= item.type %></p>
+         <% } %>
+          
+          
+        </div>
+      </div>
+    </div>
+    <% }) }else { %> 
+      <div class="row">
+        <div class="col-xs-12 item-center">
+          No history
+        </div>
+      </div>
+      <% } %>
+
+    <button class="wallet-close btn btn-primary">CLOSE</button>
   </div>
 </div>
 

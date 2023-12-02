@@ -43,7 +43,7 @@ admin_route.get('/orders',auth.isLogin,orderManagement.showOrders);
 admin_route.get('/manage-order/:orderId',auth.isLogin,orderManagement.showManageOrder);
 admin_route.patch('/cancel-order',auth.jsonIsLogin,orderManagement.cancelOrder);
 admin_route.patch('/change-status',auth.jsonIsLogin,orderManagement.changeStatus);
-admin_route.get('/cancel-request',auth.jsonIsLogin,auth.isLogin,orderManagement.showCancelRequest)
+admin_route.get('/cancel-request',auth.isLogin,orderManagement.showCancelRequest)
 
 //orders routes end
 
