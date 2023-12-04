@@ -36,6 +36,9 @@ const changeCartQuantity = async (event, operation) => {
     if(rawData.status===403){
       window.location.href="/user-blocked"
     }
+    if(rawData.status===422){
+    stockModal.style.display = "block";
+    }
 
     if (rawData.ok) {
       const data = await rawData.json();

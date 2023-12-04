@@ -183,7 +183,7 @@ const requestCancel=async(req,res)=>{
     const {reason,orderId}=req.body
     const checkCancel=await CancelRequest.findOne({orderId});
     if(checkCancel){
-      res.status(409).json({message:"Request is proccessing, please be patient"})
+     return res.status(409).json({message:"Request is proccessing, please be patient"})
     }
     const newCancelRequest = await new CancelRequest({
       orderId,

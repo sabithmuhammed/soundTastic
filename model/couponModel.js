@@ -1,12 +1,10 @@
 const mongoose = require("mongoose");
 
 const couponSchema = new mongoose.Schema({
-  name: { type: String, required: true },
   code: { type: String, required: true },
-  valifFrom: { type: Date, required: true },
+  validFrom: { type: Date, required: true },
   expiry: { type: Date, required: true },
   discountAmount: { type: mongoose.Types.Decimal128, required: true },
-  minimumSpend: { type: mongoose.Types.Decimal128, required: true },
   minimumSpend: { type: mongoose.Types.Decimal128, required: true },
   usersUsed: [
     {
@@ -14,6 +12,7 @@ const couponSchema = new mongoose.Schema({
       ref: "user",
     },
   ],
+  listed:{type:Number,required:true,default:1}
 });
 
 module.exports = mongoose.model("coupon", couponSchema);

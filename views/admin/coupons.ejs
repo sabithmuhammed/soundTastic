@@ -4,17 +4,18 @@
 <div class="body-wrapper">
   <%- include("../layouts/adminNavbar") %>
   <div class="container-fluid">
-
     <div class="row justify-content-center mb-3">
       <div class="col-md-7">
-        <div class="search-container d-flex p-0">
-          <input type="text" class="flex-grow-1" placeholder="search..." /><a
-            href=""
-            ><button class="btn btn-primary h-100 rounded-start-0">
-              Search
-            </button></a
-          >
-        </div>
+        <form action="/admin/coupons" class="search-container d-flex p-0">
+          <input
+            type="text"
+            class="flex-grow-1"
+            placeholder="search by coupon code"
+            name="search"
+            value="<%= search%>"
+          />
+          <button class="btn btn-primary h-100 rounded-start-0">Search</button>
+        </form>
       </div>
       <div class="col-md-3 mt-2 mt-md-0">
         <a href="/admin/add-coupon"
@@ -24,14 +25,14 @@
     </div>
     <h2 class="my-3">All coupons</h2>
 
-    
-
     <table class="table">
       <thead>
         <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Email</th>
-          <th scope="col">Mobile</th>
+          <th scope="col">Code</th>
+          <th scope="col">Discount</th>
+          <th scope="col">Minimum spend</th>
+          <th scope="col">Valid from</th>
+          <th scope="col">Expiry</th>
           <th scope="col">Action</th>
         </tr>
       </thead>
@@ -39,72 +40,78 @@
       <tbody>
         <% if(coupons.length){ coupons.forEach((item)=>{ %>
         <tr>
-          <td><%= item.name%></td>
-          <td><%= item.email%></td>
-          <td><%= item.phone%></td>
-          <td>
+          <td><%= item.code%></td>
+          <td>&#8377;<%= item.discountAmount%></td>
+          <td>&#8377;<%= item.minimumSpend%></td>
+          <td><%= item.validFrom.toLocaleString('en-US') %></td>
+          <td><%= item.expiry.toLocaleString('en-US') %></td>
+          <td class="product-actions d-flex flex-column justify-content-evenly">
             <button
-              class="btn btn-block <%= item.blocked?'btn-success':'btn-danger' %> btn-block"
-              id="<%= item._id %>"
-              onclick="confirmShow(this)"
+              class="btn <%= item.listed?'btn-danger':'btn-success' %>"
+              data-id="<%= item._id %>"
+              data-btnCouponList
             >
-              <%= item.blocked?'Unblock':'Block' %>
+              <%= item.listed?'Unlist':'List' %>
             </button>
+            <a href="/admin/edit-coupon/<%= item._id %>"
+              ><button class="btn btn-dark">Edit</button></a
+            >
           </td>
         </tr>
         <% })}else{ %>
         <tr>
-          <td></td>
-          <td colspan="3" class="">No coupons </td>
+          <td colspan="6" class="">No coupons</td>
         </tr>
         <%}%>
       </tbody>
+
+      <!--Confirm Modal -->
+      <div
+        class="modal fade"
+        id="coupon-modal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">
+                Are you sure?
+              </h1>
+
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <p class="error-modal"></p>
+              <p>
+                Do you really want to
+                <strong id="action-text">unlist</strong> this coupon?
+              </p>
+              <input type="hidden" name="id" id="action-id" value="" />
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cancel
+              </button>
+              <button type="button" class="btn btn-primary" data-couponList>
+                Block
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script src="/js/utils/coupons.js" defer></script>
+      <%- include("../layouts/adminFooter") %>
+    </table>
   </div>
 </div>
-
-<!--Confirm Modal -->
-<div
-  class="modal fade"
-  id="confirm-modal"
-  tabindex="-1"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Are you sure?</h1>
-
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div class="modal-body">
-        <p class="error-modal"></p>
-        <p>
-          Do you really want to <strong id="action-text">block</strong> this
-          user?
-        </p>
-        <input type="hidden" name="id" id="action-id" value="" />
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          Cancel
-        </button>
-        <button
-          type="button"
-          class="btn btn-primary"
-          onclick="customerBlock()"
-          id="action-btn"
-        >
-          Block
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<%- include("../layouts/adminFooter") %>

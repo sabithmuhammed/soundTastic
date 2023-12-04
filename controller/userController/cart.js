@@ -67,7 +67,6 @@ const addToCart = async (req, res) => {
     const exist = userCart.items.find((item) => {
       return item.productId.equals(productId);
     });
-    console.log(exist);
     // adding product to the cart if that product is not already in cart
     if (!exist) {
       const updatedCart = await Cart.findOneAndUpdate(

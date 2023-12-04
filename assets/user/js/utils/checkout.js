@@ -3,12 +3,9 @@ const checkoutModal = document.querySelector("#checkout-modal");
 const closeModal = document.querySelector("[data-checkoutStockClose]");
 const error = document.querySelector(`[data-checkoutError]`);
 const walletBtn = document.querySelector("[data-wallet]");
+const stockModal = document.querySelector("#checkout-stock-modal");
+const closeStockModal = document.querySelector("[data-checkStockClose]");
 
-window.onclick = function (event) {
-  if (event.target == checkoutModal) {
-    checkoutModal.style.display = "none";
-  }
-};
 closeModal.addEventListener("click", () => {
   checkoutModal.style.display = "none";
 });
@@ -60,9 +57,59 @@ form.addEventListener("submit", async (e) => {
   return (error.innerText = "Something went wrong try again");
 });
 
+const createListEl = ({ name, stock }) => {
+  const li = document.createElement("li");
+  const span = document.createElement("span");
+  span.textContent = stock <= 0 ? `OUT OF STOCK` : `ONLY ${stock} IN STOCK`;
+  li.textContent = `${name} - `;
+  li.appendChild(span);
+  return li;
+};
+
+
+//checking stock
+const checkStock = async () => {
+  try {
+    const checkOutStock = document.querySelector("#checkout-stock");
+    checkOutStock.innerHTML = "";
+    const rawData = await fetch("/check-stock");
+
+    if(rawData.status===401){
+      window.location.href="/login"
+    }
+    if(rawData.status===403){
+      window.location.href="/user-blocked"
+    }
+
+    if (rawData.ok) {
+      const data = await rawData.json();
+      if (data.status === "success") {
+        if (data.data.length) {
+          data.data.forEach((item) => {
+            const li = createListEl(item);
+            checkOutStock.appendChild(li);
+          });
+          stockModal.style.display = "block";
+        } else {
+          return true;
+        }
+      }
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+
+
+
 //placing order
 const placeOrder = async () => {
   try {
+    if(!await checkStock()){
+      return
+    }
+
     const addressId = document.querySelector(
       `input[name="address"]:checked`
     )?.value;
@@ -127,6 +174,19 @@ const controlWallet = () => {
     walletShow.style.visibility = "hidden";
   }
 };
+window.addEventListener('click',(event)=>{
+
+  if (event.target == stockModal) {
+    stockModal.style.display = "none";
+  }
+  if (event.target == checkoutModal) {
+    checkoutModal.style.display = "none";
+  }
+})
+
 
 walletBtn?.addEventListener("click", controlWallet);
 placeOrderBtn.addEventListener("click", placeOrder);
+closeStockModal?.addEventListener("click", () => {
+  stockModal.style.display = "none";
+});

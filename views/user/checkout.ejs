@@ -93,7 +93,7 @@
         <div class="order-summary">
           <div class="d-flex justify-between">
             <h3>Order Summary</h3>
-            <h4>3 Items</h4>
+            <h4><%=cart.items.length %> Item(s)</h4>
           </div>
           <% cart.items.forEach((item)=>{ %>
           <div class="row">
@@ -191,6 +191,16 @@
   <div class="modal-content">
     <h4 class="red" data-checkoutError></h4>
     <button class="btn btn-primary btn-ok" data-checkoutStockClose>OK</button>
+  </div>
+</div>
+
+<div id="checkout-stock-modal" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <h4>Not enough stock</h4>
+    <ul id="checkout-stock">
+    </ul>
+    <button class="btn btn-primary btn-ok" data-checkStockClose >OK</button>
   </div>
 </div>
 

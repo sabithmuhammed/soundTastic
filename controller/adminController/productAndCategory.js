@@ -10,7 +10,7 @@ const seeCategories = async (req, res) => {
     const categories = await Category.find({
       name: { $regex: ".*" + search + ".*", $options: "i" },
     });
-    res.render("admin/categories", { categories });
+    res.render("admin/categories", { categories, search });
   } catch (error) {
     console.log(error.message);
   }
@@ -83,8 +83,23 @@ const editCategory = async (req, res) => {
 
 const seeProducts = async (req, res) => {
   try {
-    const products = await Product.find().populate("category").exec();
-    res.render("admin/products", { products });
+    let search = "";
+    if (req.query.search) {
+      search = req.query.search;
+    }
+    const products = await Product.find({
+      $or: [
+        {
+          name: { $regex: ".*" + search + ".*", $options: "i" },
+        },
+        {
+          brand: { $regex: ".*" + search + ".*", $options: "i" },
+        },
+      ],
+    })
+      .populate("category")
+      .exec();
+    res.render("admin/products", { products, search });
   } catch (error) {
     console.log(error.message);
   }

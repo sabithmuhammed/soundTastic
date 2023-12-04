@@ -45,11 +45,17 @@ admin_route.get('/manage-order/:orderId',auth.isLogin,orderManagement.showManage
 admin_route.patch('/cancel-order',auth.jsonIsLogin,orderManagement.cancelOrder);
 admin_route.patch('/change-status',auth.jsonIsLogin,orderManagement.changeStatus);
 admin_route.get('/cancel-request',auth.isLogin,orderManagement.showCancelRequest)
-
 //orders routes end
 
-admin_route.get('/coupons',couponAndBanner.showCoupons)
-admin_route.get('/add-coupon',couponAndBanner.showAddCoupon)
+//coupon routes start
+admin_route.get('/coupons',auth.isLogin,couponAndBanner.showCoupons)
+admin_route.get('/add-coupon',auth.isLogin,couponAndBanner.showAddCoupon)
+admin_route.post('/add-coupon',auth.isLogin,couponAndBanner.addCoupon)
+admin_route.get('/edit-coupon/:id',auth.isLogin,couponAndBanner.showEditCoupon)
+admin_route.post('/edit-coupon',auth.isLogin,couponAndBanner.editCoupon)
+admin_route.patch('/list-coupon/:id',auth.jsonIsLogin,couponAndBanner.updateCoupons);
+//coupon routes end
+
 
 admin_route.get("/*",auth.isLogout,authAndCustomer.loginLoad)
 
