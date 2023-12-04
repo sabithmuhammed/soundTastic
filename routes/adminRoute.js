@@ -3,6 +3,7 @@ const dashboard=require('../controller/adminController/dashboard');
 const authAndCustomer =require('../controller/adminController/authAndCustomer');
 const productAndCategory =require('../controller/adminController/productAndCategory');
 const orderManagement = require("../controller/adminController/orderManagment")
+const couponAndBanner= require("../controller/adminController/couponAndBanner")
 const admin_route = express.Router();
 const imageUpload =require('../middleware/multerConfig');
 const auth =require('../middleware/adminAuth');
@@ -46,6 +47,9 @@ admin_route.patch('/change-status',auth.jsonIsLogin,orderManagement.changeStatus
 admin_route.get('/cancel-request',auth.isLogin,orderManagement.showCancelRequest)
 
 //orders routes end
+
+admin_route.get('/coupons',couponAndBanner.showCoupons)
+admin_route.get('/add-coupon',couponAndBanner.showAddCoupon)
 
 admin_route.get("/*",auth.isLogout,authAndCustomer.loginLoad)
 

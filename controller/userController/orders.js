@@ -110,7 +110,7 @@ const placeOrder = async (req, res) => {
             $push: {
               "wallet.history": {
                 amount: walletUsed,
-                type: "debit",
+                type: "Debit",
                 date: Date.now(),
                 details: `Ordered ${products.length} item(s)`,
               },

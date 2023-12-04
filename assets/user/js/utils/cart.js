@@ -178,35 +178,35 @@ const checkStock = async (event) => {
     console.log(error.message);
   }
 };
-closeStockModal.addEventListener("click", () => {
+closeStockModal?.addEventListener("click", () => {
   stockModal.style.display = "none";
 });
 
 //adding eventlisteners to cart minus button
-btnMinus.forEach((item) => {
+btnMinus?.forEach((item) => {
   item.addEventListener("click", (event) => {
     changeCartQuantity(event, -1);
   });
 });
 
 //adding eventlisteners to cart plus button
-btnPlus.forEach((item) => {
+btnPlus?.forEach((item) => {
   item.addEventListener("click", (event) => {
     changeCartQuantity(event, 1);
   });
 });
 
 //adding eventlisteners to remove button (showing warning modal)
-cartConfirm.forEach((item) => {
+cartConfirm?.forEach((item) => {
   item.addEventListener("click", showCartModal);
 });
 
 //adding eventlisteners to close/ok button (hiding modal)
-closeCartModal.forEach((item) => {
+closeCartModal?.forEach((item) => {
   item.addEventListener("click", cartClose);
 });
 
 //adding event listener for deleting from cart ( button is inside modal )
-cartDelete.addEventListener("click", removeFromCart);
+cartDelete?.addEventListener("click", removeFromCart);
 
-checkout.addEventListener("click", checkStock);
+checkout?.addEventListener("click", checkStock);

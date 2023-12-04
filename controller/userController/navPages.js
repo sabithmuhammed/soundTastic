@@ -127,6 +127,20 @@ const showUserBlock = async (req, res) => {
   }
 };
 
+const showWishlist=async(req,res)=>{
+  try {
+    const {user,userId} = req.session;
+    const cartCount = await cartUtils.getCartCount(userId);
+    const wishlist= await Wishlist.findOne({userId}).populate("products").exec();
+    const wishlistCount=wishlist?.products?.length
+
+    res.render('user/wishlist',{user,wishlistCount,cartCount,wishlist});
+
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
 const addToWishlist = async (req, res) => {
   try {
     const { productId } = req.body;
@@ -195,6 +209,7 @@ module.exports = {
   showProductPage,
   home,
   showUserBlock,
+  showWishlist,
   addToWishlist,
   removeFromWishlist,
 };

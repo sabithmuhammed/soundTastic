@@ -45,8 +45,10 @@ const wishlist = async (event) => {
             element.innerHTML = `<i class="fa-regular fa-heart"></i>`;
           }
           element.classList.toggle("wishlist-active");
-        } else {
-          //product page button changes 
+        }
+
+        //product page button changes
+        if (element.dataset.prodpage) {
           if (element.dataset.status === "false") {
             element.innerText = `REMOVE FROM WISHLIST`;
           } else {
@@ -56,6 +58,21 @@ const wishlist = async (event) => {
         //interchange the data-attribute value if you added or removed product from wishlist
         element.dataset.status =
           element.dataset.status === "false" ? "true" : "false";
+        //remove the parent div when pressed remove from wishlist in wishlistpage
+        if (element.dataset.wishpage) {
+          const wishdiv = document
+            .querySelector(`[data-wishdiv="${productId}"]`)
+          if (data.wishlistCount) {
+            wishdiv.remove();
+          } else {
+            wishdiv.innerHTML = `<div class="row">
+          <div class="col-md-12 item-center">
+            <h4>Wishlist is empty</h4>
+          </div>
+        </div>`;
+          }
+        }
+
         wishQuantity.innerText = data.wishlistCount;
         //wishlist count
         if (data.wishlistCount) {

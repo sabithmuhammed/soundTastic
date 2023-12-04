@@ -1,0 +1,60 @@
+<%- include("../layouts/userHeader") %> <%- include("../layouts/userNavbar") %>
+<script src="/user/js/utils/cart.js" defer></script>
+<div class="section mb-5">
+  <!-- container -->
+  <div class="container">
+    <!-- row -->
+    <div class="row cart">
+      <div class="col-md-12 orders">
+        <% if(wishlist && wishlist.products.length){
+        wishlist.products.forEach((item)=>{ %>
+        <div class="row" data-wishdiv="<%= item._id%>">
+          <div class="col-md-2">
+            <div class="cart-image">
+              <img src="/images/products/<%= item.images[0] %>" alt="" />
+            </div>
+          </div>
+          <div class="col-md-3">
+            <p><%= item.name %></p>
+          </div>
+          <div class="col-md-2">&#8377;<%= item.price %></div>
+          <div
+            class="col-md-2 <%= ((item.quantity <= 5) || (item.listed === 0)) ? `out-of-stock`:`in-stock` %>"
+          >
+            <%= (item.listed === 0 || item.quantity === 0)? `Out of stock` :
+            (item.quantity > 0 && item.quantity <= 5 )? `Only ${item.quantity}
+            left`: `In stock` %>
+          </div>
+          <div class="col-md-3 d-flex flex-column">
+            <button
+              class="btn btn-primary"
+              data-addToCart
+              data-id="<%= item._id %>"
+            >
+              Add to cart
+            </button>
+            <button
+              class="btn btn-danger"
+              data-wishpage="true"
+              data-addToWishlist
+              data-id="<%= item._id%>"
+              data-status="true"
+            >
+              Remove from wishlist
+            </button>
+          </div>
+        </div>
+        <% })} else{ %>
+        <div class="row">
+          <div class="col-md-12 item-center">
+            <h4>Wishlist is empty</h4>
+          </div>
+        </div>
+
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/user/js/utils/navPages.js"></script>
+<%- include("../layouts/userFooter") %>

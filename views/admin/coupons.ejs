@@ -1,0 +1,110 @@
+<%- include("../layouts/adminHeader") %>
+
+<!--  Main wrapper -->
+<div class="body-wrapper">
+  <%- include("../layouts/adminNavbar") %>
+  <div class="container-fluid">
+
+    <div class="row justify-content-center mb-3">
+      <div class="col-md-7">
+        <div class="search-container d-flex p-0">
+          <input type="text" class="flex-grow-1" placeholder="search..." /><a
+            href=""
+            ><button class="btn btn-primary h-100 rounded-start-0">
+              Search
+            </button></a
+          >
+        </div>
+      </div>
+      <div class="col-md-3 mt-2 mt-md-0">
+        <a href="/admin/add-coupon"
+          ><button class="btn btn-success">ADD COUPONS</button></a
+        >
+      </div>
+    </div>
+    <h2 class="my-3">All coupons</h2>
+
+    
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Email</th>
+          <th scope="col">Mobile</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% if(coupons.length){ coupons.forEach((item)=>{ %>
+        <tr>
+          <td><%= item.name%></td>
+          <td><%= item.email%></td>
+          <td><%= item.phone%></td>
+          <td>
+            <button
+              class="btn btn-block <%= item.blocked?'btn-success':'btn-danger' %> btn-block"
+              id="<%= item._id %>"
+              onclick="confirmShow(this)"
+            >
+              <%= item.blocked?'Unblock':'Block' %>
+            </button>
+          </td>
+        </tr>
+        <% })}else{ %>
+        <tr>
+          <td></td>
+          <td colspan="3" class="">No coupons </td>
+        </tr>
+        <%}%>
+      </tbody>
+  </div>
+</div>
+
+<!--Confirm Modal -->
+<div
+  class="modal fade"
+  id="confirm-modal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Are you sure?</h1>
+
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p class="error-modal"></p>
+        <p>
+          Do you really want to <strong id="action-text">block</strong> this
+          user?
+        </p>
+        <input type="hidden" name="id" id="action-id" value="" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          onclick="customerBlock()"
+          id="action-btn"
+        >
+          Block
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include("../layouts/adminFooter") %>

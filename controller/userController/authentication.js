@@ -4,6 +4,7 @@ const sendMail = require("../../services/sendMail");
 const UserOTP = require("../../model/userOTPVerification");
 const securePassword = require("../../services/securePassword");
 
+//loading sign up page
 const loadRegister = async (req, res) => {
   try {
     res.render("user/signup");
@@ -12,6 +13,7 @@ const loadRegister = async (req, res) => {
   }
 };
 
+//inserting user
 const insertUser = async (req, res) => {
   try {
     const { password, email, name, phone } = req.body;
@@ -45,9 +47,11 @@ const insertUser = async (req, res) => {
   }
 };
 
+// showing otp page and sending otp
 const showVerify = async (req, res) => {
   try {
     const userId = req.session.tempUserId;
+    //deleting previously saved otp if exist
     await UserOTP.findOneAndDelete({ userId });
     const userData = await User.findById({ _id: userId });
     if (userData) {
@@ -70,6 +74,7 @@ const showVerify = async (req, res) => {
   }
 };
 
+//checking otp
 const checkOTP = async (req, res) => {
   try {
     const { otp } = req.body;
@@ -78,6 +83,7 @@ const checkOTP = async (req, res) => {
     if (userOtp) {
       const otpMatch = await bcrypt.compare(otp, userOtp.otp);
       if (otpMatch) {
+        //deleting previously saved otp
         await UserOTP.findByIdAndDelete({ _id: userOtp._id });
         const userData = await User.findByIdAndUpdate(
           { _id: userId },
@@ -102,6 +108,7 @@ const checkOTP = async (req, res) => {
   }
 };
 
+//resending otp
 const resendOTP = async (req, res) => {
   try {
     const userId = req.session.tempUserId;
@@ -124,6 +131,7 @@ const resendOTP = async (req, res) => {
   }
 };
 
+//showing login page
 const loginLoad = async (req, res) => {
   try {
     const message = req.query.m || null;
@@ -133,6 +141,8 @@ const loginLoad = async (req, res) => {
     console.log(error.message);
   }
 };
+
+//verifying login
 const verifyLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -198,6 +208,7 @@ const forgetVerify = async (req, res) => {
   }
 };
 
+//otp verification page for forget password
 const showPasswordOtp = async (req, res) => {
   try {
     const userId = req.session.tempUserId;
@@ -224,6 +235,7 @@ const showPasswordOtp = async (req, res) => {
   }
 };
 
+//checking forget password otp
 const passwordCheckOTP = async (req, res) => {
   try {
     const { otp } = req.body;
@@ -244,6 +256,7 @@ const passwordCheckOTP = async (req, res) => {
   }
 };
 
+//showing the page for changing password (forgot password)
 const showChangePassword = async (req, res) => {
   try {
     res.render("user/changePassword");
@@ -252,6 +265,8 @@ const showChangePassword = async (req, res) => {
   }
 };
 
+
+//updating new password
 const changePassword = async (req, res) => {
   try {
     const id = req.session.tempUserId ?? req.session.userId;
@@ -279,6 +294,8 @@ const changePassword = async (req, res) => {
     console.log(error.message);
   }
 };
+
+//checking current password for changing password in user profile
 const checkPassword = async (req, res) => {
   try {
     const id = req.session.userId;
@@ -300,6 +317,7 @@ const checkPassword = async (req, res) => {
     console.log(error.message);
   }
 };
+
 
 const userLogout = async (req, res) => {
   try {
