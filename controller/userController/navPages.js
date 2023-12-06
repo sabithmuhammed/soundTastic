@@ -1,8 +1,11 @@
+
 const Category = require("../../model/categoryModel");
 const Product = require("../../model/productModel");
 const Wishlist = require("../../model/wishlistModel");
 const cartUtils = require("../../utilities/cartUtilities");
 const wishUtils = require("../../utilities/wishlistUtilities");
+
+
 
 const home = async (req, res) => {
   res.redirect("/home");

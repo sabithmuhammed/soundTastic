@@ -17,7 +17,7 @@
     <h3>Your orders</h3>
     <div class="row mb-5 heading">
       <div class="col-md-2">Date</div>
-      <div class="col-md-3">Order Id</div>
+      <div class="col-md-3">Invoice No.</div>
       <div class="col-md-1">Amount</div>
       <div class="col-md-3">Item(s)</div>
       <div class="col-md-1">Status</div>
@@ -28,7 +28,7 @@
     <% orders.forEach((item)=>{ %>
     <div class="row mb-5">
       <div class="col-md-2"><%= item.orderDate.toLocaleString('en-US') %></div>
-      <div class="col-md-3"><%= item._id %></div>
+      <div class="col-md-3"><%= item.invoiceNo %></div>
       <div class="col-md-1">&#8377;<%= item.finalAmount%></div>
       <div class="col-md-3">
         <ul>

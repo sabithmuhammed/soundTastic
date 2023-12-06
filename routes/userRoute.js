@@ -66,10 +66,13 @@ user_route.delete('/remove-from-wishlist',auth.jsonIsLogin,auth.jsonUserBlock,na
 //orders
 user_route.get('/checkout',auth.isLogin,auth.userBlock,ordersController.showCheckout);
 user_route.post('/place-order',auth.jsonIsLogin,auth.jsonUserBlock,ordersController.placeOrder)
+user_route.patch('/verify-payment',auth.jsonIsLogin,ordersController.verifyOnlinePayment);
 user_route.get('/order-success',auth.isLogin,auth.userBlock,ordersController.showOrderSuccess)
 user_route.get('/orders',auth.isLogin,auth.userBlock,ordersController.showOrders)
 user_route.get('/order-details/:orderId',auth.isLogin,auth.userBlock,ordersController.showOrderDetails)
 user_route.get('/order-details/:orderId',auth.isLogin,auth.userBlock,ordersController.showOrderDetails)
 user_route.post('/cancel-request',auth.jsonIsLogin,auth.jsonUserBlock,ordersController.requestCancel)
+
+user_route.get('/get-coupons',ordersController.getCoupons)
 
 module.exports = user_route;

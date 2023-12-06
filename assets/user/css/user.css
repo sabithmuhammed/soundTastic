@@ -4,7 +4,9 @@
     padding: 0;
     margin: 0;
 }
-
+body{
+    background-color: #e2e2e2;
+}
 /* util */
 .item-center {
     display: flex;
@@ -122,6 +124,11 @@ label {
     object-fit: cover;
     object-position: center;
 }
+.shop{
+    box-shadow: 9px 10px 17px -6px rgba(0,0,0,0.53);
+-webkit-box-shadow: 9px 10px 17px -6px rgba(0,0,0,0.53);
+-moz-box-shadow: 9px 10px 17px -6px rgba(0,0,0,0.53);
+}
 
 .shop-img {
     height: 200px;
@@ -137,6 +144,10 @@ label {
 .product {
     height: 450px;
     background-color: rgb(255, 255, 255);
+    box-shadow: 9px 10px 17px -6px rgba(0,0,0,0.53);
+-webkit-box-shadow: 9px 10px 17px -6px rgba(0,0,0,0.53);
+-moz-box-shadow: 9px 10px 17px -6px rgba(0,0,0,0.53);
+transition: all ease-in-out .3s;
 }
 
 .product-body {
@@ -398,7 +409,11 @@ label {
     display: flex;
     align-items: center;
     padding: 10px;
-    border-radius: 9px;
+    border-radius: 9px 9px 0 0;
+    
+    box-shadow: 9px 10px 17px -6px rgba(0,0,0,0.53);
+-webkit-box-shadow: 9px 10px 17px -6px rgba(0,0,0,0.53);
+-moz-box-shadow: 9px 10px 17px -6px rgba(0,0,0,0.53);
 }
 
 .avatar {
@@ -424,10 +439,13 @@ label {
     font-size: 18px;
     display: flex;
     align-items: center;
+    border-radius: 0 9px 0 9px;
     padding-left: 90px;
-    border-radius: 9px;
     color: white;
     cursor: pointer;
+    box-shadow: 9px 10px 17px -6px rgba(0,0,0,0.53);
+-webkit-box-shadow: 9px 10px 17px -6px rgba(0,0,0,0.53);
+-moz-box-shadow: 9px 10px 17px -6px rgba(0,0,0,0.53);
 }
 
 .option:hover {
@@ -440,6 +458,8 @@ label {
     height: 270px;
     background-image: url('/user/img/metal.png');
     background-repeat: no-repeat;
+    background-size: cover;
+    background-position: top;
     border-radius: 9px;
     padding: 20px;
     display: flex;
@@ -478,9 +498,11 @@ label {
 
 .profile-details {
     padding: 20px;
-    background-color: rgb(209, 242, 209);
-    border-radius: 9px;
+    background-color: rgb(255, 255, 255);
     margin: 0 10px 10px;
+    box-shadow: 9px 10px 17px -6px rgba(0,0,0,0.53);
+-webkit-box-shadow: 9px 10px 17px -6px rgba(0,0,0,0.53);
+-moz-box-shadow: 9px 10px 17px -6px rgba(0,0,0,0.53);
 }
 
 .profile-details .profile-form input {
@@ -521,7 +543,6 @@ label {
     margin-right: 10px;
     accent-color: #D10024;
     border: 2px solid #D10024;
-    background-color: aqua;
     cursor: pointer;
 }
 
@@ -669,8 +690,10 @@ button:focus {
 .cart-details>div {
     margin-top: 0;
     padding: 20px;
-    background-color: #EAE8E8;
-    border-radius: 9px;
+    background-color: #ffffff;
+    box-shadow: 9px 10px 17px -6px rgba(0,0,0,0.53);
+-webkit-box-shadow: 9px 10px 17px -6px rgba(0,0,0,0.53);
+-moz-box-shadow: 9px 10px 17px -6px rgba(0,0,0,0.53);
 }
 
 .cart-details * {
@@ -697,8 +720,9 @@ button:focus {
 
 .coupon-input>input {
 
-    height: 40px;
+    height: 50px;
     width: 75%;
+    text-indent: 10px;
 }
 
 .coupon-price {
@@ -731,8 +755,10 @@ button:focus {
 
 .cart-products>div {
     padding: 40px 40px;
-    background-color: #e7caca;
-    border-radius: 9px;
+    background-color: #ffffff;
+    box-shadow: 9px 10px 17px -6px rgba(0,0,0,0.53);
+-webkit-box-shadow: 9px 10px 17px -6px rgba(0,0,0,0.53);
+-moz-box-shadow: 9px 10px 17px -6px rgba(0,0,0,0.53);
 }
 
 .cart-image {
@@ -831,10 +857,12 @@ li::marker {
 .payment,
 .orders>.row,
 .order-details {
-    background-color: rgb(209, 242, 209);
-    border-radius: 9px;
+    background-color: rgb(255, 255, 255);
     flex-direction: column;
     padding: 20px;
+    box-shadow: 9px 10px 17px -6px rgba(0,0,0,0.53);
+-webkit-box-shadow: 9px 10px 17px -6px rgba(0,0,0,0.53);
+-moz-box-shadow: 9px 10px 17px -6px rgba(0,0,0,0.53);
 }
 
 .order-summary {
@@ -894,6 +922,11 @@ li::marker {
     display: flex;
     justify-content: flex-end;
 
+}
+.btn-show-coupon{
+    font-size: 13px;
+    padding: 5px;
+    height: 50px;
 }
 
 .orders>.row {
@@ -957,6 +990,39 @@ li::marker {
 
 .black {
     color: #000;
+}
+.coupon-codes-container{
+    width: 100%;
+}
+.coupons{
+    width: 100%;
+    height: 40px;
+    margin: 10px 0 20px;
+}
+.btn-coupon-copy{
+    width: 100px;
+    font-size: 20px;
+    background-color: #121212;
+    color: white;
+    border: none;
+
+}
+.btn-coupon-copy:hover{
+    opacity: .9;
+}
+.coupon-input{
+    font-size: 18px;
+    text-indent: 10px;
+    background-color: rgb(191, 209, 191);
+    border: 1px solid rgb(137, 137, 137);
+    font-weight: 500;
+}
+.coupon-input:focus{
+    outline: none;
+}
+.coupon-min{
+    font-weight: 500;
+    color: green;
 }
 
 @media screen and (max-width: 992px) {

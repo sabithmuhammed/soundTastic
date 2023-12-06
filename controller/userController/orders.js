@@ -2,9 +2,15 @@ const User = require("../../model/userModel");
 const Cart = require("../../model/cartModel");
 const Product = require("../../model/productModel");
 const Order = require("../../model/orderModel");
+const Coupon = require("../../model/couponModel");
 const CancelRequest = require("../../model/cancelModel");
 const cartUtils = require("../../utilities/cartUtilities");
 const wishUtils = require("../../utilities/wishlistUtilities");
+const {onlinePayment,verifyPayment}=require('../../services/onlinePayment');
+const generateInvoiceNumber = require("../../services/invoiceNumber");
+
+
+
 const showCheckout = async (req, res) => {
   try {
     const { user, userId } = req.session;
@@ -44,9 +50,9 @@ const placeOrder = async (req, res) => {
   try {
     const userId = req.session.userId;
     const { addressId, coupon, payment ,useWallet} = req.body;
-    const { wallet, address } = await User.findById(
+    const { wallet, address,name,email,phone } = await User.findById(
       { _id: userId },
-      { wallet: 1, address: { $elemMatch: { _id: addressId } } }
+      { wallet: 1, address: { $elemMatch: { _id: addressId },name:1,email:1,phone:1 } }
     );
     const { items, totalPrice: totalAmount } = await Cart.findOne({
       userId,
@@ -80,10 +86,11 @@ const placeOrder = async (req, res) => {
         }
       }
     }
-  
+  const invoiceNo=generateInvoiceNumber()
     const orderObj = {
       userId,
       address: address[0],
+      invoiceNo,
       products,
       totalAmount,
       finalAmount,
@@ -91,6 +98,7 @@ const placeOrder = async (req, res) => {
       walletUsed,
       payment,
       status: "Pending",
+      paymentStatus:"Unpaid"
     };
     const order = await new Order(orderObj).save();
     if (order) {
@@ -119,6 +127,17 @@ const placeOrder = async (req, res) => {
         );
       }
       await Cart.findOneAndDelete({ userId });
+
+      if(payment==="ONLINE"){
+        const userData={
+          name,
+          email,
+          phone
+        }
+      const paymentOrder=await onlinePayment(finalAmount,invoiceNo)
+      return res.status(200).json({ status: "pending",order:paymentOrder,userData });
+      }
+
       return res.status(200).json({ status: "success" });
     }
     return res.status(500).json({
@@ -197,9 +216,31 @@ const requestCancel=async(req,res)=>{
   } catch (error) {
     console.log(error.message);
     
+    
   }
 }
 
+const verifyOnlinePayment=async(req,res)=>{
+  try {
+    const {details,order}=req.body
+   if (await verifyPayment(details)){
+   const orderStatus= await Order.findOneAndUpdate({invoiceNo:order.receipt},{paymentStatus:"Paid"},{new:true})
+    console.log(orderStatus,order);
+    res.status(200).json({status:"success"});
+   }
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+const getCoupons = async(req,res)=>{
+  try {
+    const coupons=await Coupon.find({listed:1})
+    res.status(200).json({status:"success",coupons})
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 
 module.exports = {
   showCheckout,
@@ -207,7 +248,10 @@ module.exports = {
   showOrderSuccess,
   showOrders,
   showOrderDetails,
-  requestCancel
+  requestCancel,
+  verifyOnlinePayment,
+  getCoupons,
+
   
   
 };

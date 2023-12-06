@@ -13,7 +13,7 @@
     <table class="table">
         <thead>
           <tr>
-            <th scope="col">Order ID</th>
+            <th scope="col">Invoice No.</th>
             <th scope="col">Date</th>
             <th scope="col">Customer</th>
             <th scope="col">Payment</th>
@@ -27,7 +27,7 @@
             <% if(orders.length>0){ %>
                 <% orders.forEach((item)=>{ %> 
               <tr>
-                <td><%= item._id%></td>
+                <td><%= item.invoiceNo%></td>
                 <td><%= item.orderDate.toLocaleString('en-US')%></td>
                 <td><%= item.userId.name%></td>
                 <td><%= item.payment%></td>

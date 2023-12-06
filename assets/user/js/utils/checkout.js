@@ -5,6 +5,10 @@ const error = document.querySelector(`[data-checkoutError]`);
 const walletBtn = document.querySelector("[data-wallet]");
 const stockModal = document.querySelector("#checkout-stock-modal");
 const closeStockModal = document.querySelector("[data-checkStockClose]");
+///////
+const showCouponBtn=document.querySelector('[data-showCoupon]');
+const showCouponClose=document.querySelector('[data-couponCodeClose]');
+const couponCodeModal = document.querySelector('#coupon-code-modal')
 
 closeModal.addEventListener("click", () => {
   checkoutModal.style.display = "none";
@@ -41,11 +45,11 @@ form.addEventListener("submit", async (e) => {
     body: JSON.stringify({ name, mobile, city, address, state, pincode }),
   });
 
-  if(rawData.status===401){
-    window.location.href="/login"
+  if (rawData.status === 401) {
+    window.location.href = "/login";
   }
-  if(rawData.status===403){
-    window.location.href="/user-blocked"
+  if (rawData.status === 403) {
+    window.location.href = "/user-blocked";
   }
 
   if (rawData.ok) {
@@ -66,7 +70,6 @@ const createListEl = ({ name, stock }) => {
   return li;
 };
 
-
 //checking stock
 const checkStock = async () => {
   try {
@@ -74,11 +77,11 @@ const checkStock = async () => {
     checkOutStock.innerHTML = "";
     const rawData = await fetch("/check-stock");
 
-    if(rawData.status===401){
-      window.location.href="/login"
+    if (rawData.status === 401) {
+      window.location.href = "/login";
     }
-    if(rawData.status===403){
-      window.location.href="/user-blocked"
+    if (rawData.status === 403) {
+      window.location.href = "/user-blocked";
     }
 
     if (rawData.ok) {
@@ -99,15 +102,70 @@ const checkStock = async () => {
     console.log(error.message);
   }
 };
-
-
-
+//onlinePayment success function
+const verifyOnlinePayment = async (details,order) => {
+  try {
+    console.log(details)
+    const rawData = await fetch("/verify-payment", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({details,order}),
+    });
+if(rawData.ok){
+  const data=await rawData.json();
+  if(data.status==="success"){
+    return (window.location.href = "/order-success");
+  }
+}
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+//razorpay payment function
+const razorpayPayment = (order,userData) => {
+  var options = {
+    key: "rzp_test_ek96OXEhD4RQx2", // Enter the Key ID generated from the Dashboard
+    amount: order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    currency: "INR",
+    name: "soundtastic",
+    description: "Purchase from soundtastic",
+    image: "/images/logos/logo.png",
+    order_id: order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    handler: function (response) {
+      verifyOnlinePayment(response,order);
+    },
+    prefill: {
+      name: userData.name,
+      email: userData.email,
+      contact: userData.phone,
+    },
+    notes: {
+      address: "Manachira,Calicut,Kerala,PIN-676453",
+    },
+    theme: {
+      color: "#3399cc",
+    },
+  };
+  var rzp1 = new Razorpay(options);
+  rzp1.on("payment.failed", function (response) {
+    alert(response.error.code);
+    alert(response.error.description);
+    alert(response.error.source);
+    alert(response.error.step);
+    alert(response.error.reason);
+    alert(response.error.metadata.order_id);
+    alert(response.error.metadata.payment_id);
+  });
+  rzp1.open();
+};
 
 //placing order
 const placeOrder = async () => {
   try {
-    if(!await checkStock()){
-      return
+    if (!(await checkStock())) {
+      return;
     }
 
     const addressId = document.querySelector(
@@ -117,31 +175,34 @@ const placeOrder = async () => {
       `input[name="payment-method"]:checked`
     )?.value;
     const coupon = null;
-    const useWallet =walletBtn?.checked
+    const useWallet = walletBtn?.checked;
     if (!addressId) {
       error.innerText = "Please select an address";
       return (checkoutModal.style.display = "block");
-    }
-    if (payment === "online") {
     }
     const rawData = await fetch("/place-order", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ addressId, payment, coupon ,useWallet}),
+      body: JSON.stringify({ addressId, payment, coupon, useWallet }),
     });
-    if(rawData.status===401){
-      window.location.href="/login"
+    if (rawData.status === 401) {
+      window.location.href = "/login";
     }
-    if(rawData.status===403){
-      window.location.href="/user-blocked"
+    if (rawData.status === 403) {
+      window.location.href = "/user-blocked";
     }
 
     const data = await rawData.json();
     if (rawData.ok) {
       if (data.status === "success") {
         return (window.location.href = "/order-success");
+      }
+      if (data.status === "pending") {
+        console.log(data.order);
+        razorpayPayment(data.order,data.userData);
+        return;
       }
     }
     error.innerHTML = data.message;
@@ -162,7 +223,7 @@ const controlWallet = () => {
   const walletUsed = document.querySelector("[data-walletUsed]");
   if (walletBtn.checked) {
     if (walletAmount > totalAmount) {
-      totalContainer.innerText= 0;
+      totalContainer.innerText = 0;
       walletUsed.innerText = totalAmount;
     } else {
       totalContainer.innerText = totalAmount - walletAmount;
@@ -174,19 +235,55 @@ const controlWallet = () => {
     walletShow.style.visibility = "hidden";
   }
 };
-window.addEventListener('click',(event)=>{
-
+window.addEventListener("click", (event) => {
   if (event.target == stockModal) {
     stockModal.style.display = "none";
   }
   if (event.target == checkoutModal) {
     checkoutModal.style.display = "none";
   }
-})
+  if(event.target == couponCodeModal){
+    couponCodeModal.style.display="none"
+  }
+});
+////////////////////////////////////////
 
+const showCouponModal=async()=>{
+  try {
+    couponCodeModal.style.display="block"
+    const rawData=await fetch('/get-coupons');
+    if(rawData.ok){
+      const data=await rawData.json();
+      if(data.status==="success"){
+        const coupons=data.coupons;
+        if(coupons && coupons.length){
+          const couponDiv = document.querySelector('[data-couponDiv]')
+          coupons.forEach((item)=>{
+            const p = document.createElement('p');
+            p.setAttribute('class','coupon-min');
+            p.innerHTML=`Purchases above &#8377;${item.minimumSpend.$numberDecimal}`;
+            const div = document.createElement('div');
+            div.setAttribute('class','coupons d-flex');
+            div.innerHTML=`<input type="text" name="" id="" class="coupon-input" value="${item.code}" readonly>
+              <button class="btn-coupon-copy"><i class="fa-regular fa-copy"></i></button>`
+              couponDiv.appendChild(p)
+              couponDiv.appendChild(div)
+          })
+        }
+      }
+    }
+  } catch (error) {
+    console.log(error.messsage);
+  }
+}
 
 walletBtn?.addEventListener("click", controlWallet);
 placeOrderBtn.addEventListener("click", placeOrder);
 closeStockModal?.addEventListener("click", () => {
   stockModal.style.display = "none";
 });
+
+showCouponBtn.addEventListener('click',showCouponModal)
+showCouponClose.addEventListener('click',()=>{
+  couponCodeModal.style.display="none"
+})

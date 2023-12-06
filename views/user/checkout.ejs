@@ -1,4 +1,5 @@
 <%- include("../layouts/userHeader") %> <%- include("../layouts/userNavbar") %>
+<script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
 <script src="/user/js/utils/checkout.js" defer></script>
 
 
@@ -112,12 +113,24 @@
           </div>
           <div class="row">
             <div class="col-md-12 coupon d-flex">
+              
               <h4>COUPON CODE</h4>
-              <div class="coupon-input d-flex">
-                <input type="text" id="coupon" />
-                <button class="btn-apply">APPLY</button>
+              
+             
+              <div class="row">
+                <div class="col-md-9">
+                  <div class="coupon-input d-flex">
+                    <input type="text" id="coupon" />
+                    <button class="btn-apply">APPLY</button>
+                    
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <button class="btn-show-coupon btn btn-success" data-showCoupon >Show coupons</button>
+                </div>
               </div>
-
+              
+              
               <label for="coupon">Enter your code</label>
             </div>
           </div>
@@ -204,5 +217,16 @@
   </div>
 </div>
 
+<div id="coupon-code-modal" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="coupon-codes-container " data-couponDiv>
+      
+      
+      
+    </div>
+    <button class="btn btn-primary btn-ok" data-couponCodeClose>CLOSE</button>
+  </div>
+</div>
 
 <%- include("../layouts/userFooter") %>
