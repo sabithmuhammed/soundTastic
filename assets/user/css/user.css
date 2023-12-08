@@ -8,6 +8,10 @@ body{
     background-color: #e2e2e2;
 }
 /* util */
+
+.hidden{
+    display: hidden;
+}
 .item-center {
     display: flex;
     justify-content: center;
@@ -822,6 +826,7 @@ button:focus {
     height: 40p;
     font-size: 25px;
     border: none;
+    color: #565656;
 }
 
 .cart-empty-image {
@@ -1023,6 +1028,10 @@ li::marker {
 .coupon-min{
     font-weight: 500;
     color: green;
+}
+.error-coupon{
+    color: #D10024;
+    font-size: 14px;
 }
 
 @media screen and (max-width: 992px) {

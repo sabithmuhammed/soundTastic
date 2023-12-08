@@ -9,6 +9,16 @@ const orderSchema = new mongoose.Schema({
       productId: { type: mongoose.Types.ObjectId, ref: "product" },
       unitPrice: { type: mongoose.Types.Decimal128 },
       quantity: { type: Number },
+      cancel:{
+        status:{type:String},
+        reason:{type:String},
+        date:{type:Date}
+      },
+      return:{
+        status:{type:String},
+        reason:{type:String},
+        date:{type:Date}
+      }
     },
   ],
   totalAmount: { type: mongoose.Types.Decimal128 },
@@ -19,15 +29,6 @@ const orderSchema = new mongoose.Schema({
   payment: { type: String },
   paymentStatus:{ type: String },
   status: { type: String },
-  return: [
-    {
-      productId: { type: mongoose.Types.ObjectId, ref: "product" },
-      quantity: { type: Number },
-      reason: { type: String },
-      status: { type: String },
-      returnDate: { type: Date },
-    },
-  ],
 });
 
 module.exports = mongoose.model("order", orderSchema);

@@ -27,7 +27,7 @@
 
     <% orders.forEach((item)=>{ %>
     <div class="row mb-5">
-      <div class="col-md-2"><%= item.orderDate.toLocaleString('en-US') %></div>
+      <div class="col-md-2"><%= item.orderDate.toLocaleString('en-AU') %></div>
       <div class="col-md-3"><%= item.invoiceNo %></div>
       <div class="col-md-1">&#8377;<%= item.finalAmount%></div>
       <div class="col-md-3">
@@ -40,9 +40,6 @@
       <div class="col-md-1" data-status><%= item.status%></div>
       <div class="col-md-2 d-flex flex-column">
         <button class="btn btn-success my-2" onclick="window.location.href='/order-details/<%= item._id%>'">View details</button>
-        <% if(item.status!=="Delivered" && item.status!=="Canceled"){ %>
-          <button class="btn btn-danger" data-cancelBtn data-id="<%= item._id %>">Cancel order</button>
-        <% }else %>
         
       </div>
     </div>
@@ -50,35 +47,4 @@
     <% }) %>
   </div>
 </div>
-
-<!-- The Modal -->
-<div id="order-cancel-modal" class="modal">
-  <!-- Modal content -->
-  <div class="modal-content">
-    <h5>Are you sure you want to cancel this address?</h5>
-    <h6>Please provide a reason</h6>
-    <p class="red" data-error></p>
-    <textarea name="" id="" cols="45" rows="5" class="reason" data-reason></textarea>
-
-    <div class="confirm-modal-buttons">
-      <input type="hidden" value="" data-orderId />
-      <button class="btn btn-primary confirm-close">CLOSE</button>
-      <button class="btn btn-danger" data-sendReqBtn>
-        YES, CANCEL
-      </button>
-    </div>
-  </div>
-</div>
-<div id="order-cancel-message" class="modal">
-  <!-- Modal content -->
-  <div class="modal-content" >
-    <h5>Your request has been sent! Please be patient</h5>
-
-    <div class="confirm-modal-buttons">
-      <input type="hidden" value="" data-orderId />
-      <button class="btn btn-primary confirm-close">OK</button>
-    </div>
-  </div>
-</div>
-<script src="/user/js/utils/orders.js"></script>
 <% } %> <%- include("../layouts/userFooter") %>

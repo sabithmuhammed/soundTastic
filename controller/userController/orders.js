@@ -71,18 +71,23 @@ const placeOrder = async (req, res) => {
         quantity: element.quantity,
       });
     });
+    //coupon
+    const couponCheck = await Coupon.findOne({code:coupon});
+    if(couponCheck){
+      finalAmount-=couponCheck.discountAmount;
+    }
 
     // for using wallet amount
     if(useWallet){
       if (walletAmount !== 0) {
         if (walletAmount < parseFloat(totalAmount)) {
-          finalAmount = totalAmount - walletAmount;
+          finalAmount = finalAmount- walletAmount;
           walletUsed = walletAmount;
           walletAmount = 0;
         } else {
-          finalAmount = 0;
-          walletAmount = walletAmount - totalAmount;
+          walletAmount = walletAmount - finalAmount;
           walletUsed = wallet.balance - walletAmount;
+          finalAmount = 0;
         }
       }
     }
@@ -92,6 +97,7 @@ const placeOrder = async (req, res) => {
       address: address[0],
       invoiceNo,
       products,
+      coupon:couponCheck?._id,
       totalAmount,
       finalAmount,
       orderDate: Date.now(),
@@ -196,29 +202,64 @@ const showOrderDetails = async (req,res)=>{
   }
 }
 
-const requestCancel=async(req,res)=>{
+const cancelOrder = async (req, res) => {
   try {
-    const {userId}=req.session;
-    const {reason,orderId}=req.body
-    const checkCancel=await CancelRequest.findOne({orderId});
-    if(checkCancel){
-     return res.status(409).json({message:"Request is proccessing, please be patient"})
+    const { productId, orderId,reason} = req.body;
+    const data=await Order.findByIdAndUpdate(
+      { _id: orderId,
+        "products": {
+          $elemMatch: {
+            "productId": productId
+          }
+        }
+       }
+    );
+    console.log(data);
+    console.log(productId, orderId,reason);
+    const canceledOrder = await Order.findOneAndUpdate(
+      { _id: orderId,
+        "products": {
+          $elemMatch: {
+            "productId": productId
+          }
+        }
+       },
+      { $set:{
+        "products.$.cancel.status":"Canceled",
+        "products.$.cancel.reason":reason,
+        "products.$.cancel.date":Date.now(),
+      } },
+      { new: true }
+    );
+    if (canceledOrder) {
+      const prodDetails = cancelOrder.products.find((item)=>{
+        return item.products.productId.equals(productId)
+      })
+      console.log(prodDetails);
+      // if (canceledOrder.walletUsed) {
+      //   const { walletUsed,userId } = canceledOrder;
+      //   await User.findByIdAndUpdate(
+      //     { _id: userId },
+      //     {
+      //       $inc: { "wallet.balance": walletUsed },
+      //       $push: {
+      //         "wallet.history": {
+      //           amount: walletUsed,
+      //           type: "Credit",
+      //           date: Date.now(),
+      //           details: `Refund for canceled order`,
+      //         },
+      //       },
+      //     }
+      //   );
+      // }
+      // return res.status(204).send();
     }
-    const newCancelRequest = await new CancelRequest({
-      orderId,
-      userId,
-      date:Date.now(),
-      reason,
-    }).save();
-    if(newCancelRequest){
-      res.status(200).json({status:"success",message:"Cancel request has been sent"})
-    }
+    return res.status(404).json({ status: "failed", message: "Not found" });
   } catch (error) {
     console.log(error.message);
-    
-    
   }
-}
+};
 
 const verifyOnlinePayment=async(req,res)=>{
   try {
@@ -241,6 +282,33 @@ const getCoupons = async(req,res)=>{
     console.log(error.message);
   }
 }
+const verifyCoupon=async(req,res)=>{
+  try {
+    const {code}=req.body
+    const couponCheck = await Coupon.findOne({code});
+    if(!couponCheck){
+      return res.status(404).json({message:"Invalid coupon code"})
+    }
+    const used= couponCheck.usersUsed.includes(req.session.userId)
+    if(used){
+      return res.status(422).json({error:"unavailable",message:"Coupon already used"});
+    }
+    const curDate = Date.now();
+    if(couponCheck.validFrom.getTime()>curDate || couponCheck.expiry.getTime()<curDate){
+      console.log("date problem");
+      return res.status(422).json({error:"unavailable",message:"Coupon is currently unavailable"});
+    }
+    const couponData={
+      discount:Number(couponCheck.discountAmount),
+      minimum:Number(couponCheck.minimumSpend),
+      code:couponCheck.code
+    }
+    res.status(200).json({status:"success",couponData})
+
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 
 module.exports = {
   showCheckout,
@@ -248,9 +316,10 @@ module.exports = {
   showOrderSuccess,
   showOrders,
   showOrderDetails,
-  requestCancel,
+  cancelOrder,
   verifyOnlinePayment,
   getCoupons,
+  verifyCoupon
 
   
   

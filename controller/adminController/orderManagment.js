@@ -28,46 +28,7 @@ const showManageOrder = async (req, res) => {
   }
 };
 
-const cancelOrder = async (req, res) => {
-  try {
-    const { orderId } = req.body;
-    const cancelledOrder = await Order.findByIdAndUpdate(
-      { _id: orderId },
-      { status: "Canceled" },
-      { new: true }
-    );
-    if (cancelledOrder) {
-      cancelledOrder.products.forEach(async (product) => {
-        const { productId, quantity } = product;
-        await Product.findByIdAndUpdate(
-          { _id: productId },
-          { $inc: { quantity } }
-        );
-      });
-      if (cancelledOrder.walletUsed) {
-        const { walletUsed,userId } = cancelledOrder;
-        await User.findByIdAndUpdate(
-          { _id: userId },
-          {
-            $inc: { "wallet.balance": walletUsed },
-            $push: {
-              "wallet.history": {
-                amount: walletUsed,
-                type: "Credit",
-                date: Date.now(),
-                details: `Refund for canceled order`,
-              },
-            },
-          }
-        );
-      }
-      return res.status(204).send();
-    }
-    return res.status(404).json({ status: "failed", message: "Not found" });
-  } catch (error) {
-    console.log(error.message);
-  }
-};
+
 
 const changeStatus = async (req,res)=>{
     try {
@@ -98,7 +59,6 @@ const showCancelRequest=async(req,res)=>{
 module.exports = {
   showOrders,
   showManageOrder,
-  cancelOrder,
   changeStatus,
   showCancelRequest
 };

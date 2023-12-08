@@ -6,9 +6,11 @@ const walletBtn = document.querySelector("[data-wallet]");
 const stockModal = document.querySelector("#checkout-stock-modal");
 const closeStockModal = document.querySelector("[data-checkStockClose]");
 ///////
-const showCouponBtn=document.querySelector('[data-showCoupon]');
-const showCouponClose=document.querySelector('[data-couponCodeClose]');
-const couponCodeModal = document.querySelector('#coupon-code-modal')
+const showCouponBtn = document.querySelector("[data-showCoupon]");
+const showCouponClose = document.querySelector("[data-couponCodeClose]");
+const couponCodeModal = document.querySelector("#coupon-code-modal");
+let copyBtn = null;
+const applyBtn = document.querySelector("[data-apply]");
 
 closeModal.addEventListener("click", () => {
   checkoutModal.style.display = "none";
@@ -103,28 +105,28 @@ const checkStock = async () => {
   }
 };
 //onlinePayment success function
-const verifyOnlinePayment = async (details,order) => {
+const verifyOnlinePayment = async (details, order) => {
   try {
-    console.log(details)
+    console.log(details);
     const rawData = await fetch("/verify-payment", {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({details,order}),
+      body: JSON.stringify({ details, order }),
     });
-if(rawData.ok){
-  const data=await rawData.json();
-  if(data.status==="success"){
-    return (window.location.href = "/order-success");
-  }
-}
+    if (rawData.ok) {
+      const data = await rawData.json();
+      if (data.status === "success") {
+        return (window.location.href = "/order-success");
+      }
+    }
   } catch (error) {
     console.log(error.message);
   }
 };
 //razorpay payment function
-const razorpayPayment = (order,userData) => {
+const razorpayPayment = (order, userData) => {
   var options = {
     key: "rzp_test_ek96OXEhD4RQx2", // Enter the Key ID generated from the Dashboard
     amount: order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
@@ -134,7 +136,7 @@ const razorpayPayment = (order,userData) => {
     image: "/images/logos/logo.png",
     order_id: order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
     handler: function (response) {
-      verifyOnlinePayment(response,order);
+      verifyOnlinePayment(response, order);
     },
     prefill: {
       name: userData.name,
@@ -174,7 +176,7 @@ const placeOrder = async () => {
     const payment = document.querySelector(
       `input[name="payment-method"]:checked`
     )?.value;
-    const coupon = null;
+    const coupon = document.querySelector("[data-coupon-name]").innerText;
     const useWallet = walletBtn?.checked;
     if (!addressId) {
       error.innerText = "Please select an address";
@@ -201,7 +203,7 @@ const placeOrder = async () => {
       }
       if (data.status === "pending") {
         console.log(data.order);
-        razorpayPayment(data.order,data.userData);
+        razorpayPayment(data.order, data.userData);
         return;
       }
     }
@@ -242,40 +244,120 @@ window.addEventListener("click", (event) => {
   if (event.target == checkoutModal) {
     checkoutModal.style.display = "none";
   }
-  if(event.target == couponCodeModal){
-    couponCodeModal.style.display="none"
+  if (event.target == couponCodeModal) {
+    couponCodeModal.style.display = "none";
   }
 });
 ////////////////////////////////////////
 
-const showCouponModal=async()=>{
+const showCouponModal = async () => {
   try {
-    couponCodeModal.style.display="block"
-    const rawData=await fetch('/get-coupons');
-    if(rawData.ok){
-      const data=await rawData.json();
-      if(data.status==="success"){
-        const coupons=data.coupons;
-        if(coupons && coupons.length){
-          const couponDiv = document.querySelector('[data-couponDiv]')
-          coupons.forEach((item)=>{
-            const p = document.createElement('p');
-            p.setAttribute('class','coupon-min');
-            p.innerHTML=`Purchases above &#8377;${item.minimumSpend.$numberDecimal}`;
-            const div = document.createElement('div');
-            div.setAttribute('class','coupons d-flex');
-            div.innerHTML=`<input type="text" name="" id="" class="coupon-input" value="${item.code}" readonly>
-              <button class="btn-coupon-copy"><i class="fa-regular fa-copy"></i></button>`
-              couponDiv.appendChild(p)
-              couponDiv.appendChild(div)
-          })
+    couponCodeModal.style.display = "block";
+    const rawData = await fetch("/get-coupons");
+    if (rawData.ok) {
+      const data = await rawData.json();
+      if (data.status === "success") {
+        const coupons = data.coupons;
+        if (coupons && coupons.length) {
+          const couponDiv = document.querySelector("[data-couponDiv]");
+          couponDiv.innerHTML = "";
+          coupons.forEach((item) => {
+            const p = document.createElement("p");
+            p.setAttribute("class", "coupon-min");
+            p.innerHTML = `Purchases above &#8377;${item.minimumSpend.$numberDecimal} (discount : &#8377;${item.discountAmount.$numberDecimal})`;
+            const div = document.createElement("div");
+            div.setAttribute("class", "coupons d-flex");
+            div.innerHTML = `<input type="text" name="" id="" class="coupon-input" value="${item.code}" readonly data-coupon="${item._id}">
+              <button class="btn-coupon-copy" data-id="${item._id}"><i class="fa-regular fa-copy"></i></button>`;
+            couponDiv.appendChild(p);
+            couponDiv.appendChild(div);
+          });
+          copyBtn = document.querySelectorAll(".btn-coupon-copy");
+          copyBtn.forEach((item) => {
+            item.addEventListener("click", couponCopy);
+          });
         }
       }
     }
   } catch (error) {
-    console.log(error.messsage);
+    console.log(error);
   }
-}
+};
+
+const couponCopy = (event) => {
+  const id = event.currentTarget.dataset.id;
+  const coupon = document.querySelector(`[data-coupon="${id}"]`);
+  // Select the text field
+  coupon.select();
+  coupon.setSelectionRange(0, 99999); // For mobile devices
+  // Copy the text inside the text field
+  navigator.clipboard.writeText(coupon.value);
+  document.getSelection().removeAllRanges();
+  event.currentTarget.innerHTML = `<i class="fa-solid fa-clipboard-check"></i>`;
+  const btn = event.currentTarget;
+  setTimeout(() => {
+    btn.innerHTML = `<i class="fa-regular fa-copy"></i>`;
+  }, 3000);
+};
+
+const applyCoupon = async () => {
+  try {
+    const error = document.querySelector("[data-couponError]");
+    const couponCode = document.querySelector("[data-couponInput]");
+    const code = couponCode.value.trim();
+    if (!code) {
+      return (error.innerText = "Please enter a coupon code");
+    }
+    const rawData = await fetch("/apply-coupon", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ code }),
+    });
+    if(rawData.status===422){
+      const data=await rawData.json();
+      return error.innerText=data.message
+    }
+    if (rawData.ok) {
+      const data = await rawData.json();
+      if (data.status === "success") {
+        const error = document.querySelector("[data-couponError]");
+        const couponInput = document.querySelector("[data-couponInputDiv]");
+        const couponDiscountDiv = document.querySelector(
+          "[data-couponDeduction]"
+        );
+        const hiddenTotal = document.querySelector("[data-total-hidden]");
+        const totalShow = document.querySelector("[data-total]");
+        if (Number(hiddenTotal.value) < data.couponData.minimum) {
+          console.log(hiddenTotal.value, data.couponData.minimum);
+          return (error.innerHTML = `Coupon is only applicable for purchases totaling &#8377;${data.couponData.minimum} or more`);
+        }
+        let total = Number(hiddenTotal.value) - data.couponData.discount;
+        document.querySelector("[data-coupon-name]").innerText =
+          data.couponData.code;
+        document.querySelector("[data-coupon-amount]").innerText =
+          data.couponData.discount;
+        totalShow.innerText = total;
+        couponInput.classList.toggle("hidden");
+        couponDiscountDiv.classList.toggle("hidden");
+        controlWallet();
+        const couponRemove = document.querySelector("[data-coupon-remove]");
+        couponRemove.addEventListener("click", () => {
+          error.innerText = null;
+          couponInput.classList.remove("hidden");
+          couponDiscountDiv.classList.add("hidden");
+          totalShow.innerText = Number(hiddenTotal.value);
+          document.querySelector("[data-coupon-name]").innerText =""
+          controlWallet();
+        });
+      }
+    }
+    
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 walletBtn?.addEventListener("click", controlWallet);
 placeOrderBtn.addEventListener("click", placeOrder);
@@ -283,7 +365,9 @@ closeStockModal?.addEventListener("click", () => {
   stockModal.style.display = "none";
 });
 
-showCouponBtn.addEventListener('click',showCouponModal)
-showCouponClose.addEventListener('click',()=>{
-  couponCodeModal.style.display="none"
-})
+showCouponBtn.addEventListener("click", showCouponModal);
+showCouponClose.addEventListener("click", () => {
+  couponCodeModal.style.display = "none";
+});
+
+applyBtn.addEventListener("click", applyCoupon);

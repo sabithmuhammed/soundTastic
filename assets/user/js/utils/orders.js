@@ -7,7 +7,7 @@ const closeModalBtn = document.querySelectorAll(".confirm-close");
 const showModal = (event) => {
   const error = document.querySelector("[data-error]");
   const id = event.currentTarget.dataset.id;
-  const idInput = document.querySelector("[data-orderId]");
+  const idInput = document.querySelector("[data-productId]");
   idInput.value = id;
   error.innerText = "";
   cancelRequestModal.style.display = "block";
@@ -16,19 +16,18 @@ const showModal = (event) => {
 const sendCancelRequest = async () => {
   try {
     const error = document.querySelector("[data-error]");
-    const orderId = document.querySelector("[data-orderId]").value;
-    console.log(orderId);
-    const reason = document.querySelector("[data-reason]").value.trim();
-    if (!reason) {
-      return (error.innerText = "Field can't be empty");
-    }
+    const productId = document.querySelector("[data-productId]").value;
+    const orderId = document.querySelector('[data-orderId]').value;
+    const cancelStatus = document.querySelector(`[data-cancel="${productId}"]`)
+    const cancelBtn = document.querySelector(`[data-id="${productId}"]`)
 
-    const rawData = await fetch("/cancel-request", {
+    const reason = document.querySelector("[data-reason]").value.trim();
+    const rawData = await fetch("/cancel-order", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ orderId, reason }),
+      body: JSON.stringify({ productId, orderId, reason }),
     });
 
     if (rawData.status === 401) {
@@ -43,6 +42,8 @@ const sendCancelRequest = async () => {
       if (data.status === "success") {
         cancelRequestModal.style.display = "none";
         cancelRequestMessage.style.display = "block";
+        cancelStatus.innerText="Canceled";
+        cancelBtn.remove();
         return;
       }
     }

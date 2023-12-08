@@ -25,16 +25,30 @@
             &#8377;<%= item.unitPrice * item.quantity %>
           </div>
           <div class="col-md-3 d-flex flex-column">
+            <% if(order.status==="Delivered" && !item.cancel?.status){ %>
+            <button class="btn btn-primary">Give rating</button>
+            <% } %> <% if(order.status!=="Delivered" && !item.cancel?.status){ %>
             <button
-              class="btn btn-primary <%= order.status==='Delivered'?'':'disabled' %>"
+              class="btn btn-danger"
+              data-cancelBtn
+              data-id="<%= item.productId._id %>"
             >
-              Give rating
+              Cancel order
             </button>
-            <button
-              class="btn btn-danger <%= order.status==='Delivered'?'':'disabled' %>"
-            >
-              Return item
-            </button>
+            <% } %>
+            <p class="red" data-cancel="<%= item.productId._id %>">
+              <% if(item.cancel?.status==="Canceled"){ %> Canceled <% } %>
+            </p>
+            <% if(order.status==="Delivered" && !item.cancel?.status &&
+            !item.return?.status){ %>
+            <button class="btn btn-danger">Return item</button>
+            <% } %> <% if(order.status==="Delivered" && !item.cancel?.status &&
+            item.return?.status==="Pending"){ %>
+            <p class="red">Return request is pending</p>
+            <% } %> <% if(order.status==="Delivered" && !item.cancel?.status &&
+            item.return?.status==="Returned"){ %>
+            <p class="red">Returned</p>
+            <% } %>
           </div>
         </div>
         <% }) %>
@@ -48,7 +62,7 @@
           <div class="row">
             <div class="col-md-4">Date</div>
             <div class="col-md-8">
-              : <%= order.orderDate.toLocaleString('en-US') %>
+              : <%= order.orderDate.toLocaleString('en-AU') %>
             </div>
           </div>
           <div class="row">
@@ -122,4 +136,46 @@
   </div>
 </div>
 
+
+
+<!-- The Modal -->
+<div id="order-cancel-modal" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <h5>Are you sure you want to cancel this address?</h5>
+    <h6>Give a reason (optional)</h6>
+    <p class="red" data-error></p>
+    <textarea
+      name=""
+      id=""
+      cols="45"
+      rows="5"
+      class="reason"
+      data-reason
+    ></textarea>
+
+    <div class="confirm-modal-buttons">
+      <input type="hidden" data-orderId value="<%= order._id %>" />
+      <input type="hidden" value="" data-productId />
+      <button class="btn btn-primary confirm-close">CLOSE</button>
+      <button class="btn btn-danger" data-sendReqBtn>YES, CANCEL</button>
+    </div>
+  </div>
+</div>
+<div id="order-cancel-message" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <h5>
+      Your orders have been canceled. The refund will be credited to your wallet
+      shortly.
+    </h5>
+
+    <div class="confirm-modal-buttons">
+      <input type="hidden" value="" data-orderId />
+      <button class="btn btn-primary confirm-close">OK</button>
+    </div>
+  </div>
+</div>
+
+<script src="/user/js/utils/orders.js"></script>
 <%- include("../layouts/userFooter") %>

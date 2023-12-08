@@ -2,8 +2,6 @@
 <script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
 <script src="/user/js/utils/checkout.js" defer></script>
 
-
-
 <div class="section mb-5">
   <!-- container -->
   <div class="container">
@@ -11,7 +9,7 @@
       <div class="col-md-12"><h2>CHECKOUT</h2></div>
     </div>
     <!-- row -->
-    <% if(cart){ %> 
+    <% if(cart){ %>
     <div class="row checkout">
       <div class="col-md-6">
         <div class="address-div">
@@ -111,34 +109,45 @@
             <div class="col-md-10 shipping">Shipping</div>
             <div class="col-md-2 sh-price right"><span>Free</span></div>
           </div>
-          <div class="row">
+          <div class="row" data-couponInputDiv>
             <div class="col-md-12 coupon d-flex">
-              
               <h4>COUPON CODE</h4>
-              
-             
+
               <div class="row">
+                <div class="col-md-12">
+                  <div class="error-coupon"><p data-couponError></p></div>
+                </div>
                 <div class="col-md-9">
                   <div class="coupon-input d-flex">
-                    <input type="text" id="coupon" />
-                    <button class="btn-apply">APPLY</button>
-                    
+                    <input type="text" id="coupon" data-couponInput />
+                    <button class="btn-apply" data-apply>APPLY</button>
                   </div>
                 </div>
                 <div class="col-md-3">
-                  <button class="btn-show-coupon btn btn-success" data-showCoupon >Show coupons</button>
+                  <button
+                    class="btn-show-coupon btn btn-success"
+                    data-showCoupon
+                  >
+                    Show coupons
+                  </button>
                 </div>
               </div>
-              
-              
+
               <label for="coupon">Enter your code</label>
             </div>
           </div>
 
-          <!-- <div class="row coupon-container">
-            <div class="col-md-9 coupon-price">name</div>
-            <div class="col-md-3 coupon-price right"><span>- 5680</span></div>
-          </div> -->
+          <div class="row coupon-container hidden" data-couponDeduction >
+            <div class="col-md-9"><h4>Coupon</h4></div>
+            <div class="col-md-3 right"></div>
+            <div class="col-md-9 coupon-price">
+              <span data-coupon-name></span
+              ><button class="cart-remove" data-coupon-remove>&times;</button>
+            </div>
+            <div class="col-md-3 coupon-price right">
+              <span>-&#8377;<span data-coupon-amount></span></span>
+            </div>
+          </div>
           <% if(walletAmount){ %>
           <div class="row coupon-container">
             <div class="col-md-9 coupon-price">
@@ -148,7 +157,11 @@
               >
               )
             </div>
-            <div class="col-md-3 coupon-price right" data-walletShow style="visibility: hidden;">
+            <div
+              class="col-md-3 coupon-price right"
+              data-walletShow
+              style="visibility: hidden"
+            >
               - &#8377; <span data-walletUsed></span>
             </div>
           </div>
@@ -156,6 +169,12 @@
           <div class="row total-div">
             <div class="col-md-9 total">TOTAL</div>
             <div class="col-md-3 total-price right">
+              <input
+                type="hidden"
+                name=""
+                data-total-hidden
+                value="<%= cart.totalPrice %>"
+              />
               <span>&#8377;<span data-total><%= cart.totalPrice %></span></span>
             </div>
           </div>
@@ -188,14 +207,13 @@
       </div>
     </div>
     <% }else{ %>
-          <div class="row">
-            <div class="md-md-12 item-center">
-              <h4>Your cart is empty! <a href="/shop">Continue shopping</a></h4>
-            </div>
-          </div>
-    
-      <% } %>
+    <div class="row">
+      <div class="md-md-12 item-center">
+        <h4>Your cart is empty! <a href="/shop">Continue shopping</a></h4>
+      </div>
+    </div>
 
+    <% } %>
   </div>
 </div>
 
@@ -211,20 +229,15 @@
   <!-- Modal content -->
   <div class="modal-content">
     <h4>Not enough stock</h4>
-    <ul id="checkout-stock">
-    </ul>
-    <button class="btn btn-primary btn-ok" data-checkStockClose >OK</button>
+    <ul id="checkout-stock"></ul>
+    <button class="btn btn-primary btn-ok" data-checkStockClose>OK</button>
   </div>
 </div>
 
 <div id="coupon-code-modal" class="modal">
   <!-- Modal content -->
   <div class="modal-content">
-    <div class="coupon-codes-container " data-couponDiv>
-      
-      
-      
-    </div>
+    <div class="coupon-codes-container" data-couponDiv></div>
     <button class="btn btn-primary btn-ok" data-couponCodeClose>CLOSE</button>
   </div>
 </div>

@@ -71,8 +71,10 @@ user_route.get('/order-success',auth.isLogin,auth.userBlock,ordersController.sho
 user_route.get('/orders',auth.isLogin,auth.userBlock,ordersController.showOrders)
 user_route.get('/order-details/:orderId',auth.isLogin,auth.userBlock,ordersController.showOrderDetails)
 user_route.get('/order-details/:orderId',auth.isLogin,auth.userBlock,ordersController.showOrderDetails)
-user_route.post('/cancel-request',auth.jsonIsLogin,auth.jsonUserBlock,ordersController.requestCancel)
+user_route.post('/cancel-order',auth.jsonIsLogin,auth.jsonUserBlock,ordersController.cancelOrder)
 
+//coupon
 user_route.get('/get-coupons',ordersController.getCoupons)
+user_route.post('/apply-coupon',ordersController.verifyCoupon)
 
 module.exports = user_route;
