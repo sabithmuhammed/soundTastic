@@ -89,17 +89,17 @@
           <% if(parseInt(order.walletUsed)){ %>
           <div class="row">
             <div class="col-md-4">Wallet</div>
-            <div class="col-md-8">: -&#8377;<%= order.walletUsed %></div>
+            <div class="col-md-8" data-wallet>: -&#8377;<%= order.walletUsed %></div>
           </div>
           <% } %> <% if(order.coupon){ %>
-          <div class="row">
+          <div class="row" data-coupon>
             <div class="col-md-4">Coupon</div>
-            <div class="col-md-8">: -&#8377;<%= order.coupon %></div>
+            <div class="col-md-8">: -&#8377;<%= order.coupon.discountAmount %></div>
           </div>
           <% } %>
           <div class="row">
             <div class="col-md-4">Final Amount</div>
-            <div class="col-md-8">: &#8377;<%= order.finalAmount %></div>
+            <div class="col-md-8">: &#8377;<span data-finalAmount><%= order.finalAmount %></span></div>
           </div>
         </div>
         <div class="order-details">

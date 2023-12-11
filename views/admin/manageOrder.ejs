@@ -55,22 +55,19 @@
                 <td data-status><%= order.status %></td>
               </tr>
               <tr>
-                <td>
-                  <button
-                    class="btn btn-primary <%= order.status==='Delivered' || order.status==='Cancelled' ?'disabled':''%>"
-                    data-statusBtn
-                  >
-                    Change status
-                  </button>
-                </td>
-                <td>
-                  <button
-                    class="btn btn-danger <%= order.status==='Delivered' || order.status==='Cancelled'?'disabled':''%>"
-                    data-cancelOrder
-                  >
-                    Cancel Order
-                  </button>
-                </td>
+                <% if(order.status==='Delivered' || order.status==='Canceled') { %>
+                
+                <% }else{ %> 
+                  <td>
+                    <button
+                      class="btn btn-primary"
+                      data-statusBtn
+                    >
+                      Change status
+                    </button>
+                  </td>
+                  <% } %>
+              
               </tr>
             </tbody>
           </table>
@@ -123,6 +120,7 @@
               <tr>
                 <th scope="col">Image</th>
                 <th scope="col">Name</th>
+                <th scope="col">Status</th>
                 <th scope="col">Quantity</th>
                 <th scope="col">Amount</th>
               </tr>
@@ -137,6 +135,11 @@
                   />
                 </td>
                 <td><%= item.productId.name %></td>
+                <% if(item.cancel?.status || item.return?.status){ %>
+                <td class="text-danger"><%= item.cancel?.status || item.return?.status %></td>
+                <% }else{ %>
+                  <td data-status><%= order.status %></td>
+                 <% } %>
                 <td><%= item.quantity %></td>
                 <td>&#8377;<%= item.unitPrice * item.quantity %></td>
               </tr>

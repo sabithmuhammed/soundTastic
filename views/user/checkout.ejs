@@ -52,40 +52,8 @@
             </div>
           </div>
           <% })} %>
-          <div class="address">
-            <form id="checkout-address">
-              <div class="error" id="error"></div>
-              <div class="form-group">
-                <label for="name">Full Name <span class="red">*</span></label>
-                <input type="text" class="form-control" id="name" />
-              </div>
-              <div class="form-group">
-                <label for="mobile">Mobile <span class="red">*</span></label>
-                <input type="number" class="form-control" id="mobile" />
-              </div>
-              <div class="form-group">
-                <label for="address"
-                  >Address (Area and Street) <span class="red">*</span></label
-                >
-                <input type="text" class="form-control" id="address" />
-              </div>
-              <div class="form-group">
-                <label for="city"
-                  >City / District / Town <span class="red">*</span></label
-                >
-                <input type="text" class="form-control" id="city" />
-              </div>
-              <div class="form-group">
-                <label for="state">State <span class="red">*</span></label>
-                <input type="text" class="form-control" id="state" />
-              </div>
-              <div class="form-group">
-                <label for="pincode">Pincode <span class="red">*</span></label>
-                <input type="number" class="form-control" id="pincode" />
-              </div>
-              <button type="submit" class="btn primary-btn">Add Address</button>
-            </form>
-          </div>
+
+         <button class="btn btn-primary" data-add-address>Add address</button>
         </div>
       </div>
       <div class="col-md-6">
@@ -239,6 +207,47 @@
   <div class="modal-content">
     <div class="coupon-codes-container" data-couponDiv></div>
     <button class="btn btn-primary btn-ok" data-couponCodeClose>CLOSE</button>
+  </div>
+</div>
+
+<div id="address-modal" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="address coupon-codes-container">
+      <form id="checkout-address">
+        <div class="error" id="error"></div>
+        <div class="form-group">
+          <label for="name">Full Name <span class="red">*</span></label>
+          <input type="text" class="form-control" id="name" />
+        </div>
+        <div class="form-group">
+          <label for="mobile">Mobile <span class="red">*</span></label>
+          <input type="number" class="form-control" id="mobile" />
+        </div>
+        <div class="form-group">
+          <label for="address"
+            >Address (Area and Street) <span class="red">*</span></label
+          >
+          <input type="text" class="form-control" id="address" />
+        </div>
+        <div class="form-group">
+          <label for="city"
+            >City / District / Town <span class="red">*</span></label
+          >
+          <input type="text" class="form-control" id="city" />
+        </div>
+        <div class="form-group">
+          <label for="state">State <span class="red">*</span></label>
+          <input type="text" class="form-control" id="state" />
+        </div>
+        <div class="form-group">
+          <label for="pincode">Pincode <span class="red">*</span></label>
+          <input type="number" class="form-control" id="pincode" />
+        </div>
+        <button type="submit" class="btn primary-btn">Add Address</button>
+      </form>
+    </div>
+    <button class="btn btn-primary btn-ok" data-addressClose>CLOSE</button>
   </div>
 </div>
 

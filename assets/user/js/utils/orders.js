@@ -1,4 +1,4 @@
-const cancelBtn = document.querySelector("[data-cancelBtn]");
+const cancelBtn = document.querySelectorAll("[data-cancelBtn]");
 const sendReqBtn = document.querySelector("[data-sendReqBtn]");
 const cancelRequestModal = document.getElementById("order-cancel-modal");
 const cancelRequestMessage = document.getElementById("order-cancel-message");
@@ -43,7 +43,18 @@ const sendCancelRequest = async () => {
         cancelRequestModal.style.display = "none";
         cancelRequestMessage.style.display = "block";
         cancelStatus.innerText="Canceled";
-        cancelBtn.remove();
+        cancelBtn?.remove();
+        document.querySelector('[data-finalAmount]').innerText=data.finalAmount
+        const wallet = document.querySelector('[data-wallet]')
+        if(data.wallet){
+          wallet.innerHTML=`-&#8377;${data.wallet}`
+        }else{
+          wallet.innerHTML=`&#8377;0`
+        }
+        if(!data.couponUpdate){
+          document.querySelector('[data-coupon]').remove()
+        }
+        
         return;
       }
     }
@@ -57,8 +68,9 @@ const closeModal = () => {
   cancelRequestModal.style.display = "none";
   cancelRequestMessage.style.display = "none";
 };
-
-cancelBtn.addEventListener("click", showModal);
+cancelBtn.forEach((item)=>{
+  item.addEventListener("click", showModal);
+})
 sendReqBtn.addEventListener("click", sendCancelRequest);
 closeModalBtn.forEach((item) => {
   item.addEventListener("click", closeModal);

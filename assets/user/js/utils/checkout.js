@@ -11,6 +11,10 @@ const showCouponClose = document.querySelector("[data-couponCodeClose]");
 const couponCodeModal = document.querySelector("#coupon-code-modal");
 let copyBtn = null;
 const applyBtn = document.querySelector("[data-apply]");
+//////
+const addressBtn = document.querySelector("[data-add-address]");
+const addressCloseBtn = document.querySelector("[data-addressClose]");
+const addressModal = document.querySelector("#address-modal");
 
 closeModal.addEventListener("click", () => {
   checkoutModal.style.display = "none";
@@ -247,6 +251,9 @@ window.addEventListener("click", (event) => {
   if (event.target == couponCodeModal) {
     couponCodeModal.style.display = "none";
   }
+  if (event.target == addressModal) {
+    addressModal.style.display = "none";
+  }
 });
 ////////////////////////////////////////
 
@@ -315,7 +322,7 @@ const applyCoupon = async () => {
       },
       body: JSON.stringify({ code }),
     });
-    if(rawData.status===422){
+    if(rawData.status===422 || rawData.status===404){
       const data=await rawData.json();
       return error.innerText=data.message
     }
@@ -359,6 +366,14 @@ const applyCoupon = async () => {
   }
 };
 
+
+const showAddressModal = ()=>{
+  addressModal.style.display="block"
+}
+addressCloseBtn.addEventListener('click',()=>{
+  addressModal.style.display="none"
+})
+
 walletBtn?.addEventListener("click", controlWallet);
 placeOrderBtn.addEventListener("click", placeOrder);
 closeStockModal?.addEventListener("click", () => {
@@ -371,3 +386,4 @@ showCouponClose.addEventListener("click", () => {
 });
 
 applyBtn.addEventListener("click", applyCoupon);
+addressBtn.addEventListener('click',showAddressModal)

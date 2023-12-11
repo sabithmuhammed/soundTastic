@@ -10,7 +10,7 @@ const ordersController = require('../controller/userController/orders')
 
 //home and login
 user_route.get("/", navPagesController.home);
-user_route.get("/home", navPagesController.loadHome);
+user_route.get("/home",auth.userBlock, navPagesController.loadHome);
 user_route.get("/login",auth.isLogout,authController.loginLoad);
 user_route.post("/login", authController.verifyLogin);
 user_route.get("/logout",authController.userLogout);
@@ -37,8 +37,8 @@ user_route.get("/change-password",auth.changePassword,authController.showChangeP
 user_route.patch("/change-password",authController.changePassword);
 
 //shop and product view page
-user_route.get("/shop",navPagesController.showShop);
-user_route.get("/product/:id",navPagesController.showProductPage);
+user_route.get("/shop",auth.userBlock,navPagesController.showShop);
+user_route.get("/product/:id",auth.userBlock,navPagesController.showProductPage);
 
 //user profile
 user_route.get('/my-profile',auth.isLogin,auth.userBlock,userPageController.showProfile);
