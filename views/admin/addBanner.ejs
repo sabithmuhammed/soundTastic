@@ -1,0 +1,183 @@
+<%- include("../layouts/adminHeader") %>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.css" integrity="sha512-bs9fAcCAeaDfA4A+NiShWR886eClUcBtqhipoY5DM60Y1V3BbVQlabthUBal5bq8Z8nnxxiyb1wfGX2n76N1Mw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js" integrity="sha512-9KkIqdfN7ipEW6B6k+Aq20PV31bjODg4AA52W+tYtAE0jE0kMx49bjJ3FgvS56wzmyfMUHbQ4Km2b7l9+Y/+Eg==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+<!--  Main wrapper -->
+<div class="body-wrapper">
+  <%- include("../layouts/adminNavbar") %>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    form {
+      margin: 20px auto;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 16px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+    .preview {
+      width: 100%;
+      height: 300px;
+      background-color: red;
+      display: none;
+    }
+    .preview img {
+      width: 100%;
+    }
+  </style>
+  <div class="container-fluid">
+    <div class="row justify-content-center mb-3">
+      <div class="col-md-8">
+        <h2>Add Banner</h2>
+        <form id="bannerForm">
+            <div class="d-flex justify-content-center">
+                <p id="error" class="text-danger"></p>
+            </div>
+            
+          <label for="bannerImage">Banner Image (required): </label>
+          <input
+            type="file"
+            id="bannerImage"
+            required
+            accept="image/*"
+            multiple="false"
+          />
+          <div class="preview" id="preview">
+            <img src="" alt="" id="previewImg" />
+          </div>
+
+          <label for="bannerLink">Banner Link URL (optional):</label>
+          <input type="text" id="bannerLink" name="bannerLink" placeholder="eg:/product/654db03b2977a11adf861a82"/>
+          <div class="d-flex justify-content-center">
+            <span class="">OR</span>
+          </div>
+          <label for="bannerLink">Category Name (optional):</label>
+          <input type="text" id="bannerCategory" name="bannerLink" placeholder="eg:Wireless"/>
+          <div class="d-flex justify-content-center">
+            <span class="">OR</span>
+          </div>
+          <label for="bannerLink">Product ID (optional):</label>
+          <input type="text" id="bannerProduct" name="bannerLink" placeholder="eg:654db03b2977a11adf861a82"/>
+
+          <label for="bannerLink">Banner Title (optional):</label>
+          <input type="text" id="bannerTitle" name="bannerLink" />
+
+          <label for="bannerDescription">Banner Description (optional):</label>
+          <textarea
+            id="bannerDescription"
+            name="bannerDescription"
+            rows="4"
+          ></textarea>
+
+          <button type="button" id="submitBtn" >Add Banner</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const fileInput = document.querySelector("#bannerImage");
+  const preview = document.querySelector("#preview");
+  const previewImg = document.querySelector("#previewImg");
+  let croppedImg = null;
+  fileInput.addEventListener("change", (e) => {
+    const files = fileInput.files;
+    if (files.length > 0) {
+      const file = files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        document.querySelector('#preview').style.display="block"
+        previewImg.src=e.target.result
+        const cropper = new Cropper(previewImg,{
+            aspectRatio:3/1,
+            viewMode:3
+        })
+        croppedImg = cropper
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+const submitBtn = document.querySelector('#submitBtn');
+submitBtn.addEventListener('click',async(event)=>{
+    const error = document.querySelector("#error")
+    console.log("fdjsakla")
+    if(!croppedImg){
+        window.location.href="#top"
+        return error.innerText="Select an Image"
+    }
+    
+    const image=croppedImg.getCroppedCanvas()
+    .toDataURL("image/png");
+    const blob = dataURItoBlob(image);
+    const link= document.querySelector('#bannerLink').value
+    const category= document.querySelector('#bannerCategory').value.trim()
+    const product= document.querySelector('#bannerProduct').value.trim()
+    const title= document.querySelector('#bannerProduct').value.trim()
+    const description= document.querySelector('#bannerProduct').value.trim()
+
+    let url=null;
+    if(link || category || product){
+        if(link){
+            url=link
+        }
+        if(category){
+            url=`/shop?category=${category}`
+        }
+        if(product){
+            url=`/product/${product}`
+        }
+    }
+    const formData= new FormData()
+    formData.append(`banner`, blob, `banner.png`);
+    formData.append(`link`, link);
+    formData.append(`title`, title);
+    formData.append(`description`, description);
+    const rawData = await fetch('add-banner',{
+        method:"POST",
+        body:formData,
+        headers:{}
+    })
+    if(rawData.ok){
+        window.location.href="/admin/banners"
+    }
+
+})
+
+
+function dataURItoBlob(dataURI) {
+    const byteString = atob(dataURI.split(",")[1]);
+    const mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([ab], { type: mimeString });
+  }
+</script>
+
+<%- include("../layouts/adminFooter") %>

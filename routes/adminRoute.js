@@ -5,7 +5,7 @@ const productAndCategory =require('../controller/adminController/productAndCateg
 const orderManagement = require("../controller/adminController/orderManagment")
 const couponAndBanner= require("../controller/adminController/couponAndBanner")
 const admin_route = express.Router();
-const imageUpload =require('../middleware/multerConfig');
+const {imageUpload,bannerUpload} =require('../middleware/multerConfig');
 const auth =require('../middleware/adminAuth');
 
 
@@ -54,6 +54,11 @@ admin_route.post('/edit-coupon',auth.isLogin,couponAndBanner.editCoupon)
 admin_route.patch('/list-coupon/:id',auth.jsonIsLogin,couponAndBanner.updateCoupons);
 //coupon routes end
 
+//banner routes start
+admin_route.get('/banners',couponAndBanner.showBanners)
+admin_route.get('/add-banner',couponAndBanner.showAddBanner)
+admin_route.post('/add-banner',bannerUpload,couponAndBanner.addBanner)
+//banner routes end
 
 admin_route.get("/*",auth.isLogout,authAndCustomer.loginLoad)
 

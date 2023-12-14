@@ -1,5 +1,6 @@
 <%- include("../layouts/userHeader") %> <%- include("../layouts/userNavbar") %>
-
+<link rel="stylesheet" href="/user/css/carousel.css">
+<script src="/user/js/utils/banner.js" defer></script>
 <!-- SECTION -->
 <div class="section">
   <!-- container -->
@@ -83,7 +84,35 @@
     <div class="row">
       <!-- banner -->
       <div class="col-12 bg-danger banner">
-        <img src="/user/img/banner.png" alt="" />
+        <div class="carousel__container">
+          <div class="carousel__item">
+            <img
+              src="/images/banners/autumn-leaf-falling-revealing-intricate-leaf-vein-generated-by-ai.jpg"
+              alt=""
+              loading="lazy"
+            />
+            <div class="banner__text">
+              <div class="banner__title">New Collections</div>
+              <div class="banner__description">Lorem, ipsum dolor sit amet  fsdfdsg dsafds consectetur adipisicing elit. Cumque adipisci impedit aliquam officia doloribus illum quis voluptate modi minus error.
+              </div>
+            </div>
+          </div>
+          <div class="carousel__item">
+            <img src="/images/banners/botanical-leaves.jpg" alt="" loading="lazy"/>
+          </div>
+          <div class="carousel__item">
+            <img src="/images/banners/neon-tropical-monstera-leaf-banner.jpg" alt="" loading="lazy"/>
+          </div>
+          <div class="carousel__item">
+            <img src="/images/banners/pexels-craig-adderley-1563356.jpg" alt="" loading="lazy"/>
+            <div class="banner__text">
+              <div class="banner__title">New Collections</div>
+              <div class="banner__description">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cumque adipisci impedit aliquam officia doloribus illum quis voluptate modi minus error.
+              </div>
+            </div>
+          </div>
+          <div class="carousel__nav"></div>
+        </div>
       </div>
       <!-- /banner -->
     </div>

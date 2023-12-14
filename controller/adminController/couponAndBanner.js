@@ -1,4 +1,5 @@
 const Coupon = require("../../model/couponModel");
+const Banner = require("../../model/bannerModel");
 
 const showCoupons = async (req, res) => {
   try {
@@ -91,6 +92,32 @@ const updateCoupons = async (req, res) => {
   }
 };
 
+const showBanners = async(req,res)=>{
+  try {
+    res.render('admin/banners')
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+const showAddBanner = async(req,res)=>{
+  try {
+    res.render('admin/addBanner')
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+const addBanner = async(req,res)=>{
+try {
+  console.log(req.file);
+  const image=req.file.filename;
+  const{link,title,description}=req.body
+  const banner=await new Banner({image,link,title,description}).save();
+    res.status(204).send()
+} catch (error) {
+  console.log(error.message);
+}
+}
 module.exports = {
   showCoupons,
   showAddCoupon,
@@ -98,4 +125,9 @@ module.exports = {
   updateCoupons,
   showEditCoupon,
   editCoupon,
+  showBanners,
+  showAddBanner,
+  addBanner,
+
+
 };

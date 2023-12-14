@@ -1,5 +1,39 @@
 <%- include("../layouts/userHeader") %> <%- include("../layouts/userNavbar") %>
 
+<div class="section mb-5">
+  <div class="container">
+    <div class="row">
+      <form class="filters" method="get" action="/shop" class="col-md-12">
+        <label for="category">Select Category:</label>
+        <select id="category" name="category">
+          <% if(!category){ %>
+          <option value="" selected>All Categories</option>
+          <% }else{ %>
+          <option value="" selected>All Categories</option>
+          <% } %> <% categories.forEach((item)=>{ if(category===item.name){ %>
+          <option selected value="<%= item.name %>"><%= item.name %></option>
+          <% }else{ %>
+          <option value="<%= item.name %>"><%= item.name %></option>
+          <% } }) %>
+        </select>
+
+        <label for="sort">Sort by Price:</label>
+        <select id="sort" name="sort">
+          <% if(sort==="1"){ %>
+            <option selected value=1>Low to High</option>
+          <option value=-1>High to Low</option>
+        <% }else{ %>
+          <option value=1>Low to High</option>
+          <option selected value=-1>High to Low</option>
+         <% } %>
+        </select>
+        <button class="btn btn-success" type="submit">APPLY</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+
 <!-- SECTION -->
 <div class="section mb-5">
   <!-- container -->
@@ -55,11 +89,12 @@
               </div>
               <div class="add-to-cart-div">
                 <% if(locals.user) { %>
-                <div class="circle <%= wishlist?.includes(item._id)?'wishlist-active':'' %>"
+                <div
+                  class="circle <%= wishlist?.includes(item._id)?'wishlist-active':'' %>"
                   data-addToWishlist
                   data-id="<%= item._id%>"
                   data-status="<%= wishlist?.includes(item._id)?'true':'false' %>"
-                  >
+                >
                   <% if(wishlist?.includes(item._id)){ %><i
                     class="fa fa-heart-o"
                   ></i>
@@ -103,7 +138,7 @@
             <div>
               <% if ( page > 1) { %>
               <a
-                href="/shop?page=<%= page - 1 %>&search=<%= search %>&category=<%= category %>"
+                href="/shop?page=<%= page - 1 %>&search=<%= search %>&category=<%= category %>&sort=<%= sort %>"
                 class="pagination-btn"
                 ><i class="fa-solid fa-chevron-left"></i
               ></a>
@@ -113,7 +148,7 @@
               ></a>
               <%} %> <% if (page < totalPages) { %>
               <a
-                href="/shop?page=<%= page + 1 %>&search=<%= search %>&category=<%= category %>"
+                href="/shop?page=<%= page + 1 %>&search=<%= search %>&category=<%= category %>&sort=<%= sort %>"
                 class="pagination-btn"
                 ><i class="fa-solid fa-chevron-right"></i
               ></a>

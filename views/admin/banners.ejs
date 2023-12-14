@@ -1,0 +1,31 @@
+<%- include("../layouts/adminHeader") %>
+
+<!--  Main wrapper -->
+<div class="body-wrapper">
+  <%- include("../layouts/adminNavbar") %>
+  <div class="container-fluid">
+    <div class="row justify-content-center mb-3">
+      <div class="col-md-7">
+        <form action="/admin/coupons" class="search-container d-flex p-0">
+          <input
+            type="text"
+            class="flex-grow-1"
+            placeholder="search by coupon code"
+            name="search"
+          />
+          <button class="btn btn-primary h-100 rounded-start-0">Search</button>
+        </form>
+      </div>
+      <div class="col-md-3 mt-2 mt-md-0">
+        <a href="/admin/add-banner"
+          ><button class="btn btn-success">ADD BANNER</button></a
+        >
+      </div>
+    </div>
+    <h2 class="my-3">All banners</h2>
+
+    
+    <script src="/js/utils/coupons.js" defer></script>
+    <%- include("../layouts/adminFooter") %>
+  </div>
+</div>

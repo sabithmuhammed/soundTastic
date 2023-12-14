@@ -1,11 +1,8 @@
-
 const Category = require("../../model/categoryModel");
 const Product = require("../../model/productModel");
 const Wishlist = require("../../model/wishlistModel");
 const cartUtils = require("../../utilities/cartUtilities");
 const wishUtils = require("../../utilities/wishlistUtilities");
-
-
 
 const home = async (req, res) => {
   res.redirect("/home");
@@ -64,6 +61,12 @@ const showShop = async (req, res) => {
         dbQuery.category = catDetails._id;
       }
     }
+    let sort = "1";
+    if (req.query.sort) {
+      sort = req.query.sort;
+    }
+
+    const categories = await Category.find();
 
     const PAGE_SIZE = 8;
     const page = parseInt(req.query.page) || 1;
@@ -71,6 +74,7 @@ const showShop = async (req, res) => {
     const totalPages = Math.ceil(totalCount / PAGE_SIZE);
 
     const products = await Product.find(dbQuery)
+      .sort({ price: sort })
       .skip((page - 1) * PAGE_SIZE)
       .limit(PAGE_SIZE)
       .populate("category")
@@ -87,6 +91,8 @@ const showShop = async (req, res) => {
       cartCount,
       wishlist,
       wishlistCount,
+      categories,
+      sort,
     });
   } catch (error) {
     console.log(error);
@@ -97,7 +103,7 @@ const showProductPage = async (req, res) => {
   try {
     const user = req.session.userId ? req.session.user : null;
     const id = req.params.id;
-    const userId=req.session.userId;
+    const userId = req.session.userId;
     const product = await Product.findById({ _id: id });
     const cartCount = await cartUtils.getCartCount(req.session.userId);
     if (product) {
@@ -112,8 +118,17 @@ const showProductPage = async (req, res) => {
         stock.lowStock = false;
         stock.status = "In stock";
       }
-    const { wishlist,wishlistCount } = await wishUtils.wishlistDetails(userId);
-      res.render("user/productPage", { product, stock, user, cartCount,wishlist,wishlistCount });
+      const { wishlist, wishlistCount } = await wishUtils.wishlistDetails(
+        userId
+      );
+      res.render("user/productPage", {
+        product,
+        stock,
+        user,
+        cartCount,
+        wishlist,
+        wishlistCount,
+      });
     } else {
       res.redirect("/");
     }
@@ -130,19 +145,20 @@ const showUserBlock = async (req, res) => {
   }
 };
 
-const showWishlist=async(req,res)=>{
+const showWishlist = async (req, res) => {
   try {
-    const {user,userId} = req.session;
+    const { user, userId } = req.session;
     const cartCount = await cartUtils.getCartCount(userId);
-    const wishlist= await Wishlist.findOne({userId}).populate("products").exec();
-    const wishlistCount=wishlist?.products?.length
+    const wishlist = await Wishlist.findOne({ userId })
+      .populate("products")
+      .exec();
+    const wishlistCount = wishlist?.products?.length;
 
-    res.render('user/wishlist',{user,wishlistCount,cartCount,wishlist});
-
+    res.render("user/wishlist", { user, wishlistCount, cartCount, wishlist });
   } catch (error) {
     console.log(error.message);
   }
-}
+};
 
 const addToWishlist = async (req, res) => {
   try {
