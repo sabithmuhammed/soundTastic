@@ -3,6 +3,7 @@ const Product = require("../../model/productModel");
 const Wishlist = require("../../model/wishlistModel");
 const cartUtils = require("../../utilities/cartUtilities");
 const wishUtils = require("../../utilities/wishlistUtilities");
+const Banner = require("../../model/bannerModel");
 
 const home = async (req, res) => {
   res.redirect("/home");
@@ -11,21 +12,21 @@ const loadHome = async (req, res) => {
   try {
     const user = req.session.userId ? req.session.user : null;
     const userId = req.session.userId;
-    const products = await Product.find({ listed: 1 })
+    const products = await Product.find({ listed: 1,quantity:{$gt:0} })
       .limit(4)
       .populate("category")
       .exec();
     const { wishlist, wishlistCount } = await wishUtils.wishlistDetails(userId);
     const cartCount = await cartUtils.getCartCount(userId);
-    if (products) {
-      res.render("user/home", {
-        products,
-        user,
-        cartCount,
-        wishlist,
-        wishlistCount,
-      });
-    }
+    const banner = await Banner.find({listed:1})
+    res.render("user/home", {
+      products,
+      user,
+      cartCount,
+      wishlist,
+      wishlistCount,
+      banner
+    });
   } catch (error) {
     console.log(error.message);
   }

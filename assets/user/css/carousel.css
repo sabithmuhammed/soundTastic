@@ -1,3 +1,6 @@
+.banner{
+    padding: 0 10px;
+}
 .carousel__container{
     max-width: 100%;
     height: 390px;;
@@ -15,6 +18,8 @@
     right: 0;
     transition: all ease-in .2s;
     opacity: 0;
+    display: none;
+    cursor: pointer;
 }
 .carousel__item > img{
     width: 100%;
@@ -23,6 +28,7 @@
 }
 .carousel__item--select{
     opacity: 1;
+    display: block;
 }
 .carousel__nav{
     position: absolute;

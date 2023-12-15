@@ -124,7 +124,6 @@
 const submitBtn = document.querySelector('#submitBtn');
 submitBtn.addEventListener('click',async(event)=>{
     const error = document.querySelector("#error")
-    console.log("fdjsakla")
     if(!croppedImg){
         window.location.href="#top"
         return error.innerText="Select an Image"
@@ -136,8 +135,8 @@ submitBtn.addEventListener('click',async(event)=>{
     const link= document.querySelector('#bannerLink').value
     const category= document.querySelector('#bannerCategory').value.trim()
     const product= document.querySelector('#bannerProduct').value.trim()
-    const title= document.querySelector('#bannerProduct').value.trim()
-    const description= document.querySelector('#bannerProduct').value.trim()
+    const title= document.querySelector('#bannerTitle').value.trim()
+    const description= document.querySelector('#bannerDescription').value.trim()
 
     let url=null;
     if(link || category || product){
@@ -153,7 +152,7 @@ submitBtn.addEventListener('click',async(event)=>{
     }
     const formData= new FormData()
     formData.append(`banner`, blob, `banner.png`);
-    formData.append(`link`, link);
+    formData.append(`link`, url);
     formData.append(`title`, title);
     formData.append(`description`, description);
     const rawData = await fetch('add-banner',{

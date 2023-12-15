@@ -64,6 +64,9 @@ const sendCancelRequest = async () => {
   }
 };
 
+
+
+
 const closeModal = () => {
   cancelRequestModal.style.display = "none";
   cancelRequestMessage.style.display = "none";

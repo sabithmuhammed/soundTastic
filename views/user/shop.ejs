@@ -2,34 +2,39 @@
 
 <div class="section mb-5">
   <div class="container">
-    <div class="row">
-      <form class="filters" method="get" action="/shop" class="col-md-12">
-        <label for="category">Select Category:</label>
-        <select id="category" name="category">
-          <% if(!category){ %>
-          <option value="" selected>All Categories</option>
+      <form class="filters row" method="get" action="/shop">
+        <div class="col-md-4">
+          <label for="category">Select Category:</label>
+          <select id="category" name="category" class="right">
+            <% if(!category){ %>
+            <option value="" selected>All Categories</option>
+            <% }else{ %>
+            <option value="" selected>All Categories</option>
+            <% } %> <% categories.forEach((item)=>{ if(category===item.name){ %>
+            <option selected value="<%= item.name %>"><%= item.name %></option>
+            <% }else{ %>
+            <option value="<%= item.name %>"><%= item.name %></option>
+            <% } }) %>
+          </select>
+        </div>
+        <div class="col-md-4 ">
+          <label for="sort">Sort by Price:</label>
+          <select id="sort" name="sort" class="right">
+            <% if(sort==="1"){ %>
+              <option selected value=1>Low to High</option>
+            <option value=-1>High to Low</option>
           <% }else{ %>
-          <option value="" selected>All Categories</option>
-          <% } %> <% categories.forEach((item)=>{ if(category===item.name){ %>
-          <option selected value="<%= item.name %>"><%= item.name %></option>
-          <% }else{ %>
-          <option value="<%= item.name %>"><%= item.name %></option>
-          <% } }) %>
-        </select>
+            <option value=1>Low to High</option>
+            <option selected value=-1>High to Low</option>
+           <% } %>
+          </select>
+        </div>
+        <div class="col-md-4 d-flex flex-column justify-center filter-btn">
 
-        <label for="sort">Sort by Price:</label>
-        <select id="sort" name="sort">
-          <% if(sort==="1"){ %>
-            <option selected value=1>Low to High</option>
-          <option value=-1>High to Low</option>
-        <% }else{ %>
-          <option value=1>Low to High</option>
-          <option selected value=-1>High to Low</option>
-         <% } %>
-        </select>
-        <button class="btn btn-success" type="submit">APPLY</button>
-      </form>
-    </div>
+          <button class="btn btn-success" type="submit">APPLY</button>
+        </div>
+       
+    </form>
   </div>
 </div>
 

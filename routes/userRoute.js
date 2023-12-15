@@ -7,6 +7,7 @@ const cartController = require('../controller/userController/cart');
 const userPageController=require('../controller/userController/userProfile');
 const authController = require('../controller/userController/authentication');
 const ordersController = require('../controller/userController/orders')
+const cancelReturnController = require('../controller/userController/returnAndCancel')
 
 //home and login
 user_route.get("/", navPagesController.home);
@@ -71,7 +72,8 @@ user_route.get('/order-success',auth.isLogin,auth.userBlock,ordersController.sho
 user_route.get('/orders',auth.isLogin,auth.userBlock,ordersController.showOrders)
 user_route.get('/order-details/:orderId',auth.isLogin,auth.userBlock,ordersController.showOrderDetails)
 user_route.get('/order-details/:orderId',auth.isLogin,auth.userBlock,ordersController.showOrderDetails)
-user_route.post('/cancel-order',auth.jsonIsLogin,auth.jsonUserBlock,ordersController.cancelOrder)
+user_route.post('/cancel-order',auth.jsonIsLogin,auth.jsonUserBlock,cancelReturnController.cancelOrder);
+
 
 //coupon
 user_route.get('/get-coupons',ordersController.getCoupons)

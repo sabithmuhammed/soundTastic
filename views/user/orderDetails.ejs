@@ -142,7 +142,7 @@
 <div id="order-cancel-modal" class="modal">
   <!-- Modal content -->
   <div class="modal-content">
-    <h5>Are you sure you want to cancel this address?</h5>
+    <h5>Are you sure you want to cancel this product?</h5>
     <h6>Give a reason (optional)</h6>
     <p class="red" data-error></p>
     <textarea
@@ -163,11 +163,50 @@
   </div>
 </div>
 <div id="order-cancel-message" class="modal">
-  <!-- Modal content -->
+  <!-- Modal content --> 
   <div class="modal-content">
-    <h5>
+    <h5 class="text-center">
       Your orders have been canceled. The refund will be credited to your wallet
       shortly.
+    </h5>
+
+    <div class="confirm-modal-buttons">
+      <input type="hidden" value="" data-orderId />
+      <button class="btn btn-primary confirm-close">OK</button>
+    </div>
+  </div>
+</div>
+
+<!-- The Modal -->
+<div id="order-return-modal" class="modal" >
+  <!-- Modal content -->
+  <div class="modal-content">
+    <h5>Are you sure you want to return this product?</h5>
+    <h6>Give a reason</h6>
+    <p class="red" data-error></p>
+    <select name="returnReason" style="margin-bottom:10px">
+      <option value="defective">Defective/Malfunctioning Item</option>
+      <option value="wrongItem">Received Wrong Item</option>
+      <option value="damaged">Damaged During Shipping</option>
+      <option value="notDescribed">Not as Described</option>
+      <option value="changedMind">Unsatisfactory Quality</option>
+      <option value="changedMind">Changed Mind</option>
+  </select>
+  
+
+    <div class="confirm-modal-buttons">
+      <input type="hidden" data-orderId value="<%= order._id %>" />
+      <input type="hidden" value="" data-productId />
+      <button class="btn btn-primary confirm-close">CLOSE</button>
+      <button class="btn btn-danger" data-sendReqBtn>YES, CANCEL</button>
+    </div>
+  </div>
+</div>
+<div id="order-return-message" class="modal" >
+  <!-- Modal content --> 
+  <div class="modal-content">
+    <h5 class="text-center">
+      Your return request has been submitted. Please wait while we process it.
     </h5>
 
     <div class="confirm-modal-buttons">

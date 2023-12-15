@@ -85,32 +85,35 @@
       <!-- banner -->
       <div class="col-12 bg-danger banner">
         <div class="carousel__container">
-          <div class="carousel__item">
-            <img
-              src="/images/banners/autumn-leaf-falling-revealing-intricate-leaf-vein-generated-by-ai.jpg"
-              alt=""
-              loading="lazy"
-            />
-            <div class="banner__text">
-              <div class="banner__title">New Collections</div>
-              <div class="banner__description">Lorem, ipsum dolor sit amet  fsdfdsg dsafds consectetur adipisicing elit. Cumque adipisci impedit aliquam officia doloribus illum quis voluptate modi minus error.
+          <% if(banner && banner.length >0){
+            banner.forEach((item)=>{ %>
+              
+                <% if(item.link){ %>
+                  <div class="carousel__item" onclick="window.location.href='<%= item.link %>'">
+                <% }else{ %>
+                  <div class="carousel__item">
+               <% } %>
+                <img
+                  src="/images/banners/<%= item.image %>"
+                  alt=""
+                  loading="lazy"
+                />
+                <% if(item.title || item.description){ %>
+                <div class="banner__text">
+                  <% if(item.title){ %>
+                    <div class="banner__title"><%= item.title %></div>
+                  <% }%>
+                  <% if(item.description){ %>
+                    <div class="banner__description"><%= item.description %></div>
+                  <% }%>
+                  
+                  
+                </div>
+                <% } %>
               </div>
-            </div>
-          </div>
-          <div class="carousel__item">
-            <img src="/images/banners/botanical-leaves.jpg" alt="" loading="lazy"/>
-          </div>
-          <div class="carousel__item">
-            <img src="/images/banners/neon-tropical-monstera-leaf-banner.jpg" alt="" loading="lazy"/>
-          </div>
-          <div class="carousel__item">
-            <img src="/images/banners/pexels-craig-adderley-1563356.jpg" alt="" loading="lazy"/>
-            <div class="banner__text">
-              <div class="banner__title">New Collections</div>
-              <div class="banner__description">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cumque adipisci impedit aliquam officia doloribus illum quis voluptate modi minus error.
-              </div>
-            </div>
-          </div>
+          <%  })
+          } %>
+          
           <div class="carousel__nav"></div>
         </div>
       </div>
@@ -224,21 +227,7 @@
       </div>
     </div>
     <!-- SECTION -->
-    <div class="section">
-      <!-- container -->
-      <div class="container">
-        <!-- row -->
-        <div class="row">
-          <!-- banner -->
-          <div class="col-12 bg-danger banner">
-            <img src="/user/img/banner-2.png" alt="" />
-          </div>
-          <!-- /banner -->
-        </div>
-        <!-- /row -->
-      </div>
-      <!-- /container -->
-    </div>
+    
     <!-- /SECTION -->
   </div>
 </div>
