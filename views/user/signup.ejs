@@ -92,7 +92,7 @@
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return (error.innerText = "Invalid email address");
     }
-    if (!/^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$/.test(phone)) {
+    if (!/^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/.test(phone)) {
       return (error.innerText = "Invalid phone number");
     }
     if (!(password === confPassword)) {

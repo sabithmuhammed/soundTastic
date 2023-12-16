@@ -43,8 +43,8 @@
           <td><%= item.code%></td>
           <td>&#8377;<%= item.discountAmount%></td>
           <td>&#8377;<%= item.minimumSpend%></td>
-          <td><%= item.validFrom.toLocaleString('en-AU') %></td>
-          <td><%= item.expiry.toLocaleString('en-AU') %></td>
+          <td><%= item.validFrom.toLocaleString('en-AU',{year:"numeric",month:"2-digit",day:"2-digit"}) %></td>
+          <td><%= item.expiry.toLocaleString('en-AU',{year:"numeric",month:"2-digit",day:"2-digit"}) %></td>
           <td class="product-actions d-flex flex-column justify-content-evenly">
             <button
               class="btn <%= item.listed?'btn-danger':'btn-success' %>"

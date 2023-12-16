@@ -41,11 +41,13 @@
             </p>
             <% if(order.status==="Delivered" && !item.cancel?.status &&
             !item.return?.status){ %>
-            <button class="btn btn-danger">Return item</button>
-            <% } %> <% if(order.status==="Delivered" && !item.cancel?.status &&
+            <button class="btn btn-danger" data-returnBtn data-id="<%= item.productId._id %>">Return item</button>
+            <% } %>  <p class="red" id="return-status">
+            <% if(order.status==="Delivered" && !item.cancel?.status &&
             item.return?.status==="Pending"){ %>
-            <p class="red">Return request is pending</p>
-            <% } %> <% if(order.status==="Delivered" && !item.cancel?.status &&
+           Return request is pending
+            <% } %> </p>
+            <% if(order.status==="Delivered" && !item.cancel?.status &&
             item.return?.status==="Returned"){ %>
             <p class="red">Returned</p>
             <% } %>
@@ -62,7 +64,7 @@
           <div class="row">
             <div class="col-md-4">Date</div>
             <div class="col-md-8">
-              : <%= order.orderDate.toLocaleString('en-AU') %>
+              : <%= order.orderDate.toLocaleString('en-AU',{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}) %>
             </div>
           </div>
           <div class="row">
@@ -138,7 +140,7 @@
 
 
 
-<!-- The Modal -->
+<!-- The Modal (cancel order)-->
 <div id="order-cancel-modal" class="modal">
   <!-- Modal content -->
   <div class="modal-content">
@@ -177,31 +179,31 @@
   </div>
 </div>
 
-<!-- The Modal -->
+<!-- The Modal (return product)-->
 <div id="order-return-modal" class="modal" >
   <!-- Modal content -->
   <div class="modal-content">
     <h5>Are you sure you want to return this product?</h5>
     <h6>Give a reason</h6>
-    <p class="red" data-error></p>
-    <select name="returnReason" style="margin-bottom:10px">
-      <option value="defective">Defective/Malfunctioning Item</option>
-      <option value="wrongItem">Received Wrong Item</option>
-      <option value="damaged">Damaged During Shipping</option>
-      <option value="notDescribed">Not as Described</option>
-      <option value="changedMind">Unsatisfactory Quality</option>
-      <option value="changedMind">Changed Mind</option>
+    <p class="red" data-returnError></p>
+    <select name="returnReason" style="margin-bottom:10px" id="return-reason">
+      <option disabled selected value="">Select a reason</option>
+      <option value="Defective">Defective/Malfunctioning Item</option>
+      <option value="Wrong Item">Received Wrong Item</option>
+      <option value="Damaged">Damaged During Shipping</option>
+      <option value="Not AS Described">Not as Described</option>
+      <option value="Unsatisfactory">Unsatisfactory Quality</option>
+      <option value="Changed Mind">Changed Mind</option>
   </select>
-  
-
     <div class="confirm-modal-buttons">
       <input type="hidden" data-orderId value="<%= order._id %>" />
       <input type="hidden" value="" data-productId />
       <button class="btn btn-primary confirm-close">CLOSE</button>
-      <button class="btn btn-danger" data-sendReqBtn>YES, CANCEL</button>
+      <button class="btn btn-danger" data-returnReqBtn>YES, RETURN</button>
     </div>
   </div>
 </div>
+
 <div id="order-return-message" class="modal" >
   <!-- Modal content --> 
   <div class="modal-content">

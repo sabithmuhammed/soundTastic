@@ -1,0 +1,111 @@
+<%- include("../layouts/adminHeader") %>
+<script src="/js/utils/cancelRequest.js" defer></script>
+<!--  Main wrapper -->
+<div class="body-wrapper">
+  <%- include("../layouts/adminNavbar") %>
+  <div class="container-fluid">
+    <!-- <div class="row justify-content-center mb-3">
+        <form class="search-container d-flex p-0" action="/admin/customers" method="get">
+            <input type="text" class="flex-grow-1 " placeholder="search..." name="search" value=""><button class="btn btn-primary h-100 rounded-start-0">Search</button>
+        </form>
+    </div> -->
+    <h2 class="my-3">All Requests</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Order ID</th>
+          <th scope="col">Ordered Date</th>
+          <th scope="col">Request Date</th>
+          <th scope="col">Reason</th>
+          <th scope="col">Product Name</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% if(requests.length>0){ %> <% requests.forEach((item)=>{ %>
+        <tr>
+          <td><%= item.orderId.invoiceNo %></td>
+          <td>
+            <%=
+            item.orderId.orderDate.toLocaleString('en-AU',{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"})%>
+          </td>
+          <td>
+            <%=
+            item.date.toLocaleString('en-AU',{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"})%>
+          </td>
+          <td><%= item.reason%></td>
+          <td><%= item.productId.name %></td>
+          <td class="product-actions d-flex flex-column justify-content-evenly">
+            <button
+              class="btn btn-primary"
+              data-approve
+              data-id="<%= item._id %>"
+            >
+              Approve
+            </button>
+            <button
+              class="btn btn-primary"
+              onclick="window.location.href='/admin/manage-order/<%= item.orderId._id %>'"
+            >
+              More info
+            </button>
+          </td>
+        </tr>
+        <% })}else{ %>
+        <tr>
+          <td></td>
+          <td colspan="3" class="">No Requests found</td>
+        </tr>
+        <%}%>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!--Confirm Modal -->
+<div
+  class="modal fade"
+  id="confirm-modal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Are you sure?</h1>
+
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p class="error-modal"></p>
+        <p>Do you really want to approve this return request?</p>
+        <input type="text" name="id" id="request-id" value="" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          NO
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          id="action-btn"
+          data-cancelReqBtn
+          data-id=""
+        >
+          YES, APPROVE
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<%- include("../layouts/adminFooter") %>
+

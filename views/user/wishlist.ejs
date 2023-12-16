@@ -10,7 +10,7 @@
         wishlist.products.forEach((item)=>{ %>
         <div class="row" data-wishdiv="<%= item._id%>">
           <div class="col-md-2">
-            <div class="cart-image">
+            <div class="cart-image" onclick="window.location.href='product/<%= item._id %>'">
               <img src="/images/products/<%= item.images[0] %>" alt="" />
             </div>
           </div>

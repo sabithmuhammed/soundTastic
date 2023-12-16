@@ -43,6 +43,7 @@ admin_route.patch('/list-product/:id',auth.jsonIsLogin,productAndCategory.update
 admin_route.get('/orders',auth.isLogin,orderManagement.showOrders);
 admin_route.get('/manage-order/:orderId',auth.isLogin,orderManagement.showManageOrder);
 admin_route.patch('/change-status',auth.jsonIsLogin,orderManagement.changeStatus);
+admin_route.get('/return-requests',auth.jsonIsLogin,orderManagement.showReturnRequests);
 //orders routes end
 
 //coupon routes start

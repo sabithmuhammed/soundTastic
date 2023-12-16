@@ -52,7 +52,7 @@
         <div class="col-md-6">
           <div class="header-search">
             <form class="" action="/shop" method="get">
-              <input class="input" placeholder="Search here" name="search" />
+              <input class="input" placeholder="Search here" name="search"  value="<%= locals.search?search:'' %>"/>
               <button class="search-btn">Search</button>
             </form>
           </div>

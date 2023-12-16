@@ -1,6 +1,7 @@
 const Order = require("../../model/orderModel");
 const Product = require("../../model/productModel");
 const User = require("../../model/userModel");
+const ReturnRequest = require("../../model/returnModel");
 
 
 const showOrders = async (req, res) => {
@@ -43,13 +44,13 @@ const changeStatus = async (req,res)=>{
     }
 }
 
-const showCancelRequest=async(req,res)=>{
+const showReturnRequests=async(req,res)=>{
   try {
-    const requests = await CancelRequest.find().sort({date:-1}).populate({
-      path:"userId orderId",
-      select:"name orderDate"
-    }).exec();
-    res.render('admin/cancelRequests',{requests})
+    const requests = await ReturnRequest.find().populate({
+      path:"productId orderId",
+      select:"invoiceNo orderDate name"
+    })
+    return res.render('admin/returnRequests',{requests})
   } catch (error) {
     
   }
@@ -59,5 +60,6 @@ module.exports = {
   showOrders,
   showManageOrder,
   changeStatus,
-  showCancelRequest
+  showReturnRequests,
+
 };

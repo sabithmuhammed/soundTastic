@@ -27,7 +27,7 @@
 
     <% orders.forEach((item)=>{ %>
     <div class="row mb-5">
-      <div class="col-md-2"><%= item.orderDate.toLocaleString('en-AU') %></div>
+      <div class="col-md-2"><%= item.orderDate.toLocaleString('en-AU',{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}) %></div>
       <div class="col-md-3"><%= item.invoiceNo %></div>
       <div class="col-md-1">&#8377;<%= item.finalAmount%></div>
       <div class="col-md-3">
