@@ -64,54 +64,52 @@
         </tr>
         <%}%>
       </tbody>
-
-      <!--Confirm Modal -->
-      <div
-        class="modal fade"
-        id="coupon-modal"
-        tabindex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5" id="exampleModalLabel">
-                Are you sure?
-              </h1>
-
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body">
-              <p class="error-modal"></p>
-              <p>
-                Do you really want to
-                <strong id="action-text">unlist</strong> this coupon?
-              </p>
-              <input type="hidden" name="id" id="action-id" value="" />
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Cancel
-              </button>
-              <button type="button" class="btn btn-primary" data-couponList>
-                Block
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      
     </table>
+     <!--Confirm Modal -->
+     <div
+     class="modal fade"
+     id="coupon-modal"
+     tabindex="-1"
+     aria-labelledby="exampleModalLabel"
+     aria-hidden="true"
+   >
+     <div class="modal-dialog">
+       <div class="modal-content">
+         <div class="modal-header">
+           <h1 class="modal-title fs-5" id="exampleModalLabel">
+             Are you sure?
+           </h1>
+
+           <button
+             type="button"
+             class="btn-close"
+             data-bs-dismiss="modal"
+             aria-label="Close"
+           ></button>
+         </div>
+         <div class="modal-body">
+           <p class="error-modal"></p>
+           <p>
+             Do you really want to
+             <strong id="action-text">unlist</strong> this coupon?
+           </p>
+           <input type="hidden" name="id" id="action-id" value="" />
+         </div>
+         <div class="modal-footer">
+           <button
+             type="button"
+             class="btn btn-secondary"
+             data-bs-dismiss="modal"
+           >
+             Cancel
+           </button>
+           <button type="button" class="btn btn-primary" data-couponList>
+             Block
+           </button>
+         </div>
+       </div>
+     </div>
+   </div>
     <script src="/js/utils/coupons.js" defer></script>
       <%- include("../layouts/adminFooter") %>
   </div>

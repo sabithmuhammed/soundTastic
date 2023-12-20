@@ -219,7 +219,7 @@
     userData.wallet.history.reverse().forEach((item)=>{ %>
     <div class="row">
       <div class="col-xs-8">
-        <p class="black"><%= item.date.toLocaleString('en-us') %></p>
+        <p class="black"><%= item.date.toLocaleString('en-AU',{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}) %></p>
         <p class="black"><%= item.details %></p>
       </div>
       <div class="col-xs-4 right">

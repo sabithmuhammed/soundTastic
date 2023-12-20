@@ -218,6 +218,7 @@ label {
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
     transition: all ease-in-out .3s;
 
 }
@@ -272,6 +273,7 @@ label {
     width: 400px;
     height: 400px;
     border: 2px solid #D10024;
+    background-color: #ffffff;
 
 
 }
@@ -316,6 +318,7 @@ label {
     width: 100px;
     height: 100px;
     padding: 5px;
+    background-color: #ffffff;
 }
 
 .image-thumb>img {

@@ -1,7 +1,7 @@
 
 const changeStatus = document.querySelector("[data-statusBtn]");
 const modal = document.getElementById("confirm-modal");
-const orderCancelModal = new bootstrap.Modal(modal);
+const orderCancelModal = null
 const statusModal = document.getElementById("change-status-modal");
 const changeStatusModal = new bootstrap.Modal(statusModal);
 const cancelReqBtn = document.querySelector("[data-cancelReqBtn]");
@@ -9,32 +9,10 @@ const statusCol = document.querySelectorAll("[data-status]");
 const changeStatusBtn = document.querySelector("[data-changeStatusBtn]");
 
 const showCancelModal = () => {
+  orderCancelModal = new bootstrap.Modal(modal);
   orderCancelModal.show();
 };
 
-// const cancelRequest = async (event) => {
-//   try {
-//     const orderId = event.target.dataset.id;
-//     const rawData = await fetch("/admin/cancel-order", {
-//       method: "PATCH",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({ orderId }),
-//     });
-//     if(rawData.status===401){
-//       window.location.href="/admin/login"
-//     }
-//     if (rawData.ok) {
-//       cancelBtn.classList.add("disabled");
-//       changeStatus.classList.add("disabled");
-//       statusCol.innerText = "Cancelled";
-//       orderCancelModal.hide();
-//     }
-//   } catch (error) {
-//     console.error(error.message);
-//   }
-// };
 
 const showChangeStatus = () => {
   changeStatusModal.show();

@@ -1,5 +1,5 @@
 <%- include("../layouts/adminHeader") %>
-<script src="/js/utils/cancelRequest.js" defer></script>
+<script src="/js/utils/returnRequest.js" defer></script>
 <!--  Main wrapper -->
 <div class="body-wrapper">
   <%- include("../layouts/adminNavbar") %>
@@ -24,7 +24,7 @@
 
       <tbody>
         <% if(requests.length>0){ %> <% requests.forEach((item)=>{ %>
-        <tr>
+        <tr data-row="<%= item._id %>">
           <td><%= item.orderId.invoiceNo %></td>
           <td>
             <%=
@@ -45,7 +45,14 @@
               Approve
             </button>
             <button
-              class="btn btn-primary"
+              class="btn btn-danger"
+              data-reject
+              data-id="<%= item._id %>"
+            >
+              Reject
+            </button>
+            <button
+              class="btn btn-success"
               onclick="window.location.href='/admin/manage-order/<%= item.orderId._id %>'"
             >
               More info
@@ -54,8 +61,7 @@
         </tr>
         <% })}else{ %>
         <tr>
-          <td></td>
-          <td colspan="3" class="">No Requests found</td>
+          <td colspan="6" class="text-center">No Requests found</td>
         </tr>
         <%}%>
       </tbody>
@@ -86,7 +92,7 @@
       <div class="modal-body">
         <p class="error-modal"></p>
         <p>Do you really want to approve this return request?</p>
-        <input type="text" name="id" id="request-id" value="" />
+        <input type="hidden" name="id" id="request-id" value="" />
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -96,10 +102,51 @@
           type="button"
           class="btn btn-danger"
           id="action-btn"
-          data-cancelReqBtn
-          data-id=""
+          data-btnReturn
         >
           YES, APPROVE
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Confirm Modal -->
+<div
+  class="modal fade"
+  id="reject-modal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Are you sure?</h1>
+
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p class="error-modal"></p>
+        <p>Do you really want to reject this return request?</p>
+        <input type="hidden" name="id" id="reject-id" value="" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          NO
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          id="action-btn"
+          data-btnReject
+        >
+          YES, REJECT
         </button>
       </div>
     </div>

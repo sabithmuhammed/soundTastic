@@ -43,7 +43,9 @@ admin_route.patch('/list-product/:id',auth.jsonIsLogin,productAndCategory.update
 admin_route.get('/orders',auth.isLogin,orderManagement.showOrders);
 admin_route.get('/manage-order/:orderId',auth.isLogin,orderManagement.showManageOrder);
 admin_route.patch('/change-status',auth.jsonIsLogin,orderManagement.changeStatus);
-admin_route.get('/return-requests',auth.jsonIsLogin,orderManagement.showReturnRequests);
+admin_route.get('/return-requests',auth.isLogin,orderManagement.showReturnRequests);
+admin_route.patch('/accept-return',auth.jsonIsLogin,orderManagement.acceptReturn);
+admin_route.patch('/reject-return',auth.jsonIsLogin,orderManagement.rejectReturn);
 //orders routes end
 
 //coupon routes start
@@ -59,6 +61,8 @@ admin_route.patch('/list-coupon/:id',auth.jsonIsLogin,couponAndBanner.updateCoup
 admin_route.get('/banners',couponAndBanner.showBanners)
 admin_route.get('/add-banner',couponAndBanner.showAddBanner)
 admin_route.post('/add-banner',bannerUpload,couponAndBanner.addBanner)
+admin_route.patch('/list-banner/:id',couponAndBanner.listBanner)
+admin_route.delete('/delete-banner/:id',couponAndBanner.deleteBanner)
 //banner routes end
 
 admin_route.get("/*",auth.isLogout,authAndCustomer.loginLoad)

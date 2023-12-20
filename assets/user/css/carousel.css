@@ -6,6 +6,9 @@
     height: 390px;;
     margin: 0 auto;
     position: relative;
+    background-image: url('/user/img/banner.png');
+    background-position: center;
+    background-size: cover;
 }
 .carousel__item{
     width: 100%;

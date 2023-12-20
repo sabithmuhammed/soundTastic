@@ -94,7 +94,9 @@ const updateCoupons = async (req, res) => {
 
 const showBanners = async(req,res)=>{
   try {
-    res.render('admin/banners')
+    const banners = await Banner.find();
+
+    res.render('admin/banners',{banners})
   } catch (error) {
     console.log(error.message);
   }
@@ -118,6 +120,34 @@ try {
   console.log(error.message);
 }
 }
+
+const listBanner = async (req, res) => {
+  try {
+    const banner = await Banner.findByIdAndUpdate(
+      { _id: req.params.id },
+      { $bit: { listed: { xor: 1 } } },
+      { new: true }
+    );
+    if (banner) {
+      const message = banner.listed ? "Unlist" : "List";
+      res.json({ message });
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const deleteBanner = async (req,res)=>{
+  try {
+    const deletedBanner = await Banner.findByIdAndDelete(req.params.id)
+    if(deleteBanner){
+    return res.status(204).send()
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
 module.exports = {
   showCoupons,
   showAddCoupon,
@@ -128,6 +158,7 @@ module.exports = {
   showBanners,
   showAddBanner,
   addBanner,
-
+  listBanner,
+  deleteBanner
 
 };

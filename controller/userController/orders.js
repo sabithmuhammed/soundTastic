@@ -10,6 +10,9 @@ const {
   verifyPayment,
 } = require("../../services/onlinePayment");
 const generateInvoiceNumber = require("../../services/invoiceNumber");
+const deletePendingOrders =require("../../utilities/deletePendingOrders")
+
+setInterval(deletePendingOrders, 900000);
 
 const showCheckout = async (req, res) => {
   try {
@@ -218,6 +221,7 @@ const showOrderDetails = async (req, res) => {
         select: "name images discountAmount",
       })
       .exec();
+      console.log(order);
     res.render("user/orderDetails", { order, user, cartCount, wishlistCount });
   } catch (error) {
     console.log(error.message);

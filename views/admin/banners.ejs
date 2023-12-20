@@ -6,15 +6,7 @@
   <div class="container-fluid">
     <div class="row justify-content-center mb-3">
       <div class="col-md-7">
-        <form action="/admin/coupons" class="search-container d-flex p-0">
-          <input
-            type="text"
-            class="flex-grow-1"
-            placeholder="search by coupon code"
-            name="search"
-          />
-          <button class="btn btn-primary h-100 rounded-start-0">Search</button>
-        </form>
+        
       </div>
       <div class="col-md-3 mt-2 mt-md-0">
         <a href="/admin/add-banner"
@@ -23,9 +15,146 @@
       </div>
     </div>
     <h2 class="my-3">All banners</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Image</th>
+          <th scope="col">Link</th>
+          <th scope="col">Title</th>
+          <th scope="col">Description</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
 
-    
-    <script src="/js/utils/coupons.js" defer></script>
+      <tbody>
+        <% if(banners && banners.length>0){ banners.forEach((item)=>{ %>
+        <tr data-row="<%= item._id %>">
+          <td>
+            <div class="img-banner">
+              <img src="/images/banners/<%= item.image %>" alt="" />
+            </div>
+          </td>
+          <td><%= item.link?item.link:"--" %></td>
+          <td><%= item.title?item.title:"--" %></td>
+          <td><%= item.description?item.description:"--" %></td>
+          <td class="product-actions d-flex flex-column justify-content-evenly">
+            <button
+              class="btn <%= item.listed?'btn-danger':'btn-success' %>"
+              data-id="<%= item._id %>"
+              data-btnBannerList
+            >
+              <%= item.listed?'Unlist':'List' %>
+            </button>
+            <button
+              class="btn btn-danger"
+              data-delete-id="<%= item._id %>"
+              data-btnBannerDelete
+            >
+              Delete
+            </button>
+          </td>
+        </tr>
+        <% })}else{ %>
+        <tr>
+          <td colspan="6" class="text-center">No Banners</td>
+        </tr>
+        <%}%>
+      </tbody>
+    </table>
+
+     <!--Confirm Modal -->
+     <div
+     class="modal fade"
+     id="banner-modal"
+     tabindex="-1"
+     aria-labelledby="exampleModalLabel"
+     aria-hidden="true"
+   >
+     <div class="modal-dialog">
+       <div class="modal-content">
+         <div class="modal-header">
+           <h1 class="modal-title fs-5" id="exampleModalLabel">
+             Are you sure?
+           </h1>
+
+           <button
+             type="button"
+             class="btn-close"
+             data-bs-dismiss="modal"
+             aria-label="Close"
+           ></button>
+         </div>
+         <div class="modal-body">
+           <p class="error-modal"></p>
+           <p>
+             Do you really want to
+             <strong id="action-text">unlist</strong> this banner?
+           </p>
+           <input type="hidden" name="id" id="action-id" value="" />
+         </div>
+         <div class="modal-footer">
+           <button
+             type="button"
+             class="btn btn-secondary"
+             data-bs-dismiss="modal"
+           >
+             Cancel
+           </button>
+           <button type="button" class="btn btn-primary" data-bannerList>
+             Block
+           </button>
+         </div>
+       </div>
+     </div>
+   </div>
+
+    <!--Confirm Modal -->
+    <div
+    class="modal fade"
+    id="banner-delete-modal"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">
+            Are you sure?
+          </h1>
+
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p class="error-modal"></p>
+          <p>
+            Do you really want to
+            <strong>delete</strong> this banner?
+          </p>
+          <input type="hidden" name="id" id="action-delete-id" value="" />
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cancel
+          </button>
+          <button type="button" class="btn btn-primary" data-bannerDelete>
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <script src="/js/utils/banner.js" defer></script>
     <%- include("../layouts/adminFooter") %>
   </div>
 </div>
