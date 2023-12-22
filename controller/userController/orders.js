@@ -121,7 +121,7 @@ const placeOrder = async (req, res) => {
       finalAmount,
       orderDate: Date.now(),
       walletUsed,
-      payment,
+      payment:finalAmount ? payment : "WALLET",
       status: "Pending",
       paymentStatus: "Unpaid",
     };
@@ -151,8 +151,9 @@ const placeOrder = async (req, res) => {
           }
         );
       }
-      await Cart.findOneAndDelete({ userId });
-
+      if(payment!== "ONLINE"){
+        await Cart.findOneAndDelete({ userId });
+      }
       if (payment === "ONLINE") {
         const userData = {
           name,
@@ -221,7 +222,6 @@ const showOrderDetails = async (req, res) => {
         select: "name images discountAmount",
       })
       .exec();
-      console.log(order);
     res.render("user/orderDetails", { order, user, cartCount, wishlistCount });
   } catch (error) {
     console.log(error.message);
@@ -239,13 +239,28 @@ const verifyOnlinePayment = async (req, res) => {
         { paymentStatus: "Paid" },
         { new: true }
       );
-      console.log(orderStatus, order);
+      await Cart.findOneAndDelete({ userId:req.session.userId });
       res.status(200).json({ status: "success" });
     }
   } catch (error) {
     console.log(error.message);
   }
 };
+
+const onlinePaymentFailed= async (req,res)=>{
+try {
+  const {order} = req.body;
+  const orderDetails =  await Order.findByIdAndDelete(order._id);
+  orderDetails.products.forEach(async(item)=>{
+    await Product.findByIdAndUpdate({_id:item.productId},{$inc:{
+      quantity:item.quantity
+    }})
+  })
+ res.status(204).send() 
+} catch (error) {
+  console.log(error.message);
+}
+}
 
 const getCoupons = async (req, res) => {
   try {
@@ -273,7 +288,6 @@ const verifyCoupon = async (req, res) => {
       couponCheck.validFrom.getTime() > curDate ||
       couponCheck.expiry.getTime() < curDate
     ) {
-      console.log("date problem");
       return res.status(422).json({
         error: "unavailable",
         message: "Coupon is currently unavailable",
@@ -297,6 +311,7 @@ module.exports = {
   showOrders,
   showOrderDetails,
   verifyOnlinePayment,
+  onlinePaymentFailed,
   getCoupons,
   verifyCoupon,
 };

@@ -36,13 +36,14 @@ const createAdmin = async (req, res) => {
 const loginLoad = (req, res) => {
   try {
     res.render("admin/login");
-  } catch (error) {}
+  } catch (error) {
+    console.log(error.message)
+  }
 };
 
 const verifyLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log(email, password);
     const adminData = await Admin.findOne({ email });
     if (adminData) {
       const passwordMatch = await bcrypt.compare(password, adminData.password);

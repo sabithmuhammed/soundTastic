@@ -1,7 +1,85 @@
 <%- include("../layouts/userHeader") %> <%- include("../layouts/userNavbar") %>
+<style>
+  .shipping-status {
+    width: 100%;
+    height: 50px;
 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+  .status-bar {
+    width: 500px;
+    height: 5px;
+    background-color: #e2e2e2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 30px;
+  }
+  .statuses {
+    width: 20px;
+    height: 20px;
+    background-color: #e2e2e2;
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #e2e2e2;
+  }
+  .bars {
+    position: absolute;
+    width: 500px;
+    height: 5px;
+    border-radius: 30px;
+    display: flex;
+    overflow: hidden;
+  }
+  .bar {
+    width: 33%;
+    height: 5px;
+  }
+  .processed {
+    background-color: rgb(69, 205, 124);
+  }
+  .statuses > p {
+    position: absolute;
+    bottom: -30px;
+    left: -100%;
+    color: #4baf50;
+  }
+  .Pending .r1 {
+    background-color: #4baf50;
+    color: white;
+  }
+  .Processed :is(.r1, .r2, .b1) {
+    background-color: #4baf50;
+    color: white;
+  }
+  .Shipped :is(.r1, .r2, .r3, .b1, .b2) {
+    background-color: #4baf50;
+    color: white;
+  }
+  .Delivered :is(.r1, .r2, .r3, .r4, .b1, .b2, .b3) {
+    background-color: #4baf50;
+    color: white;
+  }
+  .Canceled :is(.r1, .r4, .b1, .b2, .b3) {
+    background-color: #f34335;
+    color: white;
+  }
+  .Canceled p {
+    color: #f34335;
+  }
+  .Canceled :is(.r2, .r3) {
+    display: none;
+  }
+</style>
 <% if(!locals.orders.length) { %>
-  
+
 <div class="section mb-5">
   <div class="container orders">
     <h3>Your orders</h3>
@@ -27,7 +105,11 @@
 
     <% orders.forEach((item)=>{ %>
     <div class="row mb-5">
-      <div class="col-md-2"><%= item.orderDate.toLocaleString('en-AU',{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}) %></div>
+      <div class="col-md-2">
+        <%=
+        item.orderDate.toLocaleString('en-AU',{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"})
+        %>
+      </div>
       <div class="col-md-3"><%= item.invoiceNo %></div>
       <div class="col-md-1">&#8377;<%= item.finalAmount%></div>
       <div class="col-md-3">
@@ -39,8 +121,46 @@
       </div>
       <div class="col-md-1" data-status><%= item.status%></div>
       <div class="col-md-2 d-flex flex-column">
-        <button class="btn btn-success my-2" onclick="window.location.href='/order-details/<%= item._id%>'">View details</button>
-        
+        <button
+          class="btn btn-success my-2"
+          onclick="window.location.href='/order-details/<%= item._id%>'"
+        >
+          View details
+        </button>
+      </div>
+      <div class="col-md-12">
+        <div class="shipping-status <%= item.status%>">
+          <div class="bars">
+            <div class="bar b1"></div>
+            <div class="bar b2"></div>
+            <div class="bar b3"></div>
+          </div>
+          <div class="status-bar">
+            <div class="statuses r1">
+              <i class="fa-solid fa-check fa-sm"></i>
+              <p>Recieved</p>
+            </div>
+            <div class="statuses r2">
+              <i class="fa-solid fa-check fa-sm"></i>
+              <p>Processed</p>
+            </div>
+            <div class="statuses r3">
+              <i class="fa-solid fa-check fa-sm"></i>
+              <p>Shipped</p>
+            </div>
+            <% if(item.status === "Canceled"){ %>
+            <div class="statuses r4">
+              <i class="fa-solid fa-check fa-sm"></i>
+              <p>Canceled</p>
+            </div>
+            <% }else{ %>
+            <div class="statuses r4">
+              <i class="fa-solid fa-check fa-sm"></i>
+              <p>Delivered</p>
+            </div>
+            <% } %>
+          </div>
+        </div>
       </div>
     </div>
 

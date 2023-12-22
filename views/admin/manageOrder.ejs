@@ -54,7 +54,7 @@
                 <th scope="row">Status</th>
                 <td data-status><%= order.status %></td>
               </tr>
-              <tr>
+              <tr data-status-tr>
                 <% if(order.status==='Delivered' || order.status==='Canceled') { %>
                 
                 <% }else{ %> 
@@ -183,8 +183,8 @@
           <option value="Pending">Pending</option>
 
           <% } %>
-           <% if(order.status !== "Processing") { %>
-          <option value="Processing">Processing</option>
+           <% if(order.status !== "Processed") { %>
+          <option value="Processed">Processed</option>
 
           <% } %>
            <% if(order.status !== "Shipped") { %>

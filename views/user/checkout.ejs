@@ -149,7 +149,7 @@
         </div>
         <div class="payment d-flex">
           <h3>Payment</h3>
-          <div class="cod">
+          <div class="cod" data-payment>
             <label for="cod"
               ><input
                 type="radio"
@@ -160,7 +160,7 @@
               />Cah on delivery</label
             >
           </div>
-          <div class="cod">
+          <div class="cod" data-payment>
             <label for="online"
               ><input
                 type="radio"
@@ -168,6 +168,17 @@
                 class="payment-method"
                 value="ONLINE"
               />Online payment</label
+            >
+          </div>
+          <div class="cod hide" data-payment>
+            <label for="online"
+              ><input
+                type="radio"
+                name=""
+                class="payment-method"
+                value="ONLINE"
+                checked
+              />Pay using wallet</label
             >
           </div>
           <button class="btn-checkout" data-placeOrder>PLACE ORDER</button>

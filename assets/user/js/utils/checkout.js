@@ -111,7 +111,6 @@ const checkStock = async () => {
 //onlinePayment success function
 const verifyOnlinePayment = async (details, order) => {
   try {
-    console.log(details);
     const rawData = await fetch("/verify-payment", {
       method: "PATCH",
       headers: {
@@ -155,14 +154,14 @@ const razorpayPayment = (order, userData) => {
     },
   };
   var rzp1 = new Razorpay(options);
-  rzp1.on("payment.failed", function (response) {
-    alert(response.error.code);
-    alert(response.error.description);
-    alert(response.error.source);
-    alert(response.error.step);
-    alert(response.error.reason);
-    alert(response.error.metadata.order_id);
-    alert(response.error.metadata.payment_id);
+  rzp1.on("payment.failed",async function (response) {
+    await fetch("payment-unsuccessful",{
+      method:"DELETE",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify(order)
+    })
   });
   rzp1.open();
 };
@@ -221,6 +220,7 @@ const placeOrder = async () => {
 //function to use wallet amount
 const controlWallet = () => {
   const walletShow = document.querySelector("[data-walletShow]");
+  const paymentMethods = document.querySelectorAll('[data-payment]')
   const walletAmount = Number(
     document.querySelector("[data-walletCurrent]").innerText
   );
@@ -231,6 +231,9 @@ const controlWallet = () => {
     if (walletAmount > totalAmount) {
       totalContainer.innerText = 0;
       walletUsed.innerText = totalAmount;
+      paymentMethods[0].classList.add('hide')
+      paymentMethods[1].classList.add('hide')
+      paymentMethods[2].classList.remove('hide')
     } else {
       totalContainer.innerText = totalAmount - walletAmount;
       walletUsed.innerHTML = walletAmount;
@@ -239,6 +242,9 @@ const controlWallet = () => {
   } else {
     totalContainer.innerText = totalAmount + Number(walletUsed.innerText);
     walletShow.style.visibility = "hidden";
+    paymentMethods[0].classList.remove('hide')
+    paymentMethods[1].classList.remove('hide')
+    paymentMethods[2].classList.add('hide')
   }
 };
 window.addEventListener("click", (event) => {

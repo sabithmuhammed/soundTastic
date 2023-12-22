@@ -52,12 +52,12 @@ const sendCancelRequest = async () => {
         document.querySelector("[data-finalAmount]").innerText =
           data.finalAmount;
         const wallet = document.querySelector("[data-wallet]");
-        if (data.wallet) {
-          wallet.innerHTML = `-&#8377;${data.wallet}`;
+        if (data.walletUsed) {
+          wallet.innerHTML = `-&#8377;${data.walletUsed}`;
         } else {
           wallet.innerHTML = `&#8377;0`;
         }
-        if (!data.couponUpdate) {
+        if (!data.couponId) {
           document.querySelector("[data-coupon]").remove();
         }
 

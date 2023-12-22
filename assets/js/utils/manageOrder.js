@@ -41,7 +41,7 @@ const changeStatusReq=async(event)=>{
                 })
                 status.value=data.orderStatus;
                 if(data.orderStatus==="Delivered"){
-                  changeStatus.remove()
+                  document.querySelector('[data-status-tr]').innerHTML=''
                 }
                 changeStatusModal.hide();
                 return

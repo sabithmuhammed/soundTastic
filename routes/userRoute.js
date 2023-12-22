@@ -68,6 +68,7 @@ user_route.delete('/remove-from-wishlist',auth.jsonIsLogin,auth.jsonUserBlock,na
 user_route.get('/checkout',auth.isLogin,auth.userBlock,ordersController.showCheckout);
 user_route.post('/place-order',auth.jsonIsLogin,auth.jsonUserBlock,ordersController.placeOrder)
 user_route.patch('/verify-payment',auth.jsonIsLogin,ordersController.verifyOnlinePayment);
+user_route.delete('/payment-unsuccessful',auth.jsonIsLogin,ordersController.onlinePaymentFailed);
 user_route.get('/order-success',auth.isLogin,auth.userBlock,ordersController.showOrderSuccess)
 user_route.get('/orders',auth.isLogin,auth.userBlock,ordersController.showOrders)
 user_route.get('/order-details/:orderId',auth.isLogin,auth.userBlock,ordersController.showOrderDetails)
