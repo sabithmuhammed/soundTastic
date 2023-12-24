@@ -15,7 +15,9 @@ admin_route.post('/login',authAndCustomer.verifyLogin);
 admin_route.get('/logout',auth.isLogin,authAndCustomer.adminLogout)
 // admin_route.post('/signup',authAndCustomer.createAdmin);
 
-admin_route.get('/dashboard',auth.isLogin,dashboard.loadDashboard);
+// admin_route.get('/dashboard',auth.isLogin,dashboard.loadDashboard);
+admin_route.get('/dashboard',dashboard.loadDashboard);
+admin_route.get('/dashboard-data',dashboard.sendDashboardData);
 
 // customer routes start
 admin_route.get('/customers',auth.isLogin,authAndCustomer.seeCustomers);

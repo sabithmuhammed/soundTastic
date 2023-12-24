@@ -31,9 +31,14 @@ const showManageOrder = async (req, res) => {
 const changeStatus = async (req, res) => {
   try {
     const { orderId, status } = req.body;
+    console.log(status);
+    const updateObj ={status};
+    if(status==='Delivered'){
+      updateObj.paymentStatus="Paid"
+    }
     const updatedOrder = await Order.findByIdAndUpdate(
       { _id: orderId },
-      { $set: { status } },
+      { $set: updateObj },
       { new: true }
     );
     if (updatedOrder) {

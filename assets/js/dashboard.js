@@ -1,211 +1,210 @@
-$(function () {
+let salesChart = null;
+let paymentChart = null;
+let categoryChart = null;
+let productChart = null;
+const fetchDashBoardData = async (timeFrame) => {
+  const rawData = await fetch(`/admin/dashboard-data?time=${timeFrame}`);
+  if (rawData.ok) {
+    const data = await rawData.json();
+    if (data.status === "success") {
+      const { customers, pendingOrders } = data;
 
+      document.querySelector("[data-customer]").innerText = customers;
+      document.querySelector("[data-pending]").innerText = pendingOrders;
+      const { payment } = data;
 
-  // =====================================
-  // Profit
-  // =====================================
-  var chart = {
-    series: [
-      { name: "Earnings this month:", data: [355, 390, 300, 350, 390, 180, 355, 390] },
-      { name: "Expense this month:", data: [280, 250, 325, 215, 250, 310, 280, 250] },
-    ],
+      salesGraph();
+      paymentGraph(payment);
+      categoryGraph();
+      productGraph();
+    }
+  }
+};
 
-    chart: {
-      type: "bar",
-      height: 345,
-      offsetX: -15,
-      toolbar: { show: true },
-      foreColor: "#adb0bb",
-      fontFamily: 'inherit',
-      sparkline: { enabled: false },
-    },
+const salesGraph = (data, label) => {
+  const sales = document.getElementById("sales-chart");
 
+  if (salesChart) {
+    salesChart.destroy();
+  }
 
-    colors: ["#5D87FF", "#49BEFF"],
-
-
-    plotOptions: {
-      bar: {
-        horizontal: false,
-        columnWidth: "35%",
-        borderRadius: [6],
-        borderRadiusApplication: 'end',
-        borderRadiusWhenStacked: 'all'
-      },
-    },
-    markers: { size: 0 },
-
-    dataLabels: {
-      enabled: false,
-    },
-
-
-    legend: {
-      show: false,
-    },
-
-
-    grid: {
-      borderColor: "rgba(0,0,0,0.1)",
-      strokeDashArray: 3,
-      xaxis: {
-        lines: {
-          show: false,
+  salesChart = new Chart(sales, {
+    type: "line",
+    data: {
+      labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
+      datasets: [
+        {
+          label: "Orders",
+          data: [20, 30, 15, 4, 5, 6, 7, 8, 9, 1, 2, 4],
+          borderWidth: 1,
+          borderColor: "white",
+          backgroundColor: "white",
         },
-      },
+      ],
     },
-
-    xaxis: {
-      type: "category",
-      categories: ["16/08", "17/08", "18/08", "19/08", "20/08", "21/08", "22/08", "23/08"],
-      labels: {
-        style: { cssClass: "grey--text lighten-2--text fill-color" },
-      },
-    },
-
-
-    yaxis: {
-      show: true,
-      min: 0,
-      max: 400,
-      tickAmount: 4,
-      labels: {
-        style: {
-          cssClass: "grey--text lighten-2--text fill-color",
-        },
-      },
-    },
-    stroke: {
-      show: true,
-      width: 3,
-      lineCap: "butt",
-      colors: ["transparent"],
-    },
-
-
-    tooltip: { theme: "light" },
-
-    responsive: [
-      {
-        breakpoint: 600,
-        options: {
-          plotOptions: {
-            bar: {
-              borderRadius: 3,
-            }
+    options: {
+      scales: {
+        x: {
+          beginAtZero: true,
+          ticks: {
+            color: "rgb(224, 224, 224)", // Change x-axis label color here
           },
-        }
-      }
-    ]
-
-
-  };
-
-  var chart = new ApexCharts(document.querySelector("#chart"), chart);
-  chart.render();
-
-
-  // =====================================
-  // Breakup
-  // =====================================
-  var breakup = {
-    color: "#adb5bd",
-    series: [38, 40, 25],
-    labels: ["2022", "2021", "2020"],
-    chart: {
-      width: 180,
-      type: "donut",
-      fontFamily: "Plus Jakarta Sans', sans-serif",
-      foreColor: "#adb0bb",
-    },
-    plotOptions: {
-      pie: {
-        startAngle: 0,
-        endAngle: 360,
-        donut: {
-          size: '75%',
         },
-      },
-    },
-    stroke: {
-      show: false,
-    },
-
-    dataLabels: {
-      enabled: false,
-    },
-
-    legend: {
-      show: false,
-    },
-    colors: ["#5D87FF", "#ecf2ff", "#F9F9FD"],
-
-    responsive: [
-      {
-        breakpoint: 991,
-        options: {
-          chart: {
-            width: 150,
+        y: {
+          beginAtZero: true,
+          ticks: {
+            color: "rgb(224, 224, 224)", // Change y-axis label color here
           },
         },
       },
-    ],
-    tooltip: {
-      theme: "dark",
-      fillSeriesColor: false,
-    },
-  };
-
-  var chart = new ApexCharts(document.querySelector("#breakup"), breakup);
-  chart.render();
-
-
-
-  // =====================================
-  // Earning
-  // =====================================
-  var earning = {
-    chart: {
-      id: "sparkline3",
-      type: "area",
-      height: 60,
-      sparkline: {
-        enabled: true,
-      },
-      group: "sparklines",
-      fontFamily: "Plus Jakarta Sans', sans-serif",
-      foreColor: "#adb0bb",
-    },
-    series: [
-      {
-        name: "Earnings",
-        color: "#49BEFF",
-        data: [25, 66, 20, 40, 12, 58, 20],
-      },
-    ],
-    stroke: {
-      curve: "smooth",
-      width: 2,
-    },
-    fill: {
-      colors: ["#f3feff"],
-      type: "solid",
-      opacity: 0.05,
-    },
-
-    markers: {
-      size: 0,
-    },
-    tooltip: {
-      theme: "dark",
-      fixed: {
-        enabled: true,
-        position: "right",
-      },
-      x: {
-        show: false,
+      plugins: {
+        legend: {
+          display: true,
+          labels: {
+            color: "rgb(224, 224, 224)", // Change legend label color here
+          },
+        },
       },
     },
-  };
-  new ApexCharts(document.querySelector("#earning"), earning).render();
-})
+  });
+};
+
+const paymentGraph = (data) => {
+  const payment = document.getElementById("payment-chart");
+
+  if (paymentChart) {
+    paymentChart.destroy();
+  }
+  paymentChart = new Chart(payment, {
+    type: "doughnut",
+    data: {
+      labels: ["COD", "Online", "Wallet"],
+      datasets: [
+        {
+          label: "Orders",
+          data: [data.cod, data.online, data.wallet],
+          borderWidth: 1,
+          backgroundColor: [
+            "rgb(22,140,98)",
+            "rgb(82,119,158)",
+            "rgb(132,133,142)",
+          ],
+        },
+      ],
+    },
+    options: {
+      plugins: {
+        legend: {
+          display: true,
+          labels: {
+            color: "rgb(224, 224, 224)", // Change label color here
+          },
+        },
+      },
+    },
+  });
+};
+
+const categoryGraph = (data) => {
+  const category = document.getElementById("category-chart");
+
+  if (categoryChart) {
+    categoryChart.destroy();
+  }
+  categoryChart = new Chart(category, {
+    type: "doughnut",
+    data: {
+      labels: ["Wired", "Wireless", "Truly Wireless", "Speakers"],
+      datasets: [
+        {
+          label: "",
+          data: [12, 19, 1, 5],
+          borderWidth: 1,
+          backgroundColor: [
+            "rgb(236,164,160",
+            "rgb(38,156,209)",
+            "rgb(160,162,198)",
+            "rgb(157,115,163)",
+          ],
+        },
+      ],
+    },
+    options: {
+      plugins: {
+        legend: {
+          display: true,
+          labels: {
+            color: "rgb(224, 224, 224)", // Change label color here
+          },
+        },
+      },
+    },
+  });
+};
+
+const productGraph = () => {
+  const product = document.getElementById("products-chart");
+  if (productChart) {
+    productChart.destroy();
+  }
+  productChart = new Chart(product, {
+    type: "bar",
+    data: {
+      labels: ["Red", "dfkhj", "sj", "hgd", "hdak"],
+      datasets: [
+        {
+          label: "Quantity sold",
+          data: [20, 30, 15, 7, 7],
+          borderWidth: 1,
+          borderColor: "white",
+          backgroundColor: [
+            "rgb(236,164,160",
+            "rgb(38,156,209)",
+            "rgb(160,162,198)",
+            "rgb(157,115,163)",
+            "rgb(222,228,233)",
+          ],
+        },
+      ],
+    },
+    options: {
+      scales: {
+        x: {
+          beginAtZero: true,
+          ticks: {
+            color: "rgb(224, 224, 224)", // Change x-axis label color here
+          },
+        },
+        y: {
+          beginAtZero: true,
+          ticks: {
+            color: "rgb(224, 224, 224)", // Change y-axis label color here
+          },
+        },
+      },
+      plugins: {
+        legend: {
+          display: true,
+          labels: {
+            color: "rgb(224, 224, 224)", // Change legend label color here
+          },
+        },
+      },
+    },
+  });
+};
+
+window.addEventListener("load", () => {
+  fetchDashBoardData("today");
+});
+
+const timeBtns = document.querySelectorAll("[data-time]");
+timeBtns.forEach((item) => {
+  item.addEventListener("click", (event) => {
+    timeBtns.forEach((item) => {
+      item.classList.remove("time-frame-active");
+    });
+    fetchDashBoardData(event.currentTarget.dataset.time);
+    event.currentTarget.classList.add("time-frame-active");
+  });
+});
