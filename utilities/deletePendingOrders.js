@@ -25,6 +25,9 @@ const deletePendingingOrders = async () => {
     await Product.findByIdAndUpdate({_id:item.productId},{$inc:{quantity:item.quantity}})
     
   })
-  console.log("Removed Pending Online Orders"); 
+  if(products.length){
+    console.log(`Removed ${products.length} Pending Online Orders`); 
+  }
+  
 };
 module.exports = deletePendingingOrders

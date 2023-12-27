@@ -10,7 +10,7 @@ const {
   verifyPayment,
 } = require("../../services/onlinePayment");
 const generateInvoiceNumber = require("../../services/invoiceNumber");
-const deletePendingOrders =require("../../utilities/deletePendingOrders")
+const deletePendingOrders = require("../../utilities/deletePendingOrders");
 
 setInterval(deletePendingOrders, 900000);
 
@@ -121,7 +121,7 @@ const placeOrder = async (req, res) => {
       finalAmount,
       orderDate: Date.now(),
       walletUsed,
-      payment:finalAmount ? payment : "WALLET",
+      payment: finalAmount ? payment : "WALLET",
       status: "Pending",
       paymentStatus: "Unpaid",
     };
@@ -151,7 +151,7 @@ const placeOrder = async (req, res) => {
           }
         );
       }
-      if(payment!== "ONLINE"){
+      if (payment !== "ONLINE") {
         await Cart.findOneAndDelete({ userId });
       }
       if (payment === "ONLINE") {
@@ -196,7 +196,9 @@ const showOrders = async (req, res) => {
   try {
     const { userId, user } = req.session;
     const cartCount = await cartUtils.getCartCount(userId);
-    const orders = await Order.find({ userId })
+    const orders = await Order.find({
+       userId
+    })
       .sort({ _id: -1 })
       .populate({
         path: "products.productId",
@@ -228,8 +230,6 @@ const showOrderDetails = async (req, res) => {
   }
 };
 
-
-
 const verifyOnlinePayment = async (req, res) => {
   try {
     const { details, order } = req.body;
@@ -239,7 +239,7 @@ const verifyOnlinePayment = async (req, res) => {
         { paymentStatus: "Paid" },
         { new: true }
       );
-      await Cart.findOneAndDelete({ userId:req.session.userId });
+      await Cart.findOneAndDelete({ userId: req.session.userId });
       res.status(200).json({ status: "success" });
     }
   } catch (error) {
@@ -247,20 +247,25 @@ const verifyOnlinePayment = async (req, res) => {
   }
 };
 
-const onlinePaymentFailed= async (req,res)=>{
-try {
-  const {order} = req.body;
-  const orderDetails =  await Order.findByIdAndDelete(order._id);
-  orderDetails.products.forEach(async(item)=>{
-    await Product.findByIdAndUpdate({_id:item.productId},{$inc:{
-      quantity:item.quantity
-    }})
-  })
- res.status(204).send() 
-} catch (error) {
-  console.log(error.message);
-}
-}
+const onlinePaymentFailed = async (req, res) => {
+  try {
+    const { order } = req.body;
+    const orderDetails = await Order.findByIdAndDelete(order._id);
+    orderDetails.products.forEach(async (item) => {
+      await Product.findByIdAndUpdate(
+        { _id: item.productId },
+        {
+          $inc: {
+            quantity: item.quantity,
+          },
+        }
+      );
+    });
+    res.status(204).send();
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
 const getCoupons = async (req, res) => {
   try {

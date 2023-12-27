@@ -100,20 +100,35 @@
     const minimumVal=minimum.value.trim();
     const startingDate=start.value;
     const expiry=end.value;
+    
     if(!couponVal || !discountVal || !minimumVal){
         error.innerText="Fill all the fields"
         event.preventDefault()
+        return
     }
 
     if(couponVal.length<8 || couponVal.length>12){
         error.innerText="Invalid coupon length (length 8-12)"
         event.preventDefault()
+        return
     }
+
+    
 
     if(expiry<=startingDate){
         error.innerText="Expiry date cannot be earlier than the starting date"
         event.preventDefault()
+        return
     }
+
+    const today = new Date(Date.now())
+    const cDate = new Date(startingDate)
+    if(cDate < today){
+        error.innerText="Invalid Valid from date"
+        event.preventDefault()
+        return
+    }
+    event.preventDefault()
    }
    couponForm.addEventListener('submit',couponValidation)
 </script>

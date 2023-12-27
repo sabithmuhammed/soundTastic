@@ -218,6 +218,9 @@ const newPassword = async () => {
     const confPassword = confPasswordInput.value.trim();
 
     const message = document.querySelector(".message-div");
+    if(password.length < 6){
+      return (error.innerText = "Password must contain at least 6 charecters");
+    }
     if (!password || !confPassword) {
       return (error.innerText = "Fields can't be empty");
     }

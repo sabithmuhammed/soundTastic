@@ -7,21 +7,22 @@ const fetchDashBoardData = async (timeFrame) => {
   if (rawData.ok) {
     const data = await rawData.json();
     if (data.status === "success") {
-      const { customers, pendingOrders } = data;
-
+      const {customers, pendingOrders, payment,products,category,sales } = data;
       document.querySelector("[data-customer]").innerText = customers;
       document.querySelector("[data-pending]").innerText = pendingOrders;
-      const { payment } = data;
-
-      salesGraph();
+      document.querySelector("[data-sales-total]").innerText = sales.totalAmount;
+      
+      
+      console.log(products)
+      salesGraph(sales);
       paymentGraph(payment);
-      categoryGraph();
-      productGraph();
+      categoryGraph(category);
+      productGraph(products);
     }
   }
 };
 
-const salesGraph = (data, label) => {
+const salesGraph = ({orderCount,label}) => {
   const sales = document.getElementById("sales-chart");
 
   if (salesChart) {
@@ -31,11 +32,11 @@ const salesGraph = (data, label) => {
   salesChart = new Chart(sales, {
     type: "line",
     data: {
-      labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
+      labels: label,
       datasets: [
         {
           label: "Orders",
-          data: [20, 30, 15, 4, 5, 6, 7, 8, 9, 1, 2, 4],
+          data: orderCount,
           borderWidth: 1,
           borderColor: "white",
           backgroundColor: "white",
@@ -83,12 +84,13 @@ const paymentGraph = (data) => {
         {
           label: "Orders",
           data: [data.cod, data.online, data.wallet],
-          borderWidth: 1,
+          borderWidth: 2,
           backgroundColor: [
-            "rgb(22,140,98)",
+            "rgb(22,140,100)",
             "rgb(82,119,158)",
             "rgb(132,133,142)",
           ],
+          borderColor:"#08686B"
         },
       ],
     },
@@ -118,14 +120,15 @@ const categoryGraph = (data) => {
       datasets: [
         {
           label: "",
-          data: [12, 19, 1, 5],
-          borderWidth: 1,
+          data: [data.wired,data.wireless,data.trulyWireless,data.speakers],
+          borderWidth: 2,
           backgroundColor: [
             "rgb(236,164,160",
             "rgb(38,156,209)",
             "rgb(160,162,198)",
             "rgb(157,115,163)",
           ],
+          borderColor:"#08686B"
         },
       ],
     },
@@ -142,7 +145,7 @@ const categoryGraph = (data) => {
   });
 };
 
-const productGraph = () => {
+const productGraph = ({productName,productCount}) => {
   const product = document.getElementById("products-chart");
   if (productChart) {
     productChart.destroy();
@@ -150,11 +153,11 @@ const productGraph = () => {
   productChart = new Chart(product, {
     type: "bar",
     data: {
-      labels: ["Red", "dfkhj", "sj", "hgd", "hdak"],
+      labels: productName,
       datasets: [
         {
           label: "Quantity sold",
-          data: [20, 30, 15, 7, 7],
+          data: productCount,
           borderWidth: 1,
           borderColor: "white",
           backgroundColor: [

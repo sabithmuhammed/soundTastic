@@ -95,6 +95,9 @@
     if (!/^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/.test(phone)) {
       return (error.innerText = "Invalid phone number");
     }
+    if(password.length < 6){
+      return (error.innerText = "Password must contain at least 6 charecters");
+    }
     if (!(password === confPassword)) {
       return (error.innerText = "Passwords must match");
     }

@@ -103,7 +103,9 @@
       <div class="col-md-2 d-flex flex-column">Actions</div>
     </div>
 
-    <% orders.forEach((item)=>{ %>
+    <% orders.forEach((item)=>{ 
+      if(item.payment!=="ONLINE" && !item.paymentStatus!=="Unpaid"){ %>
+
     <div class="row mb-5">
       <div class="col-md-2">
         <%=
@@ -164,7 +166,7 @@
       </div>
     </div>
 
-    <% }) %>
+    <%} }) %>
   </div>
 </div>
 <% } %> <%- include("../layouts/userFooter") %>

@@ -41,6 +41,7 @@ const showShop = async (req, res) => {
       search = req.query.search;
     }
     const dbQuery = {
+      quantity:{$gt:0},
       listed: 1,
       $or: [
         {
