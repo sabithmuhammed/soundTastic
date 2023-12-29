@@ -123,7 +123,7 @@ const placeOrder = async (req, res) => {
       walletUsed,
       payment: finalAmount ? payment : "WALLET",
       status: "Pending",
-      paymentStatus: "Unpaid",
+      paymentStatus: finalAmount ? "Unpaid" : "Paid",
     };
     const order = await new Order(orderObj).save();
     if (order) {

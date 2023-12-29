@@ -11,7 +11,7 @@ const adminRoute=require("./routes/adminRoute");
 
 const app = express();
 dotenv.config({ path: ".env" });
-mongoose.connect(process.env.MONGO_DB);
+mongoose.connect(process.env.MONGO_DB+"soundtastic");
 const PORT = process.env.PORT || 8080;
 
 app.set("view engine", "ejs");

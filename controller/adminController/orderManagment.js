@@ -32,9 +32,9 @@ const changeStatus = async (req, res) => {
   try {
     const { orderId, status } = req.body;
     console.log(status);
-    const updateObj ={status};
-    if(status==='Delivered'){
-      updateObj.paymentStatus="Paid"
+    const updateObj = { status };
+    if (status === "Delivered") {
+      updateObj.paymentStatus = "Paid";
     }
     const updatedOrder = await Order.findByIdAndUpdate(
       { _id: orderId },
@@ -66,28 +66,29 @@ const showReturnRequests = async (req, res) => {
 const acceptReturn = async (req, res) => {
   try {
     const { reqId } = req.body;
-    const { orderId, productId, reason ,userId} =
+    const { orderId, productId, reason, userId } =
       await ReturnRequest.findByIdAndDelete(reqId);
-  
-    let { products,walletUsed, coupon, finalAmount } = await Order.findOneAndUpdate(
-      { _id: orderId, "products.productId": productId },
-      {
-        $set: {
-          "products.$.return": {
-            status: "Returned",
-            reason,
-            date: Date.now(),
+
+    let { products, walletUsed, coupon, finalAmount } =
+      await Order.findOneAndUpdate(
+        { _id: orderId, "products.productId": productId },
+        {
+          $set: {
+            "products.$.return": {
+              status: "Returned",
+              reason,
+              date: Date.now(),
+            },
           },
         },
-      },
-      {
-        new: true,
-      }
-    );
+        {
+          new: true,
+        }
+      );
 
-const product = products.find((item)=>{
-  return item.productId.equals(productId)
-})
+    const product = products.find((item) => {
+      return item.productId.equals(productId);
+    });
 
     if (reason !== "Defective" || reason !== "Damaged") {
       await Product.findByIdAndUpdate(
@@ -99,59 +100,73 @@ const product = products.find((item)=>{
         }
       );
     }
-    let refund=0;
+    let refund = 0;
     let prodPrice = product.quantity * product.unitPrice;
-    if(!coupon){
-     let total =Number(walletUsed ) + Number(finalAmount);
-      refund=prodPrice
-      if(prodPrice >= walletUsed ){
+    if (!coupon) {
+      refund = prodPrice;
+      if (prodPrice >= walletUsed) {
         walletUsed = 0;
-        prodPrice = prodPrice-walletUsed
+        prodPrice = prodPrice - walletUsed;
       }
-      finalAmount = finalAmount-prodPrice
+      finalAmount = finalAmount - prodPrice;
     }
-    if(coupon){
-      const {discountAmount,minimumSpend}= await Coupon.findById(coupon)
-      let total =Number(walletUsed ) + Number(finalAmount)+Number(discountAmount)
-      if(Number(minimumSpend) <= total-prodPrice){
-        refund = prodPrice
-        if(prodPrice >= walletUsed){
-          walletUsed=0;
-          prodPrice=prodPrice-walletUsed
+    if (coupon) {
+      const { discountAmount, minimumSpend } = await Coupon.findById(coupon);
+      let total =
+        Number(walletUsed) + Number(finalAmount) + Number(discountAmount);
+      if (Number(minimumSpend) <= total - prodPrice) {
+        refund = prodPrice;
+        if (prodPrice >= walletUsed) {
+          walletUsed = 0;
+          prodPrice = prodPrice - walletUsed;
         }
-        finalAmount = finalAmount-prodPrice
-      }else{
-        refund = prodPrice-discountAmount
-        prodPrice = prodPrice-discountAmount
-        if(prodPrice >= walletUsed){
+        finalAmount = finalAmount - prodPrice;
+      } else {
+        refund = prodPrice - discountAmount;
+        prodPrice = prodPrice - discountAmount;
+        if (prodPrice >= walletUsed) {
           walletUsed = 0;
         }
-        finalAmount = finalAmount-prodPrice;
-        await Coupon.findByIdAndUpdate({_id:coupon},{$pull:{
-          usersUsed:userId
-        }})
-        coupon=null;
-      }  
-    }
-    await Order.findByIdAndUpdate({_id:orderId},{$set:{
-      finalAmount,
-      walletUsed,
-      coupon
-    }})
-
-    await User.findByIdAndUpdate({_id:userId},{
-      $inc:{
-        "wallet.balance":refund
-      },
-      $push:{
-        "wallet.history":{
-          amount:refund,
-          type:"Credit",
-          date:Date.now(),
-          details:"Refund for returned product"
-        }
+        finalAmount = finalAmount - prodPrice;
+        await Coupon.findByIdAndUpdate(
+          { _id: coupon },
+          {
+            $pull: {
+              usersUsed: userId,
+            },
+          }
+        );
+        coupon = null;
       }
-    })
+    }
+    finalAmount = finalAmount < 0 ? 0 : finalAmount;
+    await Order.findByIdAndUpdate(
+      { _id: orderId },
+      {
+        $set: {
+          finalAmount,
+          walletUsed,
+          coupon,
+        },
+      }
+    );
+    
+    await User.findByIdAndUpdate(
+      { _id: userId },
+      {
+        $inc: {
+          "wallet.balance": refund,
+        },
+        $push: {
+          "wallet.history": {
+            amount: refund,
+            type: "Credit",
+            date: Date.now(),
+            details: "Refund for returned product",
+          },
+        },
+      }
+    );
 
     res.status(204).send();
   } catch (error) {
@@ -159,15 +174,15 @@ const product = products.find((item)=>{
   }
 };
 
-const rejectReturn= async (req,res)=>{
+const rejectReturn = async (req, res) => {
   try {
     const { reqId } = req.body;
     await ReturnRequest.findByIdAndDelete(reqId);
-    res.status(204).send()
+    res.status(204).send();
   } catch (error) {
     console.log(error.message);
   }
-}
+};
 
 module.exports = {
   showOrders,
@@ -175,5 +190,5 @@ module.exports = {
   changeStatus,
   showReturnRequests,
   acceptReturn,
-  rejectReturn
+  rejectReturn,
 };

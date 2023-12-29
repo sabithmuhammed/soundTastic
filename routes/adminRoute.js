@@ -13,7 +13,7 @@ admin_route.get('/',auth.isLogout,authAndCustomer.loginLoad);
 admin_route.get('/login',auth.isLogout,authAndCustomer.loginLoad);
 admin_route.post('/login',authAndCustomer.verifyLogin);
 admin_route.get('/logout',auth.isLogin,authAndCustomer.adminLogout)
-// admin_route.post('/signup',authAndCustomer.createAdmin);
+admin_route.post('/signup',authAndCustomer.createAdmin);
 
 
 admin_route.get('/dashboard',auth.isLogin,dashboard.loadDashboard);

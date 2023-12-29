@@ -91,6 +91,10 @@
 </div>
 
 <script>
+
+const date = new Date().toISOString().split("T")[0];
+document.getElementById('validFrom').min = date
+document.getElementById('expiryDate').min = date
    const couponForm=document.querySelector('#coupon-form')
    const couponValidation = (event)=>{
     const error=document.querySelector('#error')

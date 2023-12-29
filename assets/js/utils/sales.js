@@ -23,7 +23,9 @@ function padTo2Digits(num) {
   const [fromDate] = formatDate(fDate).split(" ");
   const [toDate] = formatDate(tDate).split(" ");
   document.querySelector("#from-date").value = fromDate;
+  document.querySelector("#from-date").max = fromDate;
   document.querySelector("#to-date").value = toDate;
+  document.querySelector("#to-date").max = toDate;
 
   const generateReport = async () => {
     try {

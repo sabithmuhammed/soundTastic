@@ -95,7 +95,7 @@ const sendReturnRequest = async(event)=>{
   if(rawData.ok){
     const data =await rawData.json();  
     if(data.status==="success"){
-      document.querySelector("#return-status").innerText="Return request is pending"
+      document.querySelector(`#return-status-${productId}`).innerText="Return request is pending"
       document.querySelector(`[data-id="${productId}"]`).remove();
       returnRequestModal.style.display = "none";
       returnRequestMessage.style.display = "block";

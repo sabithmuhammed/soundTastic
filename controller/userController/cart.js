@@ -171,7 +171,7 @@ const removeFromCart = async (req, res) => {
     );
     const data = {
       items: updatedCart.items.length,
-      total: updatedCart.totalPrice,
+      total: Number(updatedCart.totalPrice),
     };
 
     res.status(200).json({ status: "success", data });

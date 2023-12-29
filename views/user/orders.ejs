@@ -104,7 +104,7 @@
     </div>
 
     <% orders.forEach((item)=>{ 
-      if(item.payment!=="ONLINE" && !item.paymentStatus!=="Unpaid"){ %>
+      if(!(item.payment==="ONLINE" && !item.paymentStatus==="Unpaid")){ %>
 
     <div class="row mb-5">
       <div class="col-md-2">

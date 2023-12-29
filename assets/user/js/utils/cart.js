@@ -114,6 +114,7 @@ const removeFromCart = async (event) => {
         messageDiv.style.display = "block";
         const { items, total } = data.data;
         if (items) {
+          const totalDivs = document.querySelectorAll(`[data-total]`);
           row.remove();
           if (items > 1) {
             itemCount[0].innerText = `${items} Items`;
@@ -123,6 +124,7 @@ const removeFromCart = async (event) => {
             itemCount[1].innerText = `ITEM 1`;
           }
           cartCount.innerText = items;
+          totalDivs.forEach(item=>item.innerText=total)
         } else {
           const cartBody = document.querySelector(".cart");
           cartBody.innerHTML = `<div class="col-md-12 item-center">

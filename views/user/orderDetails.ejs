@@ -42,7 +42,7 @@
             <% if(order.status==="Delivered" && !item.cancel?.status &&
             !item.return?.status){ %>
             <button class="btn btn-danger" data-returnBtn data-id="<%= item.productId._id %>">Return item</button>
-            <% } %>  <p class="red" id="return-status">
+            <% } %>  <p class="red" id="return-status-<%= item.productId._id %>">
             <% if(order.status==="Delivered" && !item.cancel?.status &&
             item.return?.status==="Pending"){ %>
            Return request is pending
