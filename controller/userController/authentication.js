@@ -173,7 +173,7 @@ const verifyLogin = async (req, res) => {
     } else {
       res.json({
         status: "failed",
-        message: "Username or Password is incorrect!",
+        message: "No account found, Please try to sign up!",
       });
     }
   } catch (error) {

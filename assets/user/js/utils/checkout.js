@@ -271,8 +271,8 @@ const showCouponModal = async () => {
       const data = await rawData.json();
       if (data.status === "success") {
         const coupons = data.coupons;
+        const couponDiv = document.querySelector("[data-couponDiv]");
         if (coupons && coupons.length) {
-          const couponDiv = document.querySelector("[data-couponDiv]");
           couponDiv.innerHTML = "";
           coupons.forEach((item) => {
             const p = document.createElement("p");
@@ -289,6 +289,8 @@ const showCouponModal = async () => {
           copyBtn.forEach((item) => {
             item.addEventListener("click", couponCopy);
           });
+        }else{
+          couponDiv.innerHTML = "No Coupons Available";
         }
       }
     }

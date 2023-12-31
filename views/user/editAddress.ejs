@@ -63,7 +63,7 @@
     if (!/^[a-z ,.'-]+$/i.test(name)) {
       return (error.innerText = "Invalid name");
     }
-    if (!/^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$/.test(mobile)) {
+    if (!/^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/.test(mobile)) {
       return (error.innerText = "Invalid phone number");
     }
     if(!/^[1-9]{1}[0-9]{2}\s{0,1}[0-9]{3}$/.test(pincode)){

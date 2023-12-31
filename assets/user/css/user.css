@@ -154,6 +154,7 @@ label {
 
 .shop-img {
     height: 200px;
+    background-color: white !important;
 }
 
 .shop-img>img {

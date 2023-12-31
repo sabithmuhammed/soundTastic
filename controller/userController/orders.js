@@ -269,7 +269,7 @@ const onlinePaymentFailed = async (req, res) => {
 
 const getCoupons = async (req, res) => {
   try {
-    const coupons = await Coupon.find({ listed: 1 });
+    const coupons = await Coupon.find({ listed: 1, validFrom:{$lte:new Date(new Date().setHours(0, 0, 0, 0))},expiry:{$gte:new Date(new Date().setHours(0, 0, 0, 0))} });
     res.status(200).json({ status: "success", coupons });
   } catch (error) {
     console.log(error.message);
