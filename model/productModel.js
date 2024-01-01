@@ -11,7 +11,6 @@ const productSchema = new mongoose.Schema({
     quantity: { type: Number, required: true },
     brand:{type:String,required:true},
     reviews: [{
-       comment: { type: String },
        rating: { type: Number },
        userId: { type: mongoose.Types.ObjectId,ref:'user'},
     }],
