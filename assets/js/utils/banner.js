@@ -1,16 +1,15 @@
 const listBtn = document.querySelectorAll("[data-btnBannerList]");
 const confirmBtn = document.querySelector("[data-bannerList]");
-const bannerModal = new bootstrap.Modal(
-  document.querySelector("#banner-modal")
-);
+let bannerModal = null
 
 const deleteBtn = document.querySelectorAll("[data-btnBannerDelete]");
 const confirmDeleteBtn = document.querySelector("[data-bannerDelete]");
-const bannerDeleteModal = new bootstrap.Modal(
-  document.querySelector("#banner-delete-modal")
-);
+let bannerDeleteModal = null
 
 const showBannerModal = (event) => {
+  bannerModal = new bootstrap.Modal(
+    document.querySelector("#banner-modal")
+  );
   const modalBanner = document.querySelector("#action-id");
   const actionText = document.querySelector("#action-text");
   modalBanner.value = event.target.dataset.id;
@@ -42,6 +41,9 @@ const listBanner = async (event) => {
 };
 
 const showDeleteModal = (event) => {
+  bannerDeleteModal = new bootstrap.Modal(
+    document.querySelector("#banner-delete-modal")
+  );
   const modalBanner = document.querySelector("#action-delete-id");
   modalBanner.value = event.target.dataset.deleteId;
   bannerDeleteModal.show();
