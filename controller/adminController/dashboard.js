@@ -12,11 +12,20 @@ const loadDashboard = async (req, res) => {
 
 const sendDashboardData = async (req, res) => {
   try {
-    const [{ customers }] = await User.aggregate([{ $count: "customers" }]);
-    const [{ pendingOrders }] = await Order.aggregate([
+    const customerArray = await User.aggregate([{ $count: "customers" }]);
+    const pendingArray = await Order.aggregate([
       { $match: { status: "Pending" } },
       { $count: "pendingOrders" },
-    ]);
+    ]) ;
+    let pendingOrders = 0
+    let customers = 0;
+
+    if(pendingArray.length){
+      [{pendingOrders}] = pendingArray
+    }
+    if(customerArray.length){
+      [{customers}] = customerArray
+    }
     const { time } = req.query;
     let timeFrame = new Date(new Date().setHours(0, 0, 0, 0));
     let pipeline = [
