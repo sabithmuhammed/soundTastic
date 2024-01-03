@@ -127,12 +127,8 @@ document.getElementById('expiryDate').min = date
 
     const today = new Date(Date.now())
     const cDate = new Date(startingDate)
-    if(cDate < today){
-        error.innerText="Invalid Valid from date"
-        event.preventDefault()
-        return
-    }
-    event.preventDefault()
+
+    
    }
    couponForm.addEventListener('submit',couponValidation)
 </script>
