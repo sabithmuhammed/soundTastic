@@ -309,6 +309,23 @@ const verifyCoupon = async (req, res) => {
   }
 };
 
+const rateProduct = async (req,res)=>{
+  try {
+    const {productId,rating} =req.body
+    const {userId} = req.session
+    const ratedProduct = await Product.findOneAndUpdate({_id:productId,"reviews.userId":userId},{$set:{
+      "reviews.$.rating":rating
+
+    }},{new:true})
+
+    if(!ratedProduct){
+      await Product.findByIdAndUpdate({_id:productId},{$push:{reviews:{userId,rating}}},{new:true})
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
 module.exports = {
   showCheckout,
   placeOrder,
@@ -319,4 +336,6 @@ module.exports = {
   onlinePaymentFailed,
   getCoupons,
   verifyCoupon,
+  rateProduct,
+
 };

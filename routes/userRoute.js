@@ -73,8 +73,10 @@ user_route.get('/order-success',auth.isLogin,auth.userBlock,ordersController.sho
 user_route.get('/orders',auth.isLogin,auth.userBlock,ordersController.showOrders)
 user_route.get('/order-details/:orderId',auth.isLogin,auth.userBlock,ordersController.showOrderDetails)
 user_route.get('/order-details/:orderId',auth.isLogin,auth.userBlock,ordersController.showOrderDetails)
+user_route.patch('/rate-product',auth.jsonIsLogin,auth.jsonUserBlock,ordersController.rateProduct);
 user_route.patch('/cancel-order',auth.jsonIsLogin,auth.jsonUserBlock,cancelReturnController.cancelOrder);
 user_route.post('/request-return',auth.jsonIsLogin,auth.jsonUserBlock,cancelReturnController.returnRequest);
+
 
 
 //coupon

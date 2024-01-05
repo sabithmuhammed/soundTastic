@@ -1,5 +1,76 @@
 <%- include("../layouts/userHeader") %> <%- include("../layouts/userNavbar") %>
-
+<style>
+  .star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+  }
+  
+  .radio-input {
+    position: fixed;
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  .radio-label {
+    cursor: pointer;
+    font-size: 0;
+    color: rgba(0,0,0,0.2);
+    transition: color 0.1s ease-in-out;
+  }
+  
+  .radio-label:before {
+    content: "★";
+    display: inline-block;
+    font-size: 32px;
+  }
+  
+  .radio-input:checked ~ .radio-label {
+    color: #ffc700;
+    color: gold;
+  }
+  
+  .radio-label:hover,
+  .radio-label:hover ~ .radio-label {
+    color: goldenrod;
+  }
+  
+  .radio-input:checked + .radio-label:hover,
+  .radio-input:checked + .radio-label:hover ~ .radio-label,
+  .radio-input:checked ~ .radio-label:hover,
+  .radio-input:checked ~ .radio-label:hover ~ .radio-label,
+  .radio-label:hover ~ .radio-input:checked ~ .radio-label {
+    color: darkgoldenrod;
+  }
+  
+  
+  .average-rating {
+    position: relative;
+    appearance: none;
+    color: transparent;
+    width: auto;
+    display: inline-block;
+    vertical-align: baseline;
+    font-size: 25px;
+  }
+  
+  .average-rating::before {
+    --percent: calc(4.3/5*100%);
+    content: '★★★★★';
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: rgba(0,0,0,0.2);
+    background: linear-gradient(90deg, gold var(--percent), rgba(0,0,0,0.2) var(--percent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+ 
+  
+  form {
+    margin: 0 0 50px;
+  }
+</style>
 <div class="section mb-5">
   <!-- container -->
   <div class="container bold">
@@ -26,7 +97,7 @@
           </div>
           <div class="col-md-3 d-flex flex-column">
             <% if(order.status==="Delivered" && !item.cancel?.status){ %>
-            <button class="btn btn-primary">Give rating</button>
+            <button class="btn btn-primary" data-btn-rating data-product="<%= item.productId._id%>">Give rating</button>
             <% } %> <% if(order.status!=="Delivered" && !item.cancel?.status){ %>
             <button
               class="btn btn-danger"
@@ -217,6 +288,107 @@
     </div>
   </div>
 </div>
+
+<div id="rating-modal" class="modal" >
+  <!-- Modal content --> 
+  <div class="modal-content">
+    <h4>Rate this product</h4>
+    <div class="rating-stars">
+      <form class="star-rating">
+        <input
+          class="radio-input"
+          type="radio"
+          id="star5"
+          name="star-input"
+          value="5"
+          checked
+        />
+        <label class="radio-label" class for="star5" title="5 stars"
+          >5 stars</label
+        >
+
+        <input
+          class="radio-input"
+          type="radio"
+          id="star4"
+          name="star-input"
+          value="4"
+        />
+        <label class="radio-label" for="star4" title="4 stars"
+          >4 stars</label
+        >
+
+        <input
+          class="radio-input"
+          type="radio"
+          id="star3"
+          name="star-input"
+          value="3"
+        />
+        <label class="radio-label" for="star3" title="3 stars"
+          >3 stars</label
+        >
+
+        <input
+          class="radio-input"
+          type="radio"
+          id="star2"
+          name="star-input"
+          value="2"
+        />
+        <label class="radio-label" for="star2" title="2 stars"
+          >2 stars</label
+        >
+
+        <input
+          class="radio-input"
+          type="radio"
+          id="star1"
+          name="star-input"
+          value="1"
+          
+        />
+        <label class="radio-label" for="star1" title="1 star">1 star</label>
+        
+      </form>
+    </div>
+
+    <div class="confirm-modal-buttons">
+      <input type="hidden" value="" data-rateId />
+      <button class="btn btn-primary confirm-close" data-btn-rate >Rate</button>
+    </div>
+  </div>
+</div>
+<script>
+const ratingBtn = document.querySelectorAll('[data-btn-rating]');
+const btnRateSubmit = document.querySelector('[data-btn-rate]');
+
+const showRatingModal = (event)=>{
+  document.querySelector('#rating-modal').style.display="block"
+  document.querySelector('[data-rateId]').value = event.currentTarget.dataset.product
+}
+const submitRating = async ()=>{
+  try{
+    const productId =  document.querySelector('[data-rateId]').value
+    const rating = document.querySelector('input[name="star-input"]:checked').value
+    const rawData = await fetch('/rate-product',{
+      method:"PATCH",
+      headers:{
+        "Content-Type":"application/json",
+      },
+      body:JSON.stringify({productId,rating})
+    })
+
+  }catch(error){
+    console.error(error.message)
+  }
+}
+
+ratingBtn.forEach((item)=>{
+  item.addEventListener('click',showRatingModal)
+})
+btnRateSubmit.addEventListener('click',submitRating)
+</script>
 
 <script src="/user/js/utils/orders.js"></script>
 <%- include("../layouts/userFooter") %>
