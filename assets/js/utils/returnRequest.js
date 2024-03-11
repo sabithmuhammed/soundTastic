@@ -1,21 +1,23 @@
 const approveBtn = document.querySelectorAll("[data-approve]");
 const returnBtn = document.querySelector("[data-btnReturn]");
 
-let modal = new bootstrap.Modal(document.querySelector("#confirm-modal"));
+let modal = null
 
 
-const rejectBtn = document.querySelectorAll("[data-reject]");
+const rejectBtn = null
 const rejectConfirmBtn = document.querySelector("[data-btnReject]");
 
 let modalReject = new bootstrap.Modal(document.querySelector("#reject-modal"));
 
 const showConfirm = (event) => {
+  modal = new bootstrap.Modal(document.querySelector("#confirm-modal"));
   const idInput = document.querySelector("#request-id");
   idInput.value = event.target.dataset.id;
   modal.show();
 };
 
 const showRejectConfirm = (event) => {
+  rejectBtn = document.querySelectorAll("[data-reject]");
   const idInput = document.querySelector("#reject-id");
   idInput.value = event.target.dataset.id;
   modalReject.show();
